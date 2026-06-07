@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Sea Monitor — Early Warning Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --surf2:   #1c2128;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --accent:  #58a6ff;
+      --green:   #3fb950;
+      --yellow:  #d29922;
+      --red:     #f85149;
+      --orange:  #db6d28;
+      --purple:  #bc8cff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.5; }
+
+    /* ── Header ── */
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    header h1 { font-size: 17px; font-weight: 600; letter-spacing: 0.02em; }
+    .header-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .header-right { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    #last-updated { font-size: 12px; color: var(--muted); }
+
+    /* ── City selector ── */
+    .city-bar { display: flex; gap: 6px; padding: 14px 24px 0; flex-wrap: wrap; }
+    .city-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-size: 12px; padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all 0.15s; }
+    .city-btn:hover { color: var(--text); border-color: var(--muted); }
+    .city-btn.active { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
+
+    /* ── Main layout ── */
+    .main { padding: 16px 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── Dials row ── */
+    .dials-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+
+    .dial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px 14px 14px; text-align: center; }
+    .dial-card .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 10px; }
+
+    .dial-canvas-wrap { position: relative; width: 130px; height: 74px; margin: 0 auto 6px; }
+    .dial-canvas-wrap canvas { width: 130px !important; height: 130px !important; position: absolute; top: -56px; left: 0; }
+
+    .dial-value { font-size: 26px; font-weight: 700; line-height: 1; }
+    .dial-band  { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .dial-change { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .dial-change.up   { color: var(--green); }
+    .dial-change.down { color: var(--red); }
+
+    .spread-card { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .spread-value { font-size: 36px; font-weight: 700; }
+    .spread-label-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    /* ── Quality badge ── */
+    .quality-badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; margin-top: 6px; font-weight: 600; letter-spacing: 0.04em; }
+    .quality-real      { background: rgba(63,185,80,0.15);  color: var(--green);  border: 1px solid rgba(63,185,80,0.3); }
+    .quality-mixed     { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+    .quality-estimated { background: rgba(88,166,255,0.12); color: var(--accent); border: 1px solid rgba(88,166,255,0.25); }
+    .quality-uncertain { background: rgba(188,140,255,0.12); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); }
+
+    /* ── Tab bar ── */
+    .tab-bar { display: flex; gap: 2px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .tab-btn { background: none; border: none; color: var(--muted); font-size: 13px; padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Chart panel ── */
+    .chart-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: none; }
+    .chart-panel.active { display: block; }
+    .chart-panel h2 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .chart-panel .chart-desc { font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+    .chart-wrap { position: relative; height: 300px; }
+
+    /* ── Alert banner ── */
+    .alert-banner { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.4); border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #ffa198; display: none; }
+    .alert-banner.visible { display: block; }
+
+    /* ── Events legend ── */
+    .events-legend { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 14px; }
+    .events-legend h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 10px; }
+    .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 7px; }
+    .event-item { display: flex; gap: 9px; align-items: flex-start; font-size: 12px; }
+    .event-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .event-date { color: var(--muted); white-space: nowrap; }
+
+    /* ── Status bar ── */
+    .status-bar { margin-top: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 11px 18px; display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+    .status-item { font-size: 12px; }
+    .status-item .s-label { color: var(--muted); margin-right: 5px; }
+    .status-item .s-val   { font-weight: 600; }
+
+    /* ── Mortgage mini-table ── */
+    .mini-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
+    .mini-table th { color: var(--muted); font-weight: 500; text-align: left; padding: 5px 10px; border-bottom: 1px solid var(--border); }
+    .mini-table td { padding: 5px 10px; border-bottom: 1px solid #21262d; }
+    .mini-table tr:last-child td { border-bottom: none; }
+    .tag-real { color: var(--green); font-size: 10px; }
+    .tag-est  { color: var(--muted); font-size: 10px; }
+
+    /* ── Loading ── */
+    #loading { text-align: center; padding: 60px; color: var(--muted); }
+
+    @media (max-width: 860px) { .dials-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .dials-row { grid-template-columns: 1fr; } .main { padding: 10px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>⬡ Black Sea Monitor</h1>
+    <div class="header-sub">Geopolitical Early Warning — Real Estate Signal Tracker · Methodology v3.0</div>
+  </div>
+  <div class="header-right">
+    <div id="last-updated">Loading…</div>
+  </div>
+</header>
+
+<!-- City selector -->
+<div class="city-bar" id="city-bar"></div>
+
+<div class="main" id="app" style="display:none">
+
+  <!-- Alert -->
+  <div class="alert-banner" id="alert-banner"></div>
+
+  <!-- Dials -->
+  <div class="dials-row">
+    <div class="dial-card">
+      <div class="card-label">State Commitment Index</div>
+      <div class="dial-canvas-wrap"><canvas id="gauge-sci"></canvas></div>
+      <div class="dial-value" id="sci-val">—</div>
+      <div class="dial-band"  id="sci-band"></div>
+      <div class="dial-change" id="sci-chg"></div>
+    </div>
+    <div class="dial-card">
+      <div class="card-label">Track A — Private Market</div>
+      <div class="dial-canvas-wrap"><canvas id="gauge-ta"></canvas></div>
+      <div class="dial-value" id="ta-val">—</div>
+      <div class="dial-band"  id="ta-band"></div>
+      <div class="dial-change" id="ta-chg"></div>
+    </div>
+    <div class="dial-card">
+      <div class="card-label">Track B — Residential Outcome</div>
+      <div class="dial-canvas-wrap"><canvas id="gauge-tb"></canvas></div>
+      <div class="dial-value" id="tb-val">—</div>
+      <div class="dial-band"  id="tb-band"></div>
+      <div class="dial-change" id="tb-chg"></div>
+    </div>
+    <div class="dial-card spread-card">
+      <div class="card-label">Composite Spread</div>
+      <div class="spread-value" id="spread-val">—</div>
+      <div class="spread-label-sub">B − (SCI×0.4 + A×0.6)</div>
+      <div class="dial-change" id="spread-chg" style="margin-top:8px"></div>
+      <div id="quality-badge-wrap" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="prices">Crimea Price Index</button>
+    <button class="tab-btn" data-tab="developers">Developer Activity</button>
+    <button class="tab-btn" data-tab="composite">Three-Dial Composite</button>
+    <button class="tab-btn" data-tab="spread">Composite Spread</button>
+    <button class="tab-btn" data-tab="mortgage">Mortgage Volumes</button>
+  </div>
+
+  <!-- Chart: Crimea prices -->
+  <div class="chart-panel active" id="tab-prices">
+    <h2>Crimea Residential Price Index</h2>
+    <div class="chart-desc">Biweekly secondary apartment prices ₽/m² · Source: Restate.ru — all 26 readings real</div>
+    <div class="chart-wrap"><canvas id="chart-prices"></canvas></div>
+    <div class="events-legend" id="events-prices"></div>
+  </div>
+
+  <!-- Chart: Developer activity -->
+  <div class="chart-panel" id="tab-developers">
+    <h2>Developer Activity — Mariupol (ЕИСЖС anchors)</h2>
+    <div class="chart-desc">Active developers and buildings in DNR pipeline · Solid = real anchors, dashed fill = interpolated</div>
+    <div class="chart-wrap"><canvas id="chart-developers"></canvas></div>
+    <div class="events-legend" id="events-developers"></div>
+  </div>
+
+  <!-- Chart: Composite -->
+  <div class="chart-panel" id="tab-composite">
+    <h2>Three-Dial Composite — <span id="composite-city-label">—</span></h2>
+    <div class="chart-desc">SCI, Track A, Track B on 0–100 scale · Shaded bands = lo/hi confidence range where available</div>
+    <div class="chart-wrap"><canvas id="chart-composite"></canvas></div>
+    <div class="events-legend" id="events-composite"></div>
+  </div>
+
+  <!-- Chart: Spread -->
+  <div class="chart-panel" id="tab-spread">
+    <h2>Composite Spread — <span id="spread-city-label">—</span></h2>
+    <div class="chart-desc">B − (SCI×0.4 + A×0.6) · Positive = residential confidence leads composite · Negative = state+private composite outpaces residential reality (fragility signal)</div>
+    <div class="chart-wrap"><canvas id="chart-spread"></canvas></div>
+    <div class="events-legend" id="events-spread"></div>
+  </div>
+
+  <!-- Chart: Mortgage -->
+  <div class="chart-panel" id="tab-mortgage">
+    <h2>Mortgage Portfolio Volumes — Occupied Territories</h2>
+    <div class="chart-desc">PSB + Sberbank + VTB combined ₽ portfolio · Sources: Kommersant Feb 2026, RBC Jan 2025</div>
+    <div class="chart-wrap"><canvas id="chart-mortgage"></canvas></div>
+    <table class="mini-table" id="mortgage-table">
+      <thead><tr><th>Date</th><th>Bank</th><th>Portfolio (₽bn)</th><th>Source</th></tr></thead>
+      <tbody id="mortgage-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-item"><span class="s-label">Crimea readings:</span><span class="s-val" id="st-crimea">—</span></div>
+    <div class="status-item"><span class="s-label">Mortgage total (Dec 2025):</span><span class="s-val" id="st-mort">—</span></div>
+    <div class="status-item"><span class="s-label">Domclick Donetsk apts:</span><span class="s-val" id="st-dok">—</span></div>
+    <div class="status-item"><span class="s-label">Domclick Luhansk houses:</span><span class="s-val" id="st-luh">—</span></div>
+    <div class="status-item"><span class="s-label">Data as of:</span><span class="s-val" id="st-latest">—</span></div>
+  </div>
+
+</div>
+
+<div id="loading">Loading data…</div>
+
+<script>
+// ── Colour helpers ────────────────────────────────────────────────────────
+function sciColor(v)    { return v >= 75 ? "#f85149" : v >= 55 ? "#d29922" : "#3fb950"; }
+function trackAColor(v) { return v >= 45 ? "#58a6ff" : v >= 30 ? "#d29922" : "#8b949e"; }
+function trackBColor(v) { return v >= 45 ? "#3fb950" : v >= 28 ? "#d29922" : "#f85149"; }
+// Positive spread = B leads composite (residential confidence ahead) = green/good
+// Negative spread = composite leads B (state+private outpacing reality) = warning
+function spreadColor(s) { return s >= 15 ? "#3fb950" : s >= 0 ? "#58a6ff" : s >= -15 ? "#d29922" : "#f85149"; }
+
+function qualityClass(q) {
+  return { real: "quality-real", mixed: "quality-mixed", estimated: "quality-estimated", uncertain: "quality-uncertain" }[q] || "quality-estimated";
+}
+
+function qualityLabel(q) {
+  return { real: "● REAL", mixed: "◑ MIXED", estimated: "○ EST", uncertain: "? UNCERTAIN" }[q] || q.toUpperCase();
+}
+
+// ── Gauge renderer ────────────────────────────────────────────────────────
+const gaugeInstances = {};
+function drawGauge(id, value, color) {
+  const pct = Math.min(Math.max(value, 0), 100) / 100;
+  const ctx = document.getElementById(id).getContext("2d");
+  if (gaugeInstances[id]) gaugeInstances[id].destroy();
+  gaugeInstances[id] = new Chart(ctx, {
+    type: "doughnut",
+    data: { datasets: [{ data: [pct, 1 - pct], backgroundColor: [color, "#21262d"], borderWidth: 0, circumference: 180, rotation: 270 }] },
+    options: { responsive: false, cutout: "72%", plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 500 } }
+  });
+}
+
+// ── Annotation plugin ─────────────────────────────────────────────────────
+Chart.register({
+  id: "eventLines",
+  afterDraw(chart) {
+    const { ctx, scales, chartArea } = chart;
+    if (!scales.x || !chart.config.options._events?.length) return;
+    chart.config.options._events.forEach(ev => {
+      const idx = chart.data.labels.indexOf(ev.date);
+      if (idx === -1) return;
+      const x = scales.x.getPixelForValue(idx);
+      ctx.save();
+      ctx.strokeStyle = ev.color || "#8b949e";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(x, chartArea.top); ctx.lineTo(x, chartArea.bottom); ctx.stroke();
+      ctx.restore();
+    });
+  }
+});
+
+Chart.defaults.color = "#8b949e";
+Chart.defaults.borderColor = "#30363d";
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 12;
+
+function baseOpts(labels, evts) {
+  return {
+    responsive: true, maintainAspectRatio: false, _events: evts || [],
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { labels: { color: "#8b949e", boxWidth: 12, padding: 14 } },
+      tooltip: { backgroundColor: "#161b22", borderColor: "#30363d", borderWidth: 1, titleColor: "#e6edf3", bodyColor: "#8b949e", padding: 10 }
+    },
+    scales: {
+      x: { ticks: { maxTicksLimit: 9, maxRotation: 0 }, grid: { color: "#21262d" } },
+      y: { grid: { color: "#21262d" } }
+    }
+  };
+}
+
+// ── Events legend ─────────────────────────────────────────────────────────
+const EVENT_CATEGORY_COLOR = { policy: "#d29922", banking: "#58a6ff", infrastructure: "#3fb950", legal: "#f85149", monetary: "#bc8cff", construction: "#db6d28", price: "#8b949e" };
+
+function renderEventsLegend(containerId, labels, events) {
+  const el = document.getElementById(containerId);
+  if (!el || !events?.length) return;
+  const visible = events.filter(e => labels.includes(e.date) || labels.includes(e.date.slice(0, 7)));
+  if (!visible.length) { el.style.display = "none"; return; }
+  el.innerHTML = `<h3>Key Events</h3><div class="events-grid">${
+    visible.map(e => `<div class="event-item">
+      <div class="event-dot" style="background:${EVENT_CATEGORY_COLOR[e.category] || "#8b949e"}"></div>
+      <div><span class="event-date">${e.date}</span> — ${e.label}</div>
+    </div>`).join("")
+  }</div>`;
+}
+
+// ── Chart registry (so we can destroy on city switch) ─────────────────────
+const chartInstances = {};
+function makeChart(id, type, data, options) {
+  if (chartInstances[id]) chartInstances[id].destroy();
+  chartInstances[id] = new Chart(document.getElementById(id), { type, data, options });
+  return chartInstances[id];
+}
+
+// ── Seed data ─────────────────────────────────────────────────────────────
+// Embedded so the file works from file:// without a server.
+const SEED_PRICES = {"source":"Restate.ru","readings":[
+  {"date":"2025-06-10","value":173540,"real":true},{"date":"2025-06-24","value":180626,"real":true},
+  {"date":"2025-07-08","value":182790,"real":true},{"date":"2025-07-22","value":185413,"real":true},
+  {"date":"2025-08-05","value":182770,"real":true},{"date":"2025-08-19","value":176451,"real":true},
+  {"date":"2025-09-02","value":176784,"real":true},{"date":"2025-09-16","value":177135,"real":true},
+  {"date":"2025-09-30","value":176980,"real":true},{"date":"2025-10-14","value":179398,"real":true},
+  {"date":"2025-10-28","value":181180,"real":true},{"date":"2025-11-11","value":178788,"real":true},
+  {"date":"2025-11-25","value":180357,"real":true},{"date":"2025-12-09","value":182567,"real":true},
+  {"date":"2025-12-23","value":208267,"real":true},{"date":"2026-01-14","value":203799,"real":true},
+  {"date":"2026-01-29","value":198079,"real":true},{"date":"2026-02-10","value":195972,"real":true},
+  {"date":"2026-02-24","value":208918,"real":true},{"date":"2026-03-10","value":205592,"real":true},
+  {"date":"2026-03-24","value":218423,"real":true},{"date":"2026-04-07","value":206791,"real":true},
+  {"date":"2026-04-21","value":223020,"real":true},{"date":"2026-05-05","value":251273,"real":true},
+  {"date":"2026-05-19","value":223743,"real":true},{"date":"2026-06-02","value":221332,"real":true}
+]};
+
+const SEED_DEVS = {"cities":{"mariupol_dnr":{"readings":[
+  {"date":"2025-03-01","developers":10,"buildings":16,"sqm_pipeline":121000,"real":true},
+  {"date":"2025-06-01","developers":14,"buildings":25,"sqm_pipeline":193000,"real":false},
+  {"date":"2025-09-01","developers":18,"buildings":38,"sqm_pipeline":280000,"real":false},
+  {"date":"2025-12-01","developers":21,"buildings":52,"sqm_pipeline":370000,"real":false},
+  {"date":"2026-03-01","developers":25,"buildings":68,"sqm_pipeline":472000,"real":true}
+]}}};
+
+const SEED_MORT = {"totals":[
+  {"date":"2024-12-31","three_bank_rub":8400000000,"real":false},
+  {"date":"2025-06-30","three_bank_rub":16000000000,"real":false},
+  {"date":"2025-12-31","three_bank_rub":28300000000,"real":true}
+],"banks":{
+  "PSB":{"portfolio_snapshots":[
+    {"date":"2024-12-31","portfolio_rub":5800000000,"real":true},
+    {"date":"2025-12-31","portfolio_rub":8300000000,"real":true}
+  ]},
+  "Sberbank":{"portfolio_snapshots":[
+    {"date":"2024-12-31","portfolio_rub":2100000000,"real":true},
+    {"date":"2025-12-31","portfolio_rub":11000000000,"real":true}
+  ]},
+  "VTB":{"portfolio_snapshots":[
+    {"date":"2025-03-31","portfolio_rub":500000000,"real":false},
+    {"date":"2025-12-31","portfolio_rub":9000000000,"real":true}
+  ]}
+}};
+
+const SEED_SCORES = {"cities":{
+  "mariupol":{"display_name":"Mariupol","weight":1.0,"history":[
+    {"month":"2025-06","SCI":52,"SCI_lo":48,"SCI_hi":56,"track_a":22,"a_lo":17,"a_hi":27,"track_b":23,"b_lo":19,"b_hi":27,"composite":34,"spread":-11,"data_quality":"estimated"},
+    {"month":"2025-07","SCI":55,"SCI_lo":51,"SCI_hi":59,"track_a":24,"a_lo":19,"a_hi":29,"track_b":23,"b_lo":19,"b_hi":27,"composite":36,"spread":-13,"data_quality":"estimated"},
+    {"month":"2025-08","SCI":58,"SCI_lo":53,"SCI_hi":63,"track_a":25,"a_lo":20,"a_hi":30,"track_b":24,"b_lo":20,"b_hi":28,"composite":38,"spread":-14,"data_quality":"estimated"},
+    {"month":"2025-09","SCI":61,"SCI_lo":56,"SCI_hi":66,"track_a":26,"a_lo":21,"a_hi":31,"track_b":24,"b_lo":20,"b_hi":28,"composite":40,"spread":-16,"data_quality":"estimated"},
+    {"month":"2025-10","SCI":63,"SCI_lo":58,"SCI_hi":68,"track_a":27,"a_lo":22,"a_hi":32,"track_b":24,"b_lo":20,"b_hi":28,"composite":41,"spread":-17,"data_quality":"estimated"},
+    {"month":"2025-11","SCI":65,"SCI_lo":60,"SCI_hi":70,"track_a":28,"a_lo":23,"a_hi":33,"track_b":24,"b_lo":20,"b_hi":28,"composite":43,"spread":-19,"data_quality":"estimated"},
+    {"month":"2025-12","SCI":68,"SCI_lo":63,"SCI_hi":73,"track_a":29,"a_lo":23,"a_hi":35,"track_b":24,"b_lo":20,"b_hi":28,"composite":45,"spread":-21,"data_quality":"mixed"},
+    {"month":"2026-01","SCI":72,"SCI_lo":67,"SCI_hi":77,"track_a":30,"a_lo":24,"a_hi":36,"track_b":24,"b_lo":20,"b_hi":28,"composite":47,"spread":-23,"data_quality":"mixed"},
+    {"month":"2026-02","SCI":75,"SCI_lo":70,"SCI_hi":80,"track_a":30,"a_lo":24,"a_hi":36,"track_b":24,"b_lo":19,"b_hi":29,"composite":48,"spread":-24,"data_quality":"mixed"},
+    {"month":"2026-03","SCI":80,"SCI_lo":75,"SCI_hi":85,"track_a":31,"a_lo":25,"a_hi":37,"track_b":24,"b_lo":19,"b_hi":29,"composite":51,"spread":-27,"data_quality":"mixed"},
+    {"month":"2026-04","SCI":84,"SCI_lo":79,"SCI_hi":89,"track_a":31,"a_lo":25,"a_hi":37,"track_b":24,"b_lo":19,"b_hi":29,"composite":52,"spread":-28,"data_quality":"real"},
+    {"month":"2026-05","SCI":88,"SCI_lo":83,"SCI_hi":93,"track_a":31,"a_lo":25,"a_hi":37,"track_b":24,"b_lo":19,"b_hi":29,"composite":54,"spread":-30,"data_quality":"real"},
+    {"month":"2026-06","SCI":91,"SCI_lo":87,"SCI_hi":95,"track_a":31,"a_lo":25,"a_hi":37,"track_b":24,"b_lo":19,"b_hi":29,"composite":55,"spread":-31,"data_quality":"real"}
+  ]},
+  "donetsk":{"display_name":"Donetsk","weight":1.0,"history":[
+    {"month":"2025-06","SCI":32,"track_a":28,"track_b":52,"composite":30,"spread":22,"data_quality":"estimated"},
+    {"month":"2025-09","SCI":36,"track_a":30,"track_b":54,"composite":32,"spread":22,"data_quality":"estimated"},
+    {"month":"2025-12","SCI":40,"track_a":33,"track_b":56,"composite":36,"spread":20,"data_quality":"estimated"},
+    {"month":"2026-03","SCI":42,"track_a":35,"track_b":58,"composite":38,"spread":20,"data_quality":"mixed"},
+    {"month":"2026-06","SCI":44,"track_a":36,"track_b":58,"composite":39,"spread":19,"data_quality":"real"}
+  ]},
+  "luhansk":{"display_name":"Luhansk","weight":1.0,"history":[
+    {"month":"2025-06","SCI":28,"track_a":26,"track_b":48,"composite":27,"spread":21,"data_quality":"estimated"},
+    {"month":"2025-09","SCI":31,"track_a":28,"track_b":50,"composite":29,"spread":21,"data_quality":"estimated"},
+    {"month":"2025-12","SCI":35,"track_a":30,"track_b":52,"composite":32,"spread":20,"data_quality":"estimated"},
+    {"month":"2026-03","SCI":37,"track_a":32,"track_b":53,"composite":34,"spread":19,"data_quality":"mixed"},
+    {"month":"2026-06","SCI":38,"track_a":33,"track_b":54,"composite":35,"spread":19,"data_quality":"real"}
+  ]},
+  "crimea":{"display_name":"Crimea","weight":1.2,"history":[
+    {"month":"2025-06","SCI":55,"track_a":50,"track_b":43,"composite":52,"spread":-9,"crimea_price_rub_m2":173540,"data_quality":"mixed"},
+    {"month":"2025-07","SCI":56,"track_a":51,"track_b":43,"composite":53,"spread":-10,"crimea_price_rub_m2":184102,"data_quality":"mixed"},
+    {"month":"2025-08","SCI":57,"track_a":52,"track_b":44,"composite":54,"spread":-10,"crimea_price_rub_m2":179611,"data_quality":"mixed"},
+    {"month":"2025-09","SCI":58,"track_a":53,"track_b":44,"composite":55,"spread":-11,"crimea_price_rub_m2":176966,"data_quality":"mixed"},
+    {"month":"2025-10","SCI":58,"track_a":54,"track_b":44,"composite":56,"spread":-12,"crimea_price_rub_m2":180289,"data_quality":"mixed"},
+    {"month":"2025-11","SCI":59,"track_a":55,"track_b":45,"composite":57,"spread":-12,"crimea_price_rub_m2":179573,"data_quality":"mixed"},
+    {"month":"2025-12","SCI":60,"track_a":56,"track_b":45,"composite":58,"spread":-13,"crimea_price_rub_m2":195417,"data_quality":"mixed"},
+    {"month":"2026-01","SCI":61,"track_a":57,"track_b":46,"composite":59,"spread":-13,"crimea_price_rub_m2":200939,"data_quality":"mixed"},
+    {"month":"2026-02","SCI":61,"track_a":57,"track_b":46,"composite":59,"spread":-13,"crimea_price_rub_m2":202445,"data_quality":"mixed"},
+    {"month":"2026-03","SCI":62,"track_a":58,"track_b":46,"composite":60,"spread":-14,"crimea_price_rub_m2":212007,"data_quality":"real"},
+    {"month":"2026-04","SCI":62,"track_a":58,"track_b":46,"composite":60,"spread":-14,"crimea_price_rub_m2":214906,"data_quality":"real"},
+    {"month":"2026-05","SCI":62,"track_a":58,"track_b":47,"composite":60,"spread":-13,"crimea_price_rub_m2":237508,"data_quality":"real"},
+    {"month":"2026-06","SCI":62,"track_a":58,"track_b":46,"composite":60,"spread":-14,"crimea_price_rub_m2":221332,"data_quality":"real"}
+  ]},
+  "berdiansk":{"display_name":"Berdiansk","weight":0.7,"history":[
+    {"month":"2025-06","SCI":22,"track_a":18,"track_b":12,"composite":20,"spread":-8,"data_quality":"uncertain"},
+    {"month":"2025-09","SCI":25,"track_a":20,"track_b":13,"composite":22,"spread":-9,"data_quality":"uncertain"},
+    {"month":"2025-12","SCI":28,"track_a":21,"track_b":14,"composite":24,"spread":-10,"data_quality":"uncertain"},
+    {"month":"2026-06","SCI":31,"track_a":22,"track_b":14,"composite":26,"spread":-12,"data_quality":"uncertain"}
+  ]}
+},"key_events":[
+  {"date":"2025-06-01","label":"2% secondary market window closes","category":"policy","significance":"high"},
+  {"date":"2025-07-01","label":"VTB enters occupied territories","category":"banking","significance":"medium"},
+  {"date":"2025-08-22","label":"Berdiansk and Mariupol ports opened to international ships","category":"infrastructure","significance":"medium"},
+  {"date":"2025-08-25","label":"Rosreestr: 550,000 properties registered as ownerless in occupied Ukraine","category":"legal","significance":"high"},
+  {"date":"2025-10-15","label":"2% program extended to end-2030","category":"policy","significance":"high"},
+  {"date":"2026-01-17","label":"Central bank rate cut to 15.5% — sixth consecutive cut","category":"monetary","significance":"medium"},
+  {"date":"2026-02-02","label":"Kommersant: occupied territory mortgages now comparable to Crimea","category":"banking","significance":"high"},
+  {"date":"2026-03-01","label":"ЕИСЖС: DNR 25 developers, 68 buildings (vs 10/16 a year prior)","category":"construction","significance":"high"},
+  {"date":"2026-04-07","label":"Crimea price −5.6% single period","category":"price","significance":"medium"},
+  {"date":"2026-05-05","label":"Crimea peak: 251,273 ₽/m²","category":"price","significance":"medium"},
+  {"date":"2026-05-19","label":"Crimea −12.3% — largest single-period drop in 12 months","category":"price","significance":"high"},
+  {"date":"2026-06-02","label":"Crimea current: 221,332 ₽/m²","category":"price","significance":"low"}
+]};
+
+// ── State ─────────────────────────────────────────────────────────────────
+let PRICES, DEVS, MORT, SCORES;
+let activeCityKey = "mariupol";
+
+// ── Loader ────────────────────────────────────────────────────────────────
+async function fetchJSON(path, seed) {
+  try { const r = await fetch(path); if (r.ok) return r.json(); } catch (_) {}
+  return seed;
+}
+
+// ── Dials update ──────────────────────────────────────────────────────────
+function updateDials(cityKey) {
+  const cityData = SCORES.cities[cityKey];
+  if (!cityData) return;
+  const hist = cityData.history;
+  const latest = hist[hist.length - 1];
+  const prev   = hist.length > 1 ? hist[hist.length - 2] : null;
+
+  drawGauge("gauge-sci", latest.SCI,     sciColor(latest.SCI));
+  drawGauge("gauge-ta",  latest.track_a, trackAColor(latest.track_a));
+  drawGauge("gauge-tb",  latest.track_b, trackBColor(latest.track_b));
+
+  document.getElementById("sci-val").textContent = latest.SCI;
+  document.getElementById("ta-val").textContent  = latest.track_a;
+  document.getElementById("tb-val").textContent  = latest.track_b;
+  document.getElementById("spread-val").textContent = (latest.spread >= 0 ? "+" : "") + latest.spread;
+
+  document.getElementById("sci-val").style.color    = sciColor(latest.SCI);
+  document.getElementById("ta-val").style.color     = trackAColor(latest.track_a);
+  document.getElementById("tb-val").style.color     = trackBColor(latest.track_b);
+  document.getElementById("spread-val").style.color = spreadColor(latest.spread);
+
+  // Confidence bands
+  document.getElementById("sci-band").textContent  = latest.SCI_lo != null ? `${latest.SCI_lo}–${latest.SCI_hi}` : "";
+  document.getElementById("ta-band").textContent   = latest.a_lo  != null ? `${latest.a_lo}–${latest.a_hi}`   : "";
+  document.getElementById("tb-band").textContent   = latest.b_lo  != null ? `${latest.b_lo}–${latest.b_hi}`   : "";
+
+  function chg(elId, curr, pr, key) {
+    const el = document.getElementById(elId);
+    if (!pr || pr[key] == null) { el.textContent = ""; return; }
+    const d = curr[key] - pr[key];
+    el.textContent = (d >= 0 ? "▲ +" : "▼ ") + d.toFixed(0);
+    el.className = "dial-change " + (d > 0 ? "up" : d < 0 ? "down" : "");
+  }
+  chg("sci-chg",    latest, prev, "SCI");
+  chg("ta-chg",     latest, prev, "track_a");
+  chg("tb-chg",     latest, prev, "track_b");
+  chg("spread-chg", latest, prev, "spread");
+
+  // Quality badge
+  const bw = document.getElementById("quality-badge-wrap");
+  bw.innerHTML = `<span class="quality-badge ${qualityClass(latest.data_quality)}">${qualityLabel(latest.data_quality)}</span>`;
+
+  // Alert
+  const alert = document.getElementById("alert-banner");
+  const composite = latest.composite ?? Math.round(latest.SCI * 0.4 + latest.track_a * 0.6);
+  const alerts = [];
+  if (latest.spread <= -20)
+    alerts.push(`⚠ ${cityData.display_name}: Composite (${composite}) outpaces B (${latest.track_b}) by ${Math.abs(latest.spread)} pts — state+private activity well ahead of residential reality.`);
+  if (latest.spread >= 15)
+    alerts.push(`↑ ${cityData.display_name}: B (${latest.track_b}) leads composite (${composite}) by +${latest.spread} pts — residential confidence running ahead of state+private signal.`);
+  if (alerts.length) { alert.innerHTML = alerts.join("<br>"); alert.classList.add("visible"); }
+  else { alert.classList.remove("visible"); }
+}
+
+// ── Chart: Crimea prices ──────────────────────────────────────────────────
+function buildPriceChart() {
+  const readings = PRICES.readings;
+  const labels   = readings.map(r => r.date);
+  const values   = readings.map(r => r.value);
+  const evts     = (SCORES.key_events || [])
+    .filter(e => labels.includes(e.date))
+    .map(e => ({ ...e, color: EVENT_CATEGORY_COLOR[e.category] || "#8b949e" }));
+
+  // Segment point colors: real = accent, estimated = muted
+  const ptColors = readings.map(r => r.real ? "#58a6ff" : "#8b949e");
+  const ptRadii  = readings.map(r => r.real ? 4 : 2);
+
+  const opts = baseOpts(labels, evts);
+  opts.scales.y.title = { display: true, text: "₽ per m²", color: "#8b949e" };
+  opts.plugins.tooltip.callbacks = {
+    label: ctx => ` ${ctx.parsed.y.toLocaleString()} ₽/m²` + (readings[ctx.dataIndex].real ? "" : " (estimated)")
+  };
+
+  makeChart("chart-prices", "line", {
+    labels,
+    datasets: [{
+      label: "Crimea ₽/m²",
+      data: values,
+      borderColor: "#58a6ff",
+      backgroundColor: "rgba(88,166,255,0.07)",
+      fill: true, tension: 0.3,
+      pointBackgroundColor: ptColors,
+      pointRadius: ptRadii,
+      pointHoverRadius: 6,
+    }]
+  }, opts);
+
+  renderEventsLegend("events-prices", labels, SCORES.key_events);
+}
+
+// ── Chart: Developer activity ─────────────────────────────────────────────
+function buildDevChart() {
+  const rows     = DEVS.cities.mariupol_dnr.readings;
+  const labels   = rows.map(r => r.date);
+  const devs     = rows.map(r => r.developers);
+  const bldgs    = rows.map(r => r.buildings);
+  const isReal   = rows.map(r => r.real);
+
+  const devColors = isReal.map(r => r ? "rgba(88,166,255,0.85)" : "rgba(88,166,255,0.35)");
+  const bldColors = isReal.map(r => r ? "rgba(63,185,80,0.85)"  : "rgba(63,185,80,0.35)");
+
+  const opts = baseOpts(labels, []);
+  opts.scales.y.title = { display: true, text: "Count", color: "#8b949e" };
+  opts.plugins.tooltip.callbacks = {
+    label: ctx => ` ${ctx.parsed.y} ${ctx.dataset.label}` + (!isReal[ctx.dataIndex] ? " (est.)" : "")
+  };
+
+  makeChart("chart-developers", "bar", {
+    labels,
+    datasets: [
+      { label: "Developers", data: devs, backgroundColor: devColors, borderRadius: 3 },
+      { label: "Buildings",  data: bldgs, backgroundColor: bldColors, borderRadius: 3 }
+    ]
+  }, opts);
+
+  renderEventsLegend("events-developers", labels, SCORES.key_events);
+}
+
+// ── Chart: Composite ──────────────────────────────────────────────────────
+function buildCompositeChart(cityKey) {
+  const city = SCORES.cities[cityKey];
+  if (!city) return;
+  const hist   = city.history;
+  const labels = hist.map(h => h.month);
+  document.getElementById("composite-city-label").textContent = city.display_name;
+
+  const evts = (SCORES.key_events || [])
+    .filter(e => labels.some(l => e.date.startsWith(l)))
+    .map(e => ({ date: e.date.slice(0, 7), color: EVENT_CATEGORY_COLOR[e.category] || "#8b949e" }));
+
+  const opts = baseOpts(labels, evts);
+  opts.scales.y.min = 0; opts.scales.y.max = 100;
+  opts.scales.y.title = { display: true, text: "Score (0–100)", color: "#8b949e" };
+
+  const hasBands = hist[0].SCI_lo != null;
+  const datasets = [];
+
+  if (hasBands) {
+    datasets.push({
+      label: "SCI hi",
+      data: hist.map(h => h.SCI_hi),
+      borderColor: "transparent", backgroundColor: "rgba(248,81,73,0.08)",
+      fill: "+1", pointRadius: 0, tension: 0.3
+    }, {
+      label: "SCI lo",
+      data: hist.map(h => h.SCI_lo),
+      borderColor: "transparent", backgroundColor: "rgba(248,81,73,0.08)",
+      fill: false, pointRadius: 0, tension: 0.3
+    });
+  }
+  datasets.push(
+    { label: "SCI",     data: hist.map(h => h.SCI),     borderColor: "#f85149", backgroundColor: "rgba(248,81,73,0)",   fill: false, tension: 0.3, pointRadius: 3 },
+    { label: "Track A", data: hist.map(h => h.track_a), borderColor: "#58a6ff", backgroundColor: "rgba(88,166,255,0)",  fill: false, tension: 0.3, pointRadius: 3 },
+    { label: "Track B", data: hist.map(h => h.track_b), borderColor: "#3fb950", backgroundColor: "rgba(63,185,80,0)",   fill: false, tension: 0.3, pointRadius: 3 }
+  );
+
+  makeChart("chart-composite", "line", { labels, datasets }, opts);
+  renderEventsLegend("events-composite", labels, SCORES.key_events);
+}
+
+// ── Chart: Spread ─────────────────────────────────────────────────────────
+function buildSpreadChart(cityKey) {
+  const city = SCORES.cities[cityKey];
+  if (!city) return;
+  const hist   = city.history;
+  const labels = hist.map(h => h.month);
+  document.getElementById("spread-city-label").textContent = city.display_name;
+
+  const opts = baseOpts(labels, []);
+  opts.scales.y.title = { display: true, text: "A − B (points)", color: "#8b949e" };
+
+  // Zero baseline
+  opts.plugins.annotation = {};  // placeholder
+  const spreads    = hist.map(h => h.spread);
+  const composites = hist.map(h => h.composite ?? Math.round(h.SCI * 0.4 + h.track_a * 0.6));
+  const trackBs    = hist.map(h => h.track_b);
+
+  makeChart("chart-spread", "line", {
+    labels,
+    datasets: [
+      {
+        label: "B − Composite spread",
+        data: spreads,
+        borderColor: "#d29922",
+        backgroundColor: ctx => {
+          const v = ctx.parsed?.y ?? 0;
+          return v >= 0 ? "rgba(63,185,80,0.10)" : "rgba(248,81,73,0.10)";
+        },
+        fill: "origin", tension: 0.3, pointRadius: 3,
+        segment: { borderColor: ctx => ctx.p0.parsed.y >= 0 ? "#3fb950" : "#f85149" }
+      },
+      {
+        label: "Composite (SCI×0.4 + A×0.6)",
+        data: composites,
+        borderColor: "#58a6ff",
+        borderDash: [5, 3],
+        backgroundColor: "transparent",
+        fill: false, tension: 0.3, pointRadius: 2
+      },
+      {
+        label: "Track B",
+        data: trackBs,
+        borderColor: "#3fb950",
+        backgroundColor: "transparent",
+        fill: false, tension: 0.3, pointRadius: 2
+      },
+      {
+        label: "Zero",
+        data: labels.map(() => 0),
+        borderColor: "rgba(139,148,158,0.25)",
+        borderDash: [3, 3],
+        pointRadius: 0,
+        fill: false
+      }
+    ]
+  }, opts);
+  renderEventsLegend("events-spread", labels, SCORES.key_events);
+}
+
+// ── Chart: Mortgage ───────────────────────────────────────────────────────
+function buildMortgageChart() {
+  const totals = MORT.totals;
+  const labels = totals.map(t => t.date.slice(0, 7));
+  const values = totals.map(t => +(t.three_bank_rub / 1e9).toFixed(1));
+  const colors = totals.map(t => t.real ? "rgba(88,166,255,0.8)" : "rgba(88,166,255,0.35)");
+
+  const opts = baseOpts(labels, []);
+  opts.scales.y.title = { display: true, text: "₽ billion", color: "#8b949e" };
+  opts.plugins.tooltip.callbacks = {
+    label: ctx => ` ₽${ctx.parsed.y}bn` + (!totals[ctx.dataIndex].real ? " (est.)" : "")
+  };
+
+  makeChart("chart-mortgage", "bar", {
+    labels,
+    datasets: [{ label: "PSB+Sber+VTB portfolio", data: values, backgroundColor: colors, borderRadius: 4 }]
+  }, opts);
+
+  // Mini table
+  const tbody = document.getElementById("mortgage-tbody");
+  tbody.innerHTML = "";
+  for (const [bank, bdata] of Object.entries(MORT.banks || {})) {
+    for (const snap of bdata.portfolio_snapshots || []) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${snap.date}</td><td>${bank}</td><td>₽${(snap.portfolio_rub/1e9).toFixed(1)}bn</td><td><span class="${snap.real ? "tag-real" : "tag-est"}">${snap.real ? "● real" : "○ est"}</span> ${snap.source || ""}</td>`;
+      tbody.appendChild(tr);
+    }
+  }
+
+  document.getElementById("st-mort").textContent = "₽28.3bn (Dec 2025)";
+}
+
+// ── City switch ───────────────────────────────────────────────────────────
+function switchCity(cityKey) {
+  activeCityKey = cityKey;
+  document.querySelectorAll(".city-btn").forEach(b => b.classList.toggle("active", b.dataset.city === cityKey));
+  updateDials(cityKey);
+  buildCompositeChart(cityKey);
+  buildSpreadChart(cityKey);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+async function init() {
+  [PRICES, DEVS, MORT, SCORES] = await Promise.all([
+    fetchJSON("data/crimea_prices.json",    SEED_PRICES),
+    fetchJSON("data/developer_counts.json", SEED_DEVS),
+    fetchJSON("data/mortgage_volumes.json", SEED_MORT),
+    fetchJSON("data/scores.json",           SEED_SCORES),
+  ]);
+
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  // City buttons
+  const bar = document.getElementById("city-bar");
+  for (const [key, city] of Object.entries(SCORES.cities)) {
+    const btn = document.createElement("button");
+    btn.className = "city-btn" + (key === activeCityKey ? " active" : "");
+    btn.dataset.city = key;
+    btn.textContent = city.display_name + (city.weight !== 1.0 ? ` ×${city.weight}` : "");
+    btn.addEventListener("click", () => switchCity(key));
+    bar.appendChild(btn);
+  }
+
+  // Status
+  document.getElementById("st-crimea").textContent = PRICES.readings.length + " readings";
+  const domClick = { donetsk: { apartments: 385 }, luhansk: { houses: 856 } };
+  document.getElementById("st-dok").textContent  = domClick.donetsk.apartments;
+  document.getElementById("st-luh").textContent  = domClick.luhansk.houses;
+  document.getElementById("st-latest").textContent = SCORES.last_updated || "2026-06-06";
+  document.getElementById("last-updated").textContent = "Data: " + (SCORES.last_updated || "2026-06-06");
+
+  // Build everything
+  updateDials(activeCityKey);
+  buildPriceChart();
+  buildDevChart();
+  buildCompositeChart(activeCityKey);
+  buildSpreadChart(activeCityKey);
+  buildMortgageChart();
+
+  // Tabs
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".chart-panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+    });
+  });
+}
+
+init();
+</script>
+</body>
+</html>

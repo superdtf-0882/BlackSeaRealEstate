@@ -1,0 +1,103 @@
+{
+  "methodology_version": "3.1",
+  "last_updated": "2026-06-06",
+  "scoring_notes": {
+    "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
+    "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
+    "track_b": "Residential outcome signal. Secondary listing depth (Domclick counts) + buyer permanence score (PSB/VTB disclosures) + rental-to-purchase ratio (estimated where marked).",
+    "composite": "SCI × 0.4 + Track A × 0.6. Weighted blend of state commitment and private market signal.",
+    "spread": "Track B minus Composite (SCI×0.4 + A×0.6). Positive = residential confidence LEADS state+private composite. Negative = composite OUTPACES residential reality — the fragility signal.",
+    "city_weights": {"mariupol": 1.0, "donetsk": 1.0, "luhansk": 1.0, "crimea": 1.2, "berdiansk": 0.7},
+    "data_quality": "real = sourced and dateable. estimated = calibrated from anchors. uncertain = low-confidence estimate."
+  },
+  "cities": {
+    "mariupol": {
+      "display_name": "Mariupol",
+      "weight": 1.0,
+      "history": [
+        {"month": "2025-06", "SCI": 52, "SCI_lo": 48, "SCI_hi": 56, "track_a": 22, "a_lo": 17, "a_hi": 27, "track_b": 23, "b_lo": 19, "b_hi": 27, "composite": 34, "spread": -11, "data_quality": "estimated"},
+        {"month": "2025-07", "SCI": 55, "SCI_lo": 51, "SCI_hi": 59, "track_a": 24, "a_lo": 19, "a_hi": 29, "track_b": 23, "b_lo": 19, "b_hi": 27, "composite": 36, "spread": -13, "data_quality": "estimated"},
+        {"month": "2025-08", "SCI": 58, "SCI_lo": 53, "SCI_hi": 63, "track_a": 25, "a_lo": 20, "a_hi": 30, "track_b": 24, "b_lo": 20, "b_hi": 28, "composite": 38, "spread": -14, "data_quality": "estimated"},
+        {"month": "2025-09", "SCI": 61, "SCI_lo": 56, "SCI_hi": 66, "track_a": 26, "a_lo": 21, "a_hi": 31, "track_b": 24, "b_lo": 20, "b_hi": 28, "composite": 40, "spread": -16, "data_quality": "estimated"},
+        {"month": "2025-10", "SCI": 63, "SCI_lo": 58, "SCI_hi": 68, "track_a": 27, "a_lo": 22, "a_hi": 32, "track_b": 24, "b_lo": 20, "b_hi": 28, "composite": 41, "spread": -17, "data_quality": "estimated"},
+        {"month": "2025-11", "SCI": 65, "SCI_lo": 60, "SCI_hi": 70, "track_a": 28, "a_lo": 23, "a_hi": 33, "track_b": 24, "b_lo": 20, "b_hi": 28, "composite": 43, "spread": -19, "data_quality": "estimated"},
+        {"month": "2025-12", "SCI": 68, "SCI_lo": 63, "SCI_hi": 73, "track_a": 29, "a_lo": 23, "a_hi": 35, "track_b": 24, "b_lo": 20, "b_hi": 28, "composite": 45, "spread": -21, "data_quality": "mixed"},
+        {"month": "2026-01", "SCI": 72, "SCI_lo": 67, "SCI_hi": 77, "track_a": 30, "a_lo": 24, "a_hi": 36, "track_b": 24, "b_lo": 20, "b_hi": 28, "composite": 47, "spread": -23, "data_quality": "mixed"},
+        {"month": "2026-02", "SCI": 75, "SCI_lo": 70, "SCI_hi": 80, "track_a": 30, "a_lo": 24, "a_hi": 36, "track_b": 24, "b_lo": 19, "b_hi": 29, "composite": 48, "spread": -24, "data_quality": "mixed"},
+        {"month": "2026-03", "SCI": 80, "SCI_lo": 75, "SCI_hi": 85, "track_a": 31, "a_lo": 25, "a_hi": 37, "track_b": 24, "b_lo": 19, "b_hi": 29, "composite": 51, "spread": -27, "data_quality": "mixed"},
+        {"month": "2026-04", "SCI": 84, "SCI_lo": 79, "SCI_hi": 89, "track_a": 31, "a_lo": 25, "a_hi": 37, "track_b": 24, "b_lo": 19, "b_hi": 29, "composite": 52, "spread": -28, "data_quality": "real"},
+        {"month": "2026-05", "SCI": 88, "SCI_lo": 83, "SCI_hi": 93, "track_a": 31, "a_lo": 25, "a_hi": 37, "track_b": 24, "b_lo": 19, "b_hi": 29, "composite": 54, "spread": -30, "data_quality": "real"},
+        {"month": "2026-06", "SCI": 91, "SCI_lo": 87, "SCI_hi": 95, "track_a": 31, "a_lo": 25, "a_hi": 37, "track_b": 24, "b_lo": 19, "b_hi": 29, "composite": 55, "spread": -31, "data_quality": "real"}
+      ]
+    },
+    "donetsk": {
+      "display_name": "Donetsk",
+      "weight": 1.0,
+      "domclick_listings": {"apartments": 385, "houses": 130, "total_residential": 515, "date": "2026-06-06", "source": "Домклик live count"},
+      "history": [
+        {"month": "2025-06", "SCI": 32, "track_a": 28, "track_b": 52, "composite": 30, "spread": 22, "data_quality": "estimated"},
+        {"month": "2025-09", "SCI": 36, "track_a": 30, "track_b": 54, "composite": 32, "spread": 22, "data_quality": "estimated"},
+        {"month": "2025-12", "SCI": 40, "track_a": 33, "track_b": 56, "composite": 36, "spread": 20, "data_quality": "estimated"},
+        {"month": "2026-03", "SCI": 42, "track_a": 35, "track_b": 58, "composite": 38, "spread": 20, "data_quality": "mixed"},
+        {"month": "2026-06", "SCI": 44, "track_a": 36, "track_b": 58, "composite": 39, "spread": 19, "data_quality": "real"}
+      ]
+    },
+    "luhansk": {
+      "display_name": "Luhansk",
+      "weight": 1.0,
+      "domclick_listings": {"houses": 856, "date": "2026-06-06", "source": "Домклик live count"},
+      "history": [
+        {"month": "2025-06", "SCI": 28, "track_a": 26, "track_b": 48, "composite": 27, "spread": 21, "data_quality": "estimated"},
+        {"month": "2025-09", "SCI": 31, "track_a": 28, "track_b": 50, "composite": 29, "spread": 21, "data_quality": "estimated"},
+        {"month": "2025-12", "SCI": 35, "track_a": 30, "track_b": 52, "composite": 32, "spread": 20, "data_quality": "estimated"},
+        {"month": "2026-03", "SCI": 37, "track_a": 32, "track_b": 53, "composite": 34, "spread": 19, "data_quality": "mixed"},
+        {"month": "2026-06", "SCI": 38, "track_a": 33, "track_b": 54, "composite": 35, "spread": 19, "data_quality": "real"}
+      ]
+    },
+    "crimea": {
+      "display_name": "Crimea",
+      "weight": 1.2,
+      "notes": "Moscow red line. 1.2x weight. Decade-integrated market. Price data fully real from Restate.ru.",
+      "history": [
+        {"month": "2025-06", "SCI": 55, "track_a": 50, "track_b": 43, "composite": 52, "spread": -9,  "crimea_price_rub_m2": 173540, "data_quality": "mixed"},
+        {"month": "2025-07", "SCI": 56, "track_a": 51, "track_b": 43, "composite": 53, "spread": -10, "crimea_price_rub_m2": 184102, "data_quality": "mixed"},
+        {"month": "2025-08", "SCI": 57, "track_a": 52, "track_b": 44, "composite": 54, "spread": -10, "crimea_price_rub_m2": 179611, "data_quality": "mixed"},
+        {"month": "2025-09", "SCI": 58, "track_a": 53, "track_b": 44, "composite": 55, "spread": -11, "crimea_price_rub_m2": 176966, "data_quality": "mixed"},
+        {"month": "2025-10", "SCI": 58, "track_a": 54, "track_b": 44, "composite": 56, "spread": -12, "crimea_price_rub_m2": 180289, "data_quality": "mixed"},
+        {"month": "2025-11", "SCI": 59, "track_a": 55, "track_b": 45, "composite": 57, "spread": -12, "crimea_price_rub_m2": 179573, "data_quality": "mixed"},
+        {"month": "2025-12", "SCI": 60, "track_a": 56, "track_b": 45, "composite": 58, "spread": -13, "crimea_price_rub_m2": 195417, "data_quality": "mixed"},
+        {"month": "2026-01", "SCI": 61, "track_a": 57, "track_b": 46, "composite": 59, "spread": -13, "crimea_price_rub_m2": 200939, "data_quality": "mixed"},
+        {"month": "2026-02", "SCI": 61, "track_a": 57, "track_b": 46, "composite": 59, "spread": -13, "crimea_price_rub_m2": 202445, "data_quality": "mixed"},
+        {"month": "2026-03", "SCI": 62, "track_a": 58, "track_b": 46, "composite": 60, "spread": -14, "crimea_price_rub_m2": 212007, "data_quality": "real"},
+        {"month": "2026-04", "SCI": 62, "track_a": 58, "track_b": 46, "composite": 60, "spread": -14, "crimea_price_rub_m2": 214906, "data_quality": "real"},
+        {"month": "2026-05", "SCI": 62, "track_a": 58, "track_b": 47, "composite": 60, "spread": -13, "crimea_price_rub_m2": 237508, "data_quality": "real"},
+        {"month": "2026-06", "SCI": 62, "track_a": 58, "track_b": 46, "composite": 60, "spread": -14, "crimea_price_rub_m2": 221332, "data_quality": "real"}
+      ]
+    },
+    "berdiansk": {
+      "display_name": "Berdiansk",
+      "weight": 0.7,
+      "notes": "Thin data. All estimates. Port opened to international shipping Aug 2025.",
+      "history": [
+        {"month": "2025-06", "SCI": 22, "track_a": 18, "track_b": 12, "composite": 20, "spread": -8,  "data_quality": "uncertain"},
+        {"month": "2025-09", "SCI": 25, "track_a": 20, "track_b": 13, "composite": 22, "spread": -9,  "data_quality": "uncertain"},
+        {"month": "2025-12", "SCI": 28, "track_a": 21, "track_b": 14, "composite": 24, "spread": -10, "data_quality": "uncertain"},
+        {"month": "2026-06", "SCI": 31, "track_a": 22, "track_b": 14, "composite": 26, "spread": -12, "data_quality": "uncertain"}
+      ]
+    }
+  },
+  "key_events": [
+    {"date": "2025-06-01", "label": "2% secondary market window closes (Apr 30 deadline passed)", "category": "policy", "significance": "high"},
+    {"date": "2025-07-01", "label": "VTB enters occupied territories", "category": "banking", "significance": "medium"},
+    {"date": "2025-08-22", "label": "Berdiansk and Mariupol ports opened to international ships (Russia decree)", "category": "infrastructure", "significance": "medium"},
+    {"date": "2025-08-25", "label": "Rosreestr: 550,000 properties registered as ownerless in occupied Ukraine", "category": "legal", "significance": "high"},
+    {"date": "2025-10-15", "label": "Minfinance decree: 2% program extended to end-2030", "category": "policy", "significance": "high"},
+    {"date": "2026-01-17", "label": "Central bank rate cut to 15.5% — sixth consecutive cut", "category": "monetary", "significance": "medium"},
+    {"date": "2026-02-02", "label": "Kommersant: occupied territory mortgage volumes now comparable to Crimea", "category": "banking", "significance": "high"},
+    {"date": "2026-03-01", "label": "ЕИСЖС: DNR now 25 developers, 68 buildings active (vs 10/16 one year prior)", "category": "construction", "significance": "high"},
+    {"date": "2026-04-07", "label": "Crimea Restate index: −5.6% single period", "category": "price", "significance": "medium"},
+    {"date": "2026-05-05", "label": "Crimea Restate index: +11.2% (peak 251,273 ₽/m²)", "category": "price", "significance": "medium"},
+    {"date": "2026-05-19", "label": "Crimea Restate index: −12.3% — largest single-period drop in 12 months", "category": "price", "significance": "high"},
+    {"date": "2026-06-02", "label": "Crimea Restate index: 221,332 ₽/m² — current reading", "category": "price", "significance": "low"}
+  ]
+}

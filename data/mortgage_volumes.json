@@ -1,0 +1,52 @@
+{
+  "source": "Kommersant Feb 2026 (doc 8397926), RBC Jan 2025, ДОМ.РФ via Kommersant",
+  "program": "Льготная ипотека 2% — ДНР, ЛНР, Запорожская, Херсонская области",
+  "rate": 0.02,
+  "program_expiry": "2030-12-31",
+  "crimea_program": "Семейная ипотека 6%",
+  "banks": {
+    "PSB": {
+      "notes": "Designated state bank for occupied territories. Primary lender. Mariupol share ~38% of total volume.",
+      "portfolio_snapshots": [
+        {"date": "2024-12-31", "portfolio_rub": 5800000000, "contracts": 1300, "sqm": 60000, "real": true, "source": "PSB/RBC Jan 2025"},
+        {"date": "2025-12-31", "portfolio_rub": 8300000000, "real": true, "source": "Kommersant Feb 2026"}
+      ],
+      "mariupol_share": 0.38,
+      "mariupol_share_source": "PSB head Shchavelev, RBC Jan 2025"
+    },
+    "Sberbank": {
+      "notes": "Entered occupied territories 2024. Primary Donetsk/Luhansk lender.",
+      "portfolio_snapshots": [
+        {"date": "2024-12-31", "portfolio_rub": 2100000000, "real": true, "source": "Sberbank self-reported via RBC"},
+        {"date": "2025-12-31", "portfolio_rub": 11000000000, "contracts": 2000, "real": true, "source": "Kommersant Feb 2026"}
+      ]
+    },
+    "VTB": {
+      "notes": "Entered Oct 2024. Primary Luhansk concentration.",
+      "portfolio_snapshots": [
+        {"date": "2025-12-31", "portfolio_rub": 9000000000, "real": true, "source": "Kommersant Feb 2026"},
+        {"date": "2025-03-31", "portfolio_rub": 500000000, "real": false, "source": "estimated from 'hundreds of millions' RBC Jan 2025"}
+      ],
+      "luhansk_primary": true,
+      "luhansk_share_source": "VTB spokesperson RBC Jan 2025"
+    }
+  },
+  "totals": [
+    {"date": "2024-12-31", "three_bank_rub": 8400000000, "real": false, "source": "PSB anchor + Sber estimate + VTB estimate"},
+    {"date": "2025-06-30", "three_bank_rub": 16000000000, "real": false, "source": "interpolated midpoint"},
+    {"date": "2025-12-31", "three_bank_rub": 28300000000, "real": true, "source": "Kommersant Feb 2026 (PSB+Sber+VTB sum)"}
+  ],
+  "crimea_reference": {
+    "period": "2025-01 to 2025-11",
+    "volume_rub": 23000000000,
+    "real": true,
+    "source": "ДОМ.РФ via Kommersant Feb 2026"
+  },
+  "program_cumulative": {
+    "date": "2025-06-01",
+    "loans_issued": 1500,
+    "volume_rub": 7000000000,
+    "real": true,
+    "source": "Totdom Jun 2025 — 'за два года выдано около 1,5 тыс. кредитов на сумму свыше 7 млрд рублей'"
+  }
+}

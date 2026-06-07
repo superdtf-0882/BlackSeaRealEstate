@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "black-sea-monitor",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "7700", "--directory", "C:\\Users\\User\\CodeProjects\\Black Sea Real Estate"],
+      "port": 7700
+    }
+  ]
+}
