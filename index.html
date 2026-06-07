@@ -42,8 +42,8 @@
     /* ── Dials row ── */
     .dials-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
 
-    .dial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px 14px 14px; text-align: center; }
-    .dial-card .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 10px; }
+    .dial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 14px 16px; text-align: center; }
+    .dial-card .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-top: 10px; }
 
     .dial-canvas-wrap { position: relative; width: 130px; height: 74px; margin: 0 auto 6px; }
     .dial-canvas-wrap canvas { width: 130px !important; height: 130px !important; position: absolute; top: -56px; left: 0; }
@@ -103,6 +103,33 @@
     .mini-table tr:last-child td { border-bottom: none; }
     .tag-real { color: var(--green); font-size: 10px; }
     .tag-est  { color: var(--muted); font-size: 10px; }
+
+    /* ── Buy vs Rent panel ── */
+    .buyrent-note {
+      background: rgba(88,166,255,0.07);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: 6px;
+      padding: 11px 14px;
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 20px;
+      line-height: 1.65;
+    }
+    .buyrent-note strong { color: var(--text); }
+    .buyrent-note em { color: var(--orange); font-style: normal; font-weight: 600; }
+
+    .buyrent-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .buyrent-table th { color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: right; }
+    .buyrent-table th:first-child { text-align: left; }
+    .buyrent-table td { padding: 10px 12px; border-bottom: 1px solid #21262d; text-align: right; vertical-align: middle; }
+    .buyrent-table td:first-child { text-align: left; font-weight: 600; }
+    .buyrent-table tr:last-child td { border-bottom: none; }
+    .buyrent-table tr.mariupol-row { background: rgba(219,109,40,0.07); }
+    .buyrent-table tr.mariupol-row td:first-child { color: var(--orange); }
+    .buyrent-mariupol-note { font-size: 11px; color: var(--orange); margin-top: 12px; padding: 8px 12px; background: rgba(219,109,40,0.08); border-left: 3px solid var(--orange); border-radius: 0 4px 4px 0; }
+    .premium-positive { color: var(--red); font-weight: 600; }
+    .premium-neutral  { color: var(--muted); }
+    .city-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: middle; }
 
     /* ── Permanence insight box ── */
     .perm-insight {
@@ -167,59 +194,59 @@
   <!-- Dials -->
   <div class="dials-row">
     <div class="dial-card">
-      <div class="card-label">State Commitment Index</div>
       <div class="dial-canvas-wrap"><canvas id="gauge-sci"></canvas></div>
       <div class="dial-value" id="sci-val">—</div>
       <div class="dial-band"  id="sci-band"></div>
       <div class="dial-change" id="sci-chg"></div>
+      <div class="card-label">State Commitment Index</div>
     </div>
     <div class="dial-card">
-      <div class="card-label">Track A — Private Market</div>
       <div class="dial-canvas-wrap"><canvas id="gauge-ta"></canvas></div>
       <div class="dial-value" id="ta-val">—</div>
       <div class="dial-band"  id="ta-band"></div>
       <div class="dial-change" id="ta-chg"></div>
+      <div class="card-label">Track A — Private Market</div>
     </div>
     <div class="dial-card">
-      <div class="card-label">Track B — Residential Outcome</div>
       <div class="dial-canvas-wrap"><canvas id="gauge-tb"></canvas></div>
       <div class="dial-value" id="tb-val">—</div>
       <div class="dial-band"  id="tb-band"></div>
       <div class="dial-change" id="tb-chg"></div>
+      <div class="card-label">Track B — Residential Outcome</div>
     </div>
     <div class="dial-card spread-card">
-      <div class="card-label">Composite Spread</div>
       <div class="spread-value" id="spread-val">—</div>
       <div class="spread-label-sub">B − (SCI×0.4 + A×0.6)</div>
       <div class="dial-change" id="spread-chg" style="margin-top:8px"></div>
       <div id="quality-badge-wrap" style="margin-top:8px"></div>
+      <div class="card-label">Composite Spread</div>
     </div>
   </div>
 
   <!-- Tabs -->
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="prices">Crimea Price Index</button>
-    <button class="tab-btn" data-tab="developers">Developer Activity</button>
+    <button class="tab-btn" data-tab="allspread">Multi-City Spread</button>
     <button class="tab-btn" data-tab="composite">Three-Dial Composite</button>
     <button class="tab-btn" data-tab="spread">Composite Spread</button>
-    <button class="tab-btn" data-tab="mortgage">Mortgage Volumes</button>
+    <button class="tab-btn" data-tab="buyrent">Buy vs Rent Economics</button>
     <button class="tab-btn" data-tab="permanence">Permanence Ratio</button>
   </div>
 
   <!-- Chart: Crimea prices -->
   <div class="chart-panel active" id="tab-prices">
     <h2>Crimea Residential Price Index</h2>
-    <div class="chart-desc">Biweekly secondary apartment prices ₽/m² · Source: Restate.ru — all 26 readings real</div>
+    <div class="chart-desc">Biweekly secondary apartment prices ₽/m² · Source: Restate.ru — all 26 readings real · Mariupol new-build reference line added for context</div>
     <div class="chart-wrap"><canvas id="chart-prices"></canvas></div>
     <div class="events-legend" id="events-prices"></div>
   </div>
 
-  <!-- Chart: Developer activity -->
-  <div class="chart-panel" id="tab-developers">
-    <h2>Developer Activity — Mariupol (ЕИСЖС anchors)</h2>
-    <div class="chart-desc">Active developers and buildings in DNR pipeline · Solid = real anchors, dashed fill = interpolated</div>
-    <div class="chart-wrap"><canvas id="chart-developers"></canvas></div>
-    <div class="events-legend" id="events-developers"></div>
+  <!-- Chart: Multi-city spread -->
+  <div class="chart-panel" id="tab-allspread">
+    <h2>Composite Spread — All Cities (12 months)</h2>
+    <div class="chart-desc">B − (SCI×0.4 + A×0.6) weighted by city · Above zero = residential confidence leads · Below zero = fragility zone · Dashed = estimated data</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="chart-allspread"></canvas></div>
+    <div class="events-legend" id="events-allspread"></div>
   </div>
 
   <!-- Chart: Composite -->
@@ -230,7 +257,7 @@
     <div class="events-legend" id="events-composite"></div>
   </div>
 
-  <!-- Chart: Spread -->
+  <!-- Chart: Spread (single city) -->
   <div class="chart-panel" id="tab-spread">
     <h2>Composite Spread — <span id="spread-city-label">—</span></h2>
     <div class="chart-desc">B − (SCI×0.4 + A×0.6) · Positive = residential confidence leads composite · Negative = state+private composite outpaces residential reality (fragility signal)</div>
@@ -238,15 +265,16 @@
     <div class="events-legend" id="events-spread"></div>
   </div>
 
-  <!-- Chart: Mortgage -->
-  <div class="chart-panel" id="tab-mortgage">
-    <h2>Mortgage Portfolio Volumes — Occupied Territories</h2>
-    <div class="chart-desc">PSB + Sberbank + VTB combined ₽ portfolio · Sources: Kommersant Feb 2026, RBC Jan 2025</div>
-    <div class="chart-wrap"><canvas id="chart-mortgage"></canvas></div>
-    <table class="mini-table" id="mortgage-table">
-      <thead><tr><th>Date</th><th>Bank</th><th>Portfolio (₽bn)</th><th>Source</th></tr></thead>
-      <tbody id="mortgage-tbody"></tbody>
-    </table>
+  <!-- Panel: Buy vs Rent Economics -->
+  <div class="chart-panel" id="tab-buyrent">
+    <h2>Buy vs Rent Economics — Permanence Cost by City</h2>
+    <div class="chart-desc">Monthly ownership cost (2% mortgage, 35m², 10% down) vs typical rental · Source: permanence_ratio.json buy_vs_rent_economics</div>
+    <div class="buyrent-note">
+      In a 2% mortgage environment, buying is cheaper than renting in every city <em>except Mariupol new build</em>.
+      Anyone renting despite this is paying a measurable premium for optionality.
+      <strong>That premium is the permanence uncertainty signal.</strong>
+    </div>
+    <div id="buyrent-table-wrap"></div>
   </div>
 
   <!-- Chart: Permanence Ratio -->
@@ -636,59 +664,129 @@ function buildPriceChart() {
     .filter(e => labels.includes(e.date))
     .map(e => ({ ...e, color: EVENT_CATEGORY_COLOR[e.category] || "#8b949e" }));
 
-  // Segment point colors: real = accent, estimated = muted
   const ptColors = readings.map(r => r.real ? "#58a6ff" : "#8b949e");
   const ptRadii  = readings.map(r => r.real ? 4 : 2);
 
   const opts = baseOpts(labels, evts);
   opts.scales.y.title = { display: true, text: "₽ per m²", color: "#8b949e" };
   opts.plugins.tooltip.callbacks = {
-    label: ctx => ` ${ctx.parsed.y.toLocaleString()} ₽/m²` + (readings[ctx.dataIndex].real ? "" : " (estimated)")
+    label: ctx => ` ${ctx.parsed.y.toLocaleString()} ₽/m²` + (readings[ctx.dataIndex]?.real === false ? " (estimated)" : "")
   };
 
   makeChart("chart-prices", "line", {
     labels,
-    datasets: [{
-      label: "Crimea ₽/m²",
-      data: values,
-      borderColor: "#58a6ff",
-      backgroundColor: "rgba(88,166,255,0.07)",
-      fill: true, tension: 0.3,
-      pointBackgroundColor: ptColors,
-      pointRadius: ptRadii,
-      pointHoverRadius: 6,
-    }]
+    datasets: [
+      {
+        label: "Crimea secondary ₽/m²",
+        data: values,
+        borderColor: "#58a6ff",
+        backgroundColor: "rgba(88,166,255,0.07)",
+        fill: true, tension: 0.3,
+        pointBackgroundColor: ptColors,
+        pointRadius: ptRadii,
+        pointHoverRadius: 6,
+      },
+      {
+        // Mariupol new-build horizontal reference — single value across all labels
+        label: "Mariupol new build asking — GID.HOUSE single point (not an index)",
+        data: labels.map(() => 170000),
+        borderColor: "#db6d28",
+        borderDash: [6, 4],
+        borderWidth: 1.5,
+        backgroundColor: "transparent",
+        fill: false,
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        tension: 0,
+      }
+    ]
   }, opts);
 
   renderEventsLegend("events-prices", labels, SCORES.key_events);
 }
 
-// ── Chart: Developer activity ─────────────────────────────────────────────
-function buildDevChart() {
-  const rows     = DEVS.cities.mariupol_dnr.readings;
-  const labels   = rows.map(r => r.date);
-  const devs     = rows.map(r => r.developers);
-  const bldgs    = rows.map(r => r.buildings);
-  const isReal   = rows.map(r => r.real);
+// ── Chart: Multi-city spread (all cities, weighted) ───────────────────────
+function buildAllSpreadChart() {
+  // Build unified month set across all cities
+  const allMonths = new Set();
+  for (const city of Object.values(SCORES.cities)) {
+    for (const h of city.history || []) allMonths.add(h.month);
+  }
+  const labels = Array.from(allMonths).sort();
 
-  const devColors = isReal.map(r => r ? "rgba(88,166,255,0.85)" : "rgba(88,166,255,0.35)");
-  const bldColors = isReal.map(r => r ? "rgba(63,185,80,0.85)"  : "rgba(63,185,80,0.35)");
+  const CITY_COLORS = {
+    mariupol: "#f85149", donetsk: "#58a6ff", luhansk: "#3fb950",
+    crimea: "#d29922", berdiansk: "#bc8cff",
+  };
+  const CITY_WEIGHTS = { mariupol: 1.0, donetsk: 1.0, luhansk: 1.0, crimea: 1.2, berdiansk: 0.7 };
+
+  const datasets = [];
+
+  for (const [cityKey, city] of Object.entries(SCORES.cities)) {
+    const color   = CITY_COLORS[cityKey] || "#8b949e";
+    const weight  = CITY_WEIGHTS[cityKey] ?? 1.0;
+    const byMonth = Object.fromEntries((city.history || []).map(h => [h.month, h]));
+    const allEst  = (city.history || []).every(h => h.data_quality !== "real");
+
+    // Weighted spread: B − composite, scaled by city weight
+    const data = labels.map(m => {
+      const h = byMonth[m];
+      if (!h) return null;
+      const spread = h.spread ?? (h.track_b - Math.round(h.SCI * 0.4 + h.track_a * 0.6));
+      return +(spread * weight).toFixed(1);
+    });
+
+    datasets.push({
+      label: city.display_name + (weight !== 1.0 ? ` (×${weight})` : ""),
+      data,
+      borderColor: color,
+      backgroundColor: "transparent",
+      borderDash: allEst ? [5, 4] : [],
+      borderWidth: 2,
+      pointRadius: 3,
+      tension: 0.3,
+      spanGaps: false,
+    });
+  }
+
+  // Zero reference line
+  datasets.push({
+    label: "Zero",
+    data: labels.map(() => 0),
+    borderColor: "rgba(139,148,158,0.3)",
+    borderDash: [3, 3],
+    borderWidth: 1,
+    pointRadius: 0,
+    fill: false,
+  });
 
   const opts = baseOpts(labels, []);
-  opts.scales.y.title = { display: true, text: "Count", color: "#8b949e" };
-  opts.plugins.tooltip.callbacks = {
-    label: ctx => ` ${ctx.parsed.y} ${ctx.dataset.label}` + (!isReal[ctx.dataIndex] ? " (est.)" : "")
-  };
+  opts.scales.y.title = { display: true, text: "Weighted spread (pts)", color: "#8b949e" };
+  // Shaded fragility zone below zero via plugin
+  opts.plugins.fragZone = true;
 
-  makeChart("chart-developers", "bar", {
-    labels,
-    datasets: [
-      { label: "Developers", data: devs, backgroundColor: devColors, borderRadius: 3 },
-      { label: "Buildings",  data: bldgs, backgroundColor: bldColors, borderRadius: 3 }
-    ]
-  }, opts);
+  // Custom plugin to shade below-zero region
+  Chart.register({
+    id: "fragZone",
+    beforeDraw(chart) {
+      if (!chart.config.options.plugins?.fragZone) return;
+      const { ctx, chartArea, scales } = chart;
+      if (!scales.y || !chartArea) return;
+      const zeroY = scales.y.getPixelForValue(0);
+      if (zeroY >= chartArea.bottom) return;
+      ctx.save();
+      ctx.fillStyle = "rgba(248,81,73,0.06)";
+      ctx.fillRect(chartArea.left, zeroY, chartArea.right - chartArea.left, chartArea.bottom - zeroY);
+      // "Fragility zone" label
+      ctx.fillStyle = "rgba(248,81,73,0.4)";
+      ctx.font = "10px -apple-system, sans-serif";
+      ctx.fillText("Fragility zone", chartArea.left + 6, Math.min(zeroY + 14, chartArea.bottom - 4));
+      ctx.restore();
+    }
+  });
 
-  renderEventsLegend("events-developers", labels, SCORES.key_events);
+  makeChart("chart-allspread", "line", { labels, datasets }, opts);
+  renderEventsLegend("events-allspread", labels, SCORES.key_events);
 }
 
 // ── Chart: Composite ──────────────────────────────────────────────────────
@@ -792,36 +890,82 @@ function buildSpreadChart(cityKey) {
   renderEventsLegend("events-spread", labels, SCORES.key_events);
 }
 
-// ── Chart: Mortgage ───────────────────────────────────────────────────────
-function buildMortgageChart() {
-  const totals = MORT.totals;
-  const labels = totals.map(t => t.date.slice(0, 7));
-  const values = totals.map(t => +(t.three_bank_rub / 1e9).toFixed(1));
-  const colors = totals.map(t => t.real ? "rgba(88,166,255,0.8)" : "rgba(88,166,255,0.35)");
-
-  const opts = baseOpts(labels, []);
-  opts.scales.y.title = { display: true, text: "₽ billion", color: "#8b949e" };
-  opts.plugins.tooltip.callbacks = {
-    label: ctx => ` ₽${ctx.parsed.y}bn` + (!totals[ctx.dataIndex].real ? " (est.)" : "")
+// ── Panel: Buy vs Rent Economics ──────────────────────────────────────────
+function buildBuyRentPanel() {
+  const CITY_COLORS = {
+    mariupol: "#f85149", donetsk: "#58a6ff", luhansk: "#3fb950",
+    crimea: "#d29922", berdiansk: "#bc8cff",
   };
 
-  makeChart("chart-mortgage", "bar", {
-    labels,
-    datasets: [{ label: "PSB+Sber+VTB portfolio", data: values, backgroundColor: colors, borderRadius: 4 }]
-  }, opts);
+  // City economics data — pulled from PERM where available, fallback hardcoded from seed
+  const cityData = [
+    {
+      key: "mariupol", name: "Mariupol (new build)", isMariupol: true,
+      buy:    PERM?.cities?.mariupol?.buy_monthly_payment_rub  ?? 19800,
+      rent:   PERM?.cities?.mariupol?.typical_rent_rub         ?? 20000,
+      note:   "New-build only (₽170,000/m²). 18% local buyer adj. applies.",
+    },
+    {
+      key: "donetsk", name: "Donetsk",
+      buy:    PERM?.cities?.donetsk?.buy_monthly_payment_rub   ?? 4500,
+      rent:   PERM?.cities?.donetsk?.typical_rent_rub          ?? 17000,
+      note:   "Secondary market. Strongest rent premium in corridor.",
+    },
+    {
+      key: "luhansk", name: "Luhansk",
+      buy:    PERM?.cities?.luhansk?.buy_monthly_payment_rub   ?? 3900,
+      rent:   PERM?.cities?.luhansk?.typical_rent_rub          ?? 15000,
+      note:   "Secondary market. Lowest purchase cost.",
+    },
+    {
+      key: "crimea", name: "Crimea (secondary)",
+      buy:    PERM?.cities?.crimea?.buy_monthly_payment_rub    ?? 19800,
+      rent:   PERM?.cities?.crimea?.typical_rent_rub           ?? 35000,
+      note:   "Annual avg rent. Resort seasonal peak ₽50–100k/mo excluded.",
+    },
+  ];
 
-  // Mini table
-  const tbody = document.getElementById("mortgage-tbody");
-  tbody.innerHTML = "";
-  for (const [bank, bdata] of Object.entries(MORT.banks || {})) {
-    for (const snap of bdata.portfolio_snapshots || []) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${snap.date}</td><td>${bank}</td><td>₽${(snap.portfolio_rub/1e9).toFixed(1)}bn</td><td><span class="${snap.real ? "tag-real" : "tag-est"}">${snap.real ? "● real" : "○ est"}</span> ${snap.source || ""}</td>`;
-      tbody.appendChild(tr);
-    }
+  const wrap = document.getElementById("buyrent-table-wrap");
+  if (!wrap) return;
+
+  let html = `<table class="buyrent-table">
+    <thead><tr>
+      <th>City</th>
+      <th>Own/mo (2%)</th>
+      <th>Rent/mo (est.)</th>
+      <th>Optionality premium</th>
+      <th>Premium % of rent</th>
+    </tr></thead><tbody>`;
+
+  for (const c of cityData) {
+    const premium    = c.rent - c.buy;
+    const premiumPct = ((premium / c.rent) * 100).toFixed(0);
+    const isPosSign  = premium > 0;
+    const rowClass   = c.isMariupol ? " class=\"mariupol-row\"" : "";
+    const dotStyle   = `background:${CITY_COLORS[c.key]}`;
+
+    html += `<tr${rowClass}>
+      <td><span class="city-dot" style="${dotStyle}"></span>${c.name}</td>
+      <td>₽${c.buy.toLocaleString()}</td>
+      <td>₽${c.rent.toLocaleString()}</td>
+      <td class="${isPosSign ? "premium-positive" : "premium-neutral"}">
+        ${isPosSign ? "+" : ""}₽${Math.abs(premium).toLocaleString()}
+        ${isPosSign ? "↑ renting costs more" : "↓ owning costs more"}
+      </td>
+      <td class="${isPosSign ? "premium-positive" : "premium-neutral"}">
+        ${isPosSign ? "+" : ""}${premiumPct}%
+      </td>
+    </tr>`;
   }
 
-  document.getElementById("st-mort").textContent = "₽28.3bn (Dec 2025)";
+  html += `</tbody></table>
+    <div class="buyrent-mariupol-note">
+      ⚠ Mariupol new-build monthly cost (₽19,800) exceeds typical rental (est. ₽20,000 when available) —
+      ownership is not cheaper here. This removes the standard permanence incentive and explains
+      why PSB data shows ~82% of Mariupol mortgage buyers are inter-regional speculators, not local residents.
+    </div>`;
+
+  wrap.innerHTML = html;
 }
 
 // ── City switch ───────────────────────────────────────────────────────────
@@ -1082,10 +1226,10 @@ async function init() {
   // Build everything
   updateDials(activeCityKey);
   buildPriceChart();
-  buildDevChart();
+  buildAllSpreadChart();
   buildCompositeChart(activeCityKey);
   buildSpreadChart(activeCityKey);
-  buildMortgageChart();
+  buildBuyRentPanel();
   buildPermanenceChart();
 
   // Tabs
