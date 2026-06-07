@@ -560,12 +560,15 @@ const SEED_PERM = {"alert_thresholds":{"critical_below":50,"warning_below":65,"s
 }};
 
 // ── State ─────────────────────────────────────────────────────────────────
-let PRICES, DEVS, MORT, SCORES, PERM;
+let PRICES, DEVS, MORT, SCORES, PERM, DOMCLICK;
 let activeCityKey = "mariupol";
 
 // ── Loader ────────────────────────────────────────────────────────────────
 async function fetchJSON(path, seed) {
-  try { const r = await fetch(path); if (r.ok) return r.json(); } catch (_) {}
+  try {
+    const r = await fetch(path);
+    if (r.ok) return await r.json();   // await so JSON parse errors stay in try-catch
+  } catch (_) {}
   return seed;
 }
 
@@ -1031,12 +1034,14 @@ function buildPermanenceChart() {
 }
 
 async function init() {
-  [PRICES, DEVS, MORT, SCORES, PERM] = await Promise.all([
+  try {
+  [PRICES, DEVS, MORT, SCORES, PERM, DOMCLICK] = await Promise.all([
     fetchJSON("data/crimea_prices.json",      SEED_PRICES),
     fetchJSON("data/developer_counts.json",   SEED_DEVS),
     fetchJSON("data/mortgage_volumes.json",   SEED_MORT),
     fetchJSON("data/scores.json",             SEED_SCORES),
     fetchJSON("data/permanence_ratio.json",   SEED_PERM),
+    fetchJSON("data/domclick_listings.json",  {cities:{donetsk:{readings:[]},luhansk:{readings:[]}}}),
   ]);
 
   document.getElementById("loading").style.display = "none";
@@ -1053,13 +1058,26 @@ async function init() {
     bar.appendChild(btn);
   }
 
-  // Status
-  document.getElementById("st-crimea").textContent = PRICES.readings.length + " readings";
-  const domClick = { donetsk: { apartments: 385 }, luhansk: { houses: 856 } };
-  document.getElementById("st-dok").textContent  = domClick.donetsk.apartments;
-  document.getElementById("st-luh").textContent  = domClick.luhansk.houses;
-  document.getElementById("st-latest").textContent = SCORES.last_updated || "2026-06-06";
-  document.getElementById("last-updated").textContent = "Data: " + (SCORES.last_updated || "2026-06-06");
+  // Status bar — read from loaded data, with safe fallbacks
+  const priceReadings = PRICES?.readings ?? [];
+  document.getElementById("st-crimea").textContent = priceReadings.length + " readings";
+
+  const dokReadings = DOMCLICK?.cities?.donetsk?.readings ?? [];
+  const luhReadings = DOMCLICK?.cities?.luhansk?.readings ?? [];
+  const latestDok   = dokReadings[dokReadings.length - 1];
+  const latestLuh   = luhReadings[luhReadings.length - 1];
+  document.getElementById("st-dok").textContent = latestDok?.apartments ?? latestDok?.total_residential ?? "385";
+  document.getElementById("st-luh").textContent = latestLuh?.houses ?? "856";
+
+  const mortTotals = MORT?.totals ?? [];
+  const latestMort = [...mortTotals].filter(t => t.real).pop();
+  document.getElementById("st-mort").textContent = latestMort
+    ? "₽" + (latestMort.three_bank_rub / 1e9).toFixed(1) + "bn (" + latestMort.date.slice(0, 7) + ")"
+    : "₽28.3bn (2025-12)";
+
+  const dataDate = SCORES?.last_updated || priceReadings[priceReadings.length - 1]?.date || "2026-06-06";
+  document.getElementById("st-latest").textContent = dataDate;
+  document.getElementById("last-updated").textContent = "Data: " + dataDate;
 
   // Build everything
   updateDials(activeCityKey);
@@ -1079,6 +1097,13 @@ async function init() {
       document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
     });
   });
+}
+
+  } catch (err) {
+    console.error("Black Sea Monitor init error:", err);
+    document.getElementById("loading").textContent = "⚠ Dashboard error: " + err.message + " — check console for details.";
+    document.getElementById("loading").style.display = "block";
+  }
 }
 
 init();
