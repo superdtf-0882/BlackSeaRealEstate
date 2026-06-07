@@ -1,14 +1,16 @@
 """
-fetch/compute.py — recalculate three-dial scores and write data/scores.json
+fetch/compute.py — recalculate three-dial scores and permanence ratios
 
 Reads:
     data/crimea_prices.json
     data/domclick_listings.json
     data/developer_counts.json
     data/mortgage_volumes.json
+    data/permanence_ratio.json
 
 Writes:
-    data/scores.json  (updates the 'cities' histories and 'last_updated')
+    data/scores.json           (updates city histories and last_updated)
+    data/permanence_ratio.json (updates monthly_readings with computed ratios)
 
 Methodology v3.0:
 
@@ -40,10 +42,12 @@ Methodology v3.0:
              • rental_purchase_ratio   (weight 0.20) — estimated from available
                signals. Cities with thin rental market score lower on B.
 
-    Spread = Track A − Track B  (can be negative)
+    Spread = B − (SCI×0.4 + A×0.6)
 
-    Per-city weights applied when computing weighted composite (not stored in
-    per-city rows; composite view is a future dashboard feature).
+    Permanence Ratio (per city, written to permanence_ratio.json):
+        local_mortgages / (local_mortgages + rental_listings) × 100
+        where local_mortgages = mortgage_originations × city_adjustment_factor
+        Critical threshold (2% mortgage env): below 50 = renting premium signal.
 
 Usage:
     python fetch/compute.py           # print scores, do not write
@@ -61,6 +65,7 @@ from pathlib import Path
 ROOT   = Path(__file__).parent.parent
 DATA   = ROOT / "data"
 OUT    = DATA / "scores.json"
+PERM   = DATA / "permanence_ratio.json"
 
 CRIMEA_PRICE_BASELINE = 87_000   # estimated 2014 Crimea price extrapolated to 2025 CPI
 MARIUPOL_BLDG_BASE    = 16       # ЕИСЖС Mar 2025 anchor (real)
@@ -287,6 +292,65 @@ def compute_city(city_key: str, existing_hist: list, signals: dict, month_tag: s
     return {}
 
 
+# ── Permanence ratio ─────────────────────────────────────────────────────
+
+def compute_permanence_ratio(perm_data: dict, month_tag: str) -> dict[str, dict]:
+    """
+    For each city in permanence_ratio.json, recalculate the ratio for month_tag
+    using the formula:
+        ratio = local_mortgage_adj / (local_mortgage_adj + rental_listings) * 100
+
+    Uses rental_listings_avito if present (real), else rental_listings_est.
+    Returns dict of {city_key: updated_entry}.
+    """
+    results = {}
+    for city_key, city in perm_data.get("cities", {}).items():
+        adj    = city.get("adjustment_factor", 1.0)
+        readings = city.get("monthly_readings", [])
+        entry  = next((r for r in readings if r.get("month") == month_tag), None)
+        if entry is None:
+            continue
+
+        # Prefer real Avito count, fall back to estimate
+        rentals = entry.get("rental_listings_avito") or entry.get("rental_listings_est")
+        mortg   = entry.get("mortgage_originations_est")
+
+        if rentals is None or mortg is None:
+            results[city_key] = entry
+            continue
+
+        local_m = entry.get("local_mortgage_adj") or round(mortg * adj)
+        ratio   = round(local_m / (local_m + rentals) * 100) if (local_m + rentals) > 0 else None
+
+        entry["local_mortgage_adj"]    = local_m
+        entry["rental_listings_est"]   = rentals
+        entry["ratio"]                 = ratio
+        entry["computed_by_compute_py"] = True
+        results[city_key] = entry
+
+    return results
+
+
+def permanence_alerts(perm_data: dict, month_tag: str) -> list[str]:
+    alerts = []
+    thresholds = perm_data.get("alert_thresholds", {})
+    critical = thresholds.get("critical_below", 50)
+    warning  = thresholds.get("warning_below", 65)
+
+    for city_key, city in perm_data.get("cities", {}).items():
+        readings = city.get("monthly_readings", [])
+        entry = next((r for r in readings if r.get("month") == month_tag), None)
+        if not entry or entry.get("ratio") is None:
+            continue
+        r = entry["ratio"]
+        name = city_key.capitalize()
+        if r < critical:
+            alerts.append(f"[{name}] PERMANENCE CRITICAL: ratio={r} < {critical} — optionality premium active")
+        elif r < warning:
+            alerts.append(f"[{name}] PERMANENCE WARNING: ratio={r} < {warning}")
+    return alerts
+
+
 # ── Alert checks ──────────────────────────────────────────────────────────
 
 def check_alerts(scores: dict) -> list[str]:
@@ -340,11 +404,12 @@ def main():
     print(f"compute.py — month: {month_tag}")
     print("Loading data files…")
 
-    prices  = load("crimea_prices.json")
-    devs    = load("developer_counts.json")
-    mort    = load("mortgage_volumes.json")
+    prices   = load("crimea_prices.json")
+    devs     = load("developer_counts.json")
+    mort     = load("mortgage_volumes.json")
     domclick = load("domclick_listings.json")
-    scores  = load("scores.json")
+    scores   = load("scores.json")
+    perm     = load("permanence_ratio.json")
 
     if not isinstance(scores, dict) or "cities" not in scores:
         scores = {"methodology_version": "3.0", "cities": {}}
@@ -401,8 +466,29 @@ def main():
                 hist.append(row)
                 hist.sort(key=lambda h: h["month"])
 
+    # ── Permanence ratios ─────────────────────────────────────────────────
+    print(f"\nPermanence ratios for {month_tag}:")
+    perm_results = compute_permanence_ratio(perm, month_tag)
+    thresholds   = perm.get("alert_thresholds", {})
+    critical_thr = thresholds.get("critical_below", 50)
+    warning_thr  = thresholds.get("warning_below", 65)
+    stable_thr   = thresholds.get("stable_above", 75)
+
+    for city_key, entry in perm_results.items():
+        r = entry.get("ratio")
+        adj = perm["cities"][city_key].get("adjustment_factor", 1.0)
+        flag = ""
+        if r is not None:
+            if r < critical_thr:   flag = " ⚠ CRITICAL"
+            elif r < warning_thr:  flag = " △ WARNING"
+            elif r >= stable_thr:  flag = " ✓ STABLE"
+        r_str = f"{r:3d}" if r is not None else " — "
+        m_adj = entry.get("local_mortgage_adj", "?")
+        rent  = entry.get("rental_listings_est", "?")
+        print(f"  {city_key:12s} — ratio={r_str}  local_mort={m_adj}  rentals={rent}  adj={adj}{flag}")
+
     # ── Alerts ────────────────────────────────────────────────────────────
-    alerts = check_alerts(scores)
+    alerts = check_alerts(scores) + permanence_alerts(perm, month_tag)
     if alerts:
         print("\n=== ALERTS ===")
         for a in alerts:
@@ -414,6 +500,10 @@ def main():
         with open(OUT, "w", encoding="utf-8") as f:
             json.dump(scores, f, ensure_ascii=False, indent=2)
         print(f"\nWritten → {OUT}")
+
+        with open(PERM, "w", encoding="utf-8") as f:
+            json.dump(perm, f, ensure_ascii=False, indent=2)
+        print(f"Written → {PERM}")
     else:
         print("\n(dry-run — pass --write to save)")
 

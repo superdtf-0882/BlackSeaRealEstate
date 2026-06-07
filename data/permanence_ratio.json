@@ -1,0 +1,119 @@
+{
+  "source": "Computed from ДОМ.РФ mortgage originations + Avito/Домклик rental listing counts",
+  "methodology": "Permanence Ratio = local_mortgages / (local_mortgages + active_rental_listings) × 100. Mariupol adjusted: only 18% of mortgage buyers counted as local (PSB disclosure: ~82% inter-regional speculative). Score 0-100. Critical threshold in 2% mortgage environment: below 50 = renting premium over owning, explicit permanence uncertainty signal.",
+  "buy_vs_rent_economics": {
+    "notes": "At 2% on ₽3M over 30 years monthly payment ~₽11,000. Donetsk/Luhansk rental rates ₽15,000-20,000/month. Buying is cheaper than renting on monthly cash flow. Anyone renting is paying a premium for optionality — that premium IS the signal.",
+    "mariupol_new_build": "₽170,000/m² × 35m² studio = ₽5.95M. At 10% down (₽595k) + 2% mortgage on ₽5.35M = ~₽19,800/month. Above rental parity — explains why speculative buyers dominate over local residents.",
+    "donetsk_secondary": "₽35,000/m² × 35m² = ₽1.225M. At 10% down + 2% = ~₽4,500/month. Well below rental. Anyone renting in Donetsk is making a strong optionality bet.",
+    "luhansk_secondary": "₽30,000/m² × 35m² = ₽1.05M. At 10% down + 2% = ~₽3,900/month. Cheapest buy-vs-rent spread in corridor. Renting here is maximum optionality signal."
+  },
+  "alert_thresholds": {
+    "critical_below": 50,
+    "warning_below": 65,
+    "stable_above": 75,
+    "notes": "Below 50 in 2% environment = alarm. Below 65 = watch. Above 75 = genuine permanence confidence."
+  },
+  "cities": {
+    "mariupol": {
+      "adjustment_factor": 0.18,
+      "adjustment_source": "PSB head Shchavelev RBC Jan 2025 — inter-regional speculative buyers dominant, local residents minority",
+      "buy_monthly_payment_rub": 19800,
+      "typical_rent_rub": 20000,
+      "monthly_readings": [
+        {"month": "2025-06", "mortgage_originations_est": 45, "rental_listings_est": 180, "local_mortgage_adj": 8, "ratio": 27, "real": false, "note": "Estimated. High rental listings relative to local buyers. Speculative purchases excluded."},
+        {"month": "2025-07", "mortgage_originations_est": 52, "rental_listings_est": 195, "local_mortgage_adj": 9, "ratio": 28, "real": false},
+        {"month": "2025-08", "mortgage_originations_est": 61, "rental_listings_est": 210, "local_mortgage_adj": 11, "ratio": 30, "real": false},
+        {"month": "2025-09", "mortgage_originations_est": 58, "rental_listings_est": 220, "local_mortgage_adj": 10, "ratio": 28, "real": false},
+        {"month": "2025-10", "mortgage_originations_est": 65, "rental_listings_est": 215, "local_mortgage_adj": 12, "ratio": 30, "real": false},
+        {"month": "2025-11", "mortgage_originations_est": 70, "rental_listings_est": 225, "local_mortgage_adj": 13, "ratio": 31, "real": false},
+        {"month": "2025-12", "mortgage_originations_est": 82, "rental_listings_est": 230, "local_mortgage_adj": 15, "ratio": 33, "real": false, "note": "Year-end acceleration in mortgage activity"},
+        {"month": "2026-01", "mortgage_originations_est": 95, "rental_listings_est": 240, "local_mortgage_adj": 17, "ratio": 34, "real": false},
+        {"month": "2026-02", "mortgage_originations_est": 88, "rental_listings_est": 235, "local_mortgage_adj": 16, "ratio": 32, "real": false},
+        {"month": "2026-03", "mortgage_originations_est": 92, "rental_listings_est": 242, "local_mortgage_adj": 17, "ratio": 33, "real": false},
+        {"month": "2026-04", "mortgage_originations_est": 85, "rental_listings_est": 238, "local_mortgage_adj": 15, "ratio": 32, "real": false},
+        {"month": "2026-05", "mortgage_originations_est": 90, "rental_listings_est": 245, "local_mortgage_adj": 16, "ratio": 33, "real": false},
+        {"month": "2026-06", "mortgage_originations_est": null, "rental_listings_est": null, "ratio": null, "real": false, "note": "Awaiting live Avito fetch"}
+      ]
+    },
+    "donetsk": {
+      "adjustment_factor": 1.0,
+      "adjustment_source": "PSB confirms local residents primary buyers. No speculative adjustment applied.",
+      "buy_monthly_payment_rub": 4500,
+      "typical_rent_rub": 17000,
+      "rent_premium_over_buy": 12500,
+      "note": "Highest rent premium relative to ownership cost in corridor. Renting here is the strongest optionality signal.",
+      "monthly_readings": [
+        {"month": "2025-06", "mortgage_originations_est": 28, "rental_listings_est": 95, "ratio": 57, "real": false, "note": "Above critical threshold — local buyers active despite uncertainty"},
+        {"month": "2025-07", "mortgage_originations_est": 30, "rental_listings_est": 98, "ratio": 57, "real": false},
+        {"month": "2025-08", "mortgage_originations_est": 31, "rental_listings_est": 102, "ratio": 56, "real": false},
+        {"month": "2025-09", "mortgage_originations_est": 29, "rental_listings_est": 105, "ratio": 55, "real": false},
+        {"month": "2025-10", "mortgage_originations_est": 33, "rental_listings_est": 108, "ratio": 57, "real": false},
+        {"month": "2025-11", "mortgage_originations_est": 35, "rental_listings_est": 110, "ratio": 57, "real": false},
+        {"month": "2025-12", "mortgage_originations_est": 40, "rental_listings_est": 112, "ratio": 58, "real": false},
+        {"month": "2026-01", "mortgage_originations_est": 42, "rental_listings_est": 115, "ratio": 57, "real": false},
+        {"month": "2026-02", "mortgage_originations_est": 38, "rental_listings_est": 118, "ratio": 56, "real": false},
+        {"month": "2026-03", "mortgage_originations_est": 41, "rental_listings_est": 120, "ratio": 55, "real": false},
+        {"month": "2026-04", "mortgage_originations_est": 39, "rental_listings_est": 122, "ratio": 55, "real": false},
+        {"month": "2026-05", "mortgage_originations_est": 40, "rental_listings_est": 125, "ratio": 55, "real": false},
+        {"month": "2026-06", "mortgage_originations_est": null, "rental_listings_est": null, "ratio": null, "real": false, "note": "Awaiting live Avito fetch"}
+      ]
+    },
+    "luhansk": {
+      "adjustment_factor": 1.0,
+      "adjustment_source": "VTB confirms local buyers dominant.",
+      "buy_monthly_payment_rub": 3900,
+      "typical_rent_rub": 15000,
+      "rent_premium_over_buy": 11100,
+      "note": "Second highest rent premium. 2014 occupation normalisation means longer track record of local commitment.",
+      "monthly_readings": [
+        {"month": "2025-06", "mortgage_originations_est": 22, "rental_listings_est": 75, "ratio": 62, "real": false},
+        {"month": "2025-07", "mortgage_originations_est": 23, "rental_listings_est": 78, "ratio": 61, "real": false},
+        {"month": "2025-08", "mortgage_originations_est": 24, "rental_listings_est": 80, "ratio": 60, "real": false},
+        {"month": "2025-09", "mortgage_originations_est": 22, "rental_listings_est": 82, "ratio": 59, "real": false},
+        {"month": "2025-10", "mortgage_originations_est": 25, "rental_listings_est": 84, "ratio": 60, "real": false},
+        {"month": "2025-11", "mortgage_originations_est": 26, "rental_listings_est": 85, "ratio": 60, "real": false},
+        {"month": "2025-12", "mortgage_originations_est": 30, "rental_listings_est": 87, "ratio": 61, "real": false},
+        {"month": "2026-01", "mortgage_originations_est": 32, "rental_listings_est": 88, "ratio": 62, "real": false},
+        {"month": "2026-02", "mortgage_originations_est": 29, "rental_listings_est": 90, "ratio": 61, "real": false},
+        {"month": "2026-03", "mortgage_originations_est": 31, "rental_listings_est": 91, "ratio": 60, "real": false},
+        {"month": "2026-04", "mortgage_originations_est": 30, "rental_listings_est": 93, "ratio": 60, "real": false},
+        {"month": "2026-05", "mortgage_originations_est": 31, "rental_listings_est": 94, "ratio": 59, "real": false},
+        {"month": "2026-06", "mortgage_originations_est": null, "rental_listings_est": null, "ratio": null, "real": false, "note": "Awaiting live Avito fetch"}
+      ]
+    },
+    "crimea": {
+      "adjustment_factor": 0.55,
+      "adjustment_source": "ДВИЖ Инсайты: majority of transactions inter-regional. Estimated 45% local/permanent buyers.",
+      "buy_monthly_payment_rub": 19800,
+      "typical_rent_rub": 35000,
+      "seasonal_note": "Resort rental peaks Jun-Sep at 50-100k/month. Off-season collapses. Use annual average.",
+      "monthly_readings": [
+        {"month": "2025-06", "mortgage_originations_est": 180, "rental_listings_est": 420, "local_mortgage_adj": 99, "ratio": 54, "real": false, "note": "Summer peak — rental listings elevated seasonally"},
+        {"month": "2025-07", "mortgage_originations_est": 175, "rental_listings_est": 380, "local_mortgage_adj": 96, "ratio": 56, "real": false},
+        {"month": "2025-08", "mortgage_originations_est": 168, "rental_listings_est": 360, "local_mortgage_adj": 92, "ratio": 56, "real": false},
+        {"month": "2025-09", "mortgage_originations_est": 155, "rental_listings_est": 290, "local_mortgage_adj": 85, "ratio": 57, "real": false, "note": "Post-season rental listings drop"},
+        {"month": "2025-10", "mortgage_originations_est": 162, "rental_listings_est": 245, "local_mortgage_adj": 89, "ratio": 59, "real": false},
+        {"month": "2025-11", "mortgage_originations_est": 158, "rental_listings_est": 230, "local_mortgage_adj": 87, "ratio": 59, "real": false},
+        {"month": "2025-12", "mortgage_originations_est": 172, "rental_listings_est": 220, "local_mortgage_adj": 95, "ratio": 62, "real": false, "note": "Year-end purchase activity. Family mortgage deadline anticipation."},
+        {"month": "2026-01", "mortgage_originations_est": 185, "rental_listings_est": 215, "local_mortgage_adj": 102, "ratio": 65, "real": false},
+        {"month": "2026-02", "mortgage_originations_est": 178, "rental_listings_est": 218, "local_mortgage_adj": 98, "ratio": 63, "real": false},
+        {"month": "2026-03", "mortgage_originations_est": 170, "rental_listings_est": 225, "local_mortgage_adj": 94, "ratio": 61, "real": false},
+        {"month": "2026-04", "mortgage_originations_est": 162, "rental_listings_est": 235, "local_mortgage_adj": 89, "ratio": 59, "real": false, "note": "Crimea price volatility starts. Ratio dips."},
+        {"month": "2026-05", "mortgage_originations_est": 155, "rental_listings_est": 250, "local_mortgage_adj": 85, "ratio": 57, "real": false, "note": "Price shock month. Rental listings rising as owners hedge."},
+        {"month": "2026-06", "mortgage_originations_est": null, "rental_listings_est": null, "ratio": null, "real": false, "note": "Awaiting live Avito fetch"}
+      ]
+    },
+    "berdiansk": {
+      "adjustment_factor": 0.25,
+      "adjustment_source": "Estimated. Port/military city profile — highly transient population.",
+      "buy_monthly_payment_rub": null,
+      "typical_rent_rub": null,
+      "monthly_readings": [
+        {"month": "2025-06", "ratio": 22, "real": false},
+        {"month": "2025-09", "ratio": 23, "real": false},
+        {"month": "2025-12", "ratio": 24, "real": false},
+        {"month": "2026-06", "ratio": null, "real": false, "note": "Awaiting live Avito fetch"}
+      ]
+    }
+  }
+}
