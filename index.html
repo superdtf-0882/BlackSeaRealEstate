@@ -71,6 +71,9 @@
     .spread-value { font-size: 36px; font-weight: 700; }
     .spread-label-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
     .spread-fragility-note { font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.4; text-align: center; max-width: 160px; }
+    /* Wider variant for the full-width summary cards */
+    .card-descriptor { font-size: 10px; color: var(--muted); margin-top: 8px; line-height: 1.4; text-align: center; }
+    .card-descriptor-lg { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.4; text-align: center; }
     /* RPI / CCI cards — pressure scale (high = bad, red) */
     .pressure-card .dial-value { }
     .dial-sublabel { font-size: 10px; color: var(--muted); margin-top: 3px; font-style: italic; }
@@ -279,6 +282,7 @@
       <div class="dial-band" id="ecs-band"></div>
       <div class="dial-change" id="ecs-chg"></div>
       <span class="quality-badge quality-estimated" id="ecs-badge" style="margin-top:6px;display:inline-block">○ EST</span>
+      <div class="card-descriptor">Measures degradation of Russian energy infrastructure (RPI) combined with acute civilian stress in occupied territories (CCI). Rising ECS = refinery capacity falling, fuel shortages emerging, panic goods disappearing. ECS rising while permanence ratio holds = residents riding out a temporary shock. Both rising together = behavioral change likely imminent.</div>
       <div class="card-label" style="margin-top:8px">Energy &amp; Consumer Stress</div>
       <div class="card-sublabel">RPI × 0.5 + CCI × 0.5</div>
     </div>
@@ -288,6 +292,7 @@
       <div class="mtcs-gauge-wrap"><canvas id="gauge-mtcs"></canvas></div>
       <div class="mtcs-value" id="mtcs-val">—</div>
       <div class="mtcs-status" id="mtcs-status">Computing…</div>
+      <div class="card-descriptor-lg">Synthesizes all signals into one territorial fragility reading. Below 30: occupation self-sustaining, signals aligned. 30–50: state working harder than independent actors to project confidence. 50–65: structural stress confirmed across sectors. Above 65: system held together primarily by state expenditure and inertia — vulnerable to any shock that interrupts either.</div>
       <span class="quality-badge quality-mixed" style="margin-top:6px;display:inline-block">◑ MIXED</span>
       <div class="card-label" style="margin-top:8px">Master Territorial Confidence Signal</div>
       <div class="mtcs-footnote">Equal-weighted: real estate sector (50%) + energy/consumer sector (50%). Weighting subject to revision once live data replaces seed estimates.</div>
