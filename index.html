@@ -40,7 +40,7 @@
     .main { padding: 16px 24px 32px; max-width: 1400px; margin: 0 auto; }
 
     /* ── Dials row ── */
-    .dials-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .dials-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
 
     .dial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 14px 16px; text-align: center; }
     .dial-card .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-top: 10px; }
@@ -57,6 +57,10 @@
     .spread-card { display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .spread-value { font-size: 36px; font-weight: 700; }
     .spread-label-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    .spread-fragility-note { font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.4; text-align: center; max-width: 160px; }
+    /* RPI / CCI cards — pressure scale (high = bad, red) */
+    .pressure-card .dial-value { }
+    .dial-sublabel { font-size: 10px; color: var(--muted); margin-top: 3px; font-style: italic; }
 
     /* ── Quality badge ── */
     .quality-badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; margin-top: 6px; font-weight: 600; letter-spacing: 0.04em; }
@@ -164,11 +168,24 @@
     .perm-city-card .pcc-spark { margin-top: 8px; }
     .perm-city-card canvas     { display: block; }
 
+    /* ── Buckwheat note ── */
+    .buckwheat-note {
+      background: rgba(188,140,255,0.07);
+      border: 1px solid rgba(188,140,255,0.2);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 18px;
+      line-height: 1.65;
+    }
+    .buckwheat-note strong { color: var(--purple); }
+
     /* ── Loading ── */
     #loading { text-align: center; padding: 60px; color: var(--muted); }
 
-    @media (max-width: 860px) { .dials-row { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 480px) { .dials-row { grid-template-columns: 1fr; } .main { padding: 10px; } }
+    @media (max-width: 1100px) { .dials-row { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px)  { .dials-row { grid-template-columns: repeat(2, 1fr); } .main { padding: 10px; } }
   </style>
 </head>
 <body>
@@ -218,8 +235,24 @@
       <div class="spread-value" id="spread-val">—</div>
       <div class="spread-label-sub">B − (SCI×0.4 + A×0.6)</div>
       <div class="dial-change" id="spread-chg" style="margin-top:8px"></div>
-      <div id="quality-badge-wrap" style="margin-top:8px"></div>
+      <div id="quality-badge-wrap" style="margin-top:6px"></div>
+      <div class="spread-fragility-note">Negative = composite outpaces residential reality (fragility signal). More negative = more fragile.</div>
       <div class="card-label">Composite Spread</div>
+    </div>
+    <div class="dial-card pressure-card">
+      <div class="dial-canvas-wrap"><canvas id="gauge-rpi"></canvas></div>
+      <div class="dial-value" id="rpi-val">—</div>
+      <div class="dial-band"  id="rpi-band"></div>
+      <div class="dial-change" id="rpi-chg"></div>
+      <div class="card-label">Refinery Pressure Index</div>
+    </div>
+    <div class="dial-card pressure-card">
+      <div class="dial-canvas-wrap"><canvas id="gauge-cci"></canvas></div>
+      <div class="dial-value" id="cci-val">—</div>
+      <div class="dial-band"  id="cci-band"></div>
+      <div class="dial-change" id="cci-chg"></div>
+      <div class="dial-sublabel">Buckwheat index + fuel stress + grey market</div>
+      <div class="card-label">Civilian Confidence Index</div>
     </div>
   </div>
 
@@ -231,6 +264,8 @@
     <button class="tab-btn" data-tab="spread">Composite Spread</button>
     <button class="tab-btn" data-tab="buyrent">Buy vs Rent Economics</button>
     <button class="tab-btn" data-tab="permanence">Permanence Ratio</button>
+    <button class="tab-btn" data-tab="rpi">Refinery Pressure</button>
+    <button class="tab-btn" data-tab="cci">Civilian Confidence</button>
   </div>
 
   <!-- Chart: Crimea prices -->
@@ -295,6 +330,26 @@
     <div class="perm-city-grid" id="perm-city-grid"></div>
   </div>
 
+  <!-- Chart: Refinery Pressure Index -->
+  <div class="chart-panel" id="tab-rpi">
+    <h2>Refinery Pressure Index — 12 Months</h2>
+    <div class="chart-desc">Capacity pressure (CREA) · Strike score (GUR/OSInt, weighted) · Export pressure (Kpler Novorossiysk) · RPI composite · All readings estimated pending live fetch</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="chart-rpi"></canvas></div>
+  </div>
+
+  <!-- Chart: Civilian Confidence Index -->
+  <div class="chart-panel" id="tab-cci">
+    <h2>Civilian Confidence Index — 12 Months</h2>
+    <div class="chart-desc">Fuel price premium (Rosstat) · Panic keyword score (Telegram) · Avito grey market premium · CCI composite · All readings estimated pending live fetch</div>
+    <div class="buckwheat-note">
+      🌾 <strong>Buckwheat signal:</strong> гречка (buckwheat) disappears from occupied-city retail within hours of genuine population fear — documented in 2014 Crimea annexation and Sep 2022 mobilization.
+      Grey market Avito activation (2–5× retail price) = official supply chain failure. Monitor alongside sugar, тушёнка, diesel.
+      If CCI rises while Permanence Ratio holds — residents riding out a shock, long-term bet intact.
+      If both move together — behavioral change likely imminent.
+    </div>
+    <div class="chart-wrap" style="height:320px"><canvas id="chart-cci"></canvas></div>
+  </div>
+
   <!-- Status bar -->
   <div class="status-bar">
     <div class="status-item"><span class="s-label">Crimea readings:</span><span class="s-val" id="st-crimea">—</span></div>
@@ -316,6 +371,9 @@ function trackBColor(v) { return v >= 45 ? "#3fb950" : v >= 28 ? "#d29922" : "#f
 // Positive spread = B leads composite (residential confidence ahead) = green/good
 // Negative spread = composite leads B (state+private outpacing reality) = warning
 function spreadColor(s) { return s >= 15 ? "#3fb950" : s >= 0 ? "#58a6ff" : s >= -15 ? "#d29922" : "#f85149"; }
+// Pressure indices: high = bad → red
+function rpiColor(v)  { return v >= 70 ? "#f85149" : v >= 50 ? "#d29922" : v >= 35 ? "#58a6ff" : "#3fb950"; }
+function cciColor(v)  { return v >= 65 ? "#f85149" : v >= 45 ? "#d29922" : v >= 25 ? "#58a6ff" : "#3fb950"; }
 
 function qualityClass(q) {
   return { real: "quality-real", mixed: "quality-mixed", estimated: "quality-estimated", uncertain: "quality-uncertain" }[q] || "quality-estimated";
@@ -587,8 +645,40 @@ const SEED_PERM = {"alert_thresholds":{"critical_below":50,"warning_below":65,"s
     ]}
 }};
 
+const SEED_RPI = {"monthly_readings":[
+  {"month":"2025-06","capacity_util_pct":78,"capacity_pressure":22,"strike_score":31,"export_pressure":18,"RPI":24,"real":false},
+  {"month":"2025-07","capacity_util_pct":76,"capacity_pressure":24,"strike_score":38,"export_pressure":21,"RPI":28,"real":false},
+  {"month":"2025-08","capacity_util_pct":74,"capacity_pressure":26,"strike_score":42,"export_pressure":24,"RPI":31,"real":false},
+  {"month":"2025-09","capacity_util_pct":73,"capacity_pressure":27,"strike_score":45,"export_pressure":26,"RPI":33,"real":false},
+  {"month":"2025-10","capacity_util_pct":71,"capacity_pressure":29,"strike_score":48,"export_pressure":28,"RPI":35,"real":false},
+  {"month":"2025-11","capacity_util_pct":70,"capacity_pressure":30,"strike_score":51,"export_pressure":30,"RPI":37,"real":false},
+  {"month":"2025-12","capacity_util_pct":69,"capacity_pressure":31,"strike_score":54,"export_pressure":31,"RPI":39,"real":false},
+  {"month":"2026-01","capacity_util_pct":68,"capacity_pressure":32,"strike_score":57,"export_pressure":33,"RPI":41,"real":false},
+  {"month":"2026-02","capacity_util_pct":67,"capacity_pressure":33,"strike_score":59,"export_pressure":35,"RPI":42,"real":false},
+  {"month":"2026-03","capacity_util_pct":66,"capacity_pressure":34,"strike_score":61,"export_pressure":36,"RPI":44,"real":false},
+  {"month":"2026-04","capacity_util_pct":65,"capacity_pressure":35,"strike_score":63,"export_pressure":37,"RPI":45,"real":false},
+  {"month":"2026-05","capacity_util_pct":64,"capacity_pressure":36,"strike_score":65,"export_pressure":39,"RPI":47,"real":false},
+  {"month":"2026-06","RPI":null,"real":false}
+],"alert_thresholds":{"critical_above":70,"warning_above":50,"watch_above":35}};
+
+const SEED_CCI = {"monthly_readings":[
+  {"month":"2025-06","fuel_score":20,"panic_keyword_score":8,"avito_premium_score":5,"CCI":11,"real":false},
+  {"month":"2025-07","fuel_score":25,"panic_keyword_score":9,"avito_premium_score":6,"CCI":13,"real":false},
+  {"month":"2025-08","fuel_score":30,"panic_keyword_score":11,"avito_premium_score":8,"CCI":16,"real":false},
+  {"month":"2025-09","fuel_score":35,"panic_keyword_score":14,"avito_premium_score":10,"CCI":20,"real":false},
+  {"month":"2025-10","fuel_score":40,"panic_keyword_score":16,"avito_premium_score":12,"CCI":23,"real":false},
+  {"month":"2025-11","fuel_score":45,"panic_keyword_score":18,"avito_premium_score":14,"CCI":26,"real":false},
+  {"month":"2025-12","fuel_score":50,"panic_keyword_score":21,"avito_premium_score":16,"CCI":29,"real":false},
+  {"month":"2026-01","fuel_score":55,"panic_keyword_score":24,"avito_premium_score":18,"CCI":32,"real":false},
+  {"month":"2026-02","fuel_score":60,"panic_keyword_score":26,"avito_premium_score":20,"CCI":35,"real":false},
+  {"month":"2026-03","fuel_score":65,"panic_keyword_score":29,"avito_premium_score":22,"CCI":39,"real":false},
+  {"month":"2026-04","fuel_score":70,"panic_keyword_score":31,"avito_premium_score":24,"CCI":42,"real":false},
+  {"month":"2026-05","fuel_score":75,"panic_keyword_score":34,"avito_premium_score":27,"CCI":45,"real":false},
+  {"month":"2026-06","CCI":null,"real":false}
+],"alert_thresholds":{"critical_above":65,"warning_above":45,"watch_above":25}};
+
 // ── State ─────────────────────────────────────────────────────────────────
-let PRICES, DEVS, MORT, SCORES, PERM, DOMCLICK;
+let PRICES, DEVS, MORT, SCORES, PERM, DOMCLICK, RPI, CCI_DATA;
 let activeCityKey = "mariupol";
 
 // ── Loader ────────────────────────────────────────────────────────────────
@@ -631,8 +721,9 @@ function updateDials(cityKey) {
     const el = document.getElementById(elId);
     if (!pr || pr[key] == null) { el.textContent = ""; return; }
     const d = curr[key] - pr[key];
-    el.textContent = (d >= 0 ? "▲ +" : "▼ ") + d.toFixed(0);
-    el.className = "dial-change " + (d > 0 ? "up" : d < 0 ? "down" : "");
+    if (d === 0) { el.textContent = "Stable"; el.className = "dial-change"; return; }
+    el.textContent = (d > 0 ? "▲ +" : "▼ ") + d.toFixed(0);
+    el.className = "dial-change " + (d > 0 ? "up" : "down");
   }
   chg("sci-chg",    latest, prev, "SCI");
   chg("ta-chg",     latest, prev, "track_a");
@@ -968,6 +1059,95 @@ function buildBuyRentPanel() {
   wrap.innerHTML = html;
 }
 
+// ── RPI / CCI dial update (global — not city-specific) ───────────────────
+function updatePressureDials() {
+  function setPressureDial(gaugeId, valId, bandId, chgId, colorFn, readings) {
+    const valid = (readings || []).filter(r => r != null && typeof r === "object");
+    const withVal = valid.filter(r => r.RPI != null || r.CCI != null);
+    const key = withVal.length && withVal[0].RPI != null ? "RPI" : "CCI";
+    const latest = withVal[withVal.length - 1];
+    const prev   = withVal.length > 1 ? withVal[withVal.length - 2] : null;
+    const val    = latest?.[key] ?? null;
+
+    const el = document.getElementById(valId);
+    if (el) {
+      el.textContent = val ?? "—";
+      el.style.color = val != null ? colorFn(val) : "#8b949e";
+    }
+    if (val != null) drawGauge(gaugeId, val, colorFn(val));
+
+    const chgEl = document.getElementById(chgId);
+    if (chgEl && prev && prev[key] != null && val != null) {
+      const d = val - prev[key];
+      if (d === 0) {
+        chgEl.textContent = "Stable";
+        chgEl.className = "dial-change";
+      } else {
+        chgEl.textContent = (d > 0 ? "▲ +" : "▼ ") + d.toFixed(0);
+        chgEl.className = "dial-change " + (d > 0 ? "up" : "down");
+      }
+    }
+    const bandEl = document.getElementById(bandId);
+    if (bandEl) bandEl.textContent = latest?.real === false ? "estimated" : "";
+  }
+
+  setPressureDial("gauge-rpi", "rpi-val", "rpi-band", "rpi-chg", rpiColor, RPI?.monthly_readings);
+  setPressureDial("gauge-cci", "cci-val", "cci-band", "cci-chg", cciColor, CCI_DATA?.monthly_readings);
+}
+
+// ── Chart: Refinery Pressure Index ───────────────────────────────────────
+function buildRpiChart() {
+  const readings = (RPI?.monthly_readings || []).filter(r => r.RPI != null);
+  if (!readings.length) return;
+  const labels = readings.map(r => r.month);
+  const thr    = RPI?.alert_thresholds || {};
+
+  const opts = baseOpts(labels, []);
+  opts.scales.y.min   = 0;
+  opts.scales.y.max   = 100;
+  opts.scales.y.title = { display: true, text: "Score (0–100)", color: "#8b949e" };
+
+  makeChart("chart-rpi", "line", {
+    labels,
+    datasets: [
+      { label: "Capacity pressure", data: readings.map(r => r.capacity_pressure), borderColor: "#58a6ff", borderWidth: 1.5, pointRadius: 2, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      { label: "Strike score",      data: readings.map(r => r.strike_score),      borderColor: "#d29922", borderWidth: 1.5, pointRadius: 2, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      { label: "Export pressure",   data: readings.map(r => r.export_pressure),   borderColor: "#3fb950", borderWidth: 1.5, pointRadius: 2, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      { label: "RPI composite",     data: readings.map(r => r.RPI),               borderColor: "#f85149", borderWidth: 3,   pointRadius: 4, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      // Threshold lines
+      { label: `Warning ≥${thr.warning_above||50}`,  data: labels.map(() => thr.warning_above||50),  borderColor: "#d29922", borderDash: [5,4], borderWidth: 1.5, pointRadius: 0, fill: false, backgroundColor:"transparent" },
+      { label: `Critical ≥${thr.critical_above||70}`, data: labels.map(() => thr.critical_above||70), borderColor: "#f85149", borderDash: [5,4], borderWidth: 1.5, pointRadius: 0, fill: false, backgroundColor:"transparent" },
+    ]
+  }, opts);
+}
+
+// ── Chart: Civilian Confidence Index ─────────────────────────────────────
+function buildCciChart() {
+  const readings = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
+  if (!readings.length) return;
+  const labels = readings.map(r => r.month);
+  const thr    = CCI_DATA?.alert_thresholds || {};
+
+  const opts = baseOpts(labels, []);
+  opts.scales.y.min   = 0;
+  opts.scales.y.max   = 100;
+  opts.scales.y.title = { display: true, text: "Score (0–100)", color: "#8b949e" };
+
+  makeChart("chart-cci", "line", {
+    labels,
+    datasets: [
+      { label: "Fuel price premium", data: readings.map(r => r.fuel_score),          borderColor: "#d29922", borderWidth: 1.5, pointRadius: 2, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      { label: "Panic keywords",     data: readings.map(r => r.panic_keyword_score), borderColor: "#f85149", borderWidth: 1.5, pointRadius: 2, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      { label: "Avito grey market",  data: readings.map(r => r.avito_premium_score), borderColor: "#bc8cff", borderWidth: 1.5, pointRadius: 2, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      { label: "CCI composite",      data: readings.map(r => r.CCI),                 borderColor: "#e6edf3", borderWidth: 3,   pointRadius: 4, tension: 0.3, fill: false, backgroundColor: "transparent" },
+      // Threshold lines
+      { label: `Watch ≥${thr.watch_above||25}`,    data: labels.map(() => thr.watch_above||25),    borderColor: "#d29922", borderDash: [3,3], borderWidth: 1,   pointRadius: 0, fill: false, backgroundColor:"transparent" },
+      { label: `Warning ≥${thr.warning_above||45}`, data: labels.map(() => thr.warning_above||45),  borderColor: "#db6d28", borderDash: [5,4], borderWidth: 1.5, pointRadius: 0, fill: false, backgroundColor:"transparent" },
+      { label: `Critical ≥${thr.critical_above||65}`,data: labels.map(() => thr.critical_above||65), borderColor: "#f85149", borderDash: [5,4], borderWidth: 1.5, pointRadius: 0, fill: false, backgroundColor:"transparent" },
+    ]
+  }, opts);
+}
+
 // ── City switch ───────────────────────────────────────────────────────────
 function switchCity(cityKey) {
   activeCityKey = cityKey;
@@ -1179,13 +1359,15 @@ function buildPermanenceChart() {
 
 async function init() {
   try {
-  [PRICES, DEVS, MORT, SCORES, PERM, DOMCLICK] = await Promise.all([
+  [PRICES, DEVS, MORT, SCORES, PERM, DOMCLICK, RPI, CCI_DATA] = await Promise.all([
     fetchJSON("data/crimea_prices.json",      SEED_PRICES),
     fetchJSON("data/developer_counts.json",   SEED_DEVS),
     fetchJSON("data/mortgage_volumes.json",   SEED_MORT),
     fetchJSON("data/scores.json",             SEED_SCORES),
     fetchJSON("data/permanence_ratio.json",   SEED_PERM),
-    fetchJSON("data/domclick_listings.json",  {cities:{donetsk:{readings:[]},luhansk:{readings:[]}}}),
+    fetchJSON("data/domclick_listings.json",   {cities:{donetsk:{readings:[]},luhansk:{readings:[]}}}),
+    fetchJSON("data/refinery_pressure.json",   SEED_RPI),
+    fetchJSON("data/civilian_confidence.json", SEED_CCI),
   ]);
 
   document.getElementById("loading").style.display = "none";
@@ -1225,12 +1407,15 @@ async function init() {
 
   // Build everything
   updateDials(activeCityKey);
+  updatePressureDials();
   buildPriceChart();
   buildAllSpreadChart();
   buildCompositeChart(activeCityKey);
   buildSpreadChart(activeCityKey);
   buildBuyRentPanel();
   buildPermanenceChart();
+  buildRpiChart();
+  buildCciChart();
 
   // Tabs
   document.querySelectorAll(".tab-btn").forEach(btn => {

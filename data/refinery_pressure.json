@@ -1,0 +1,39 @@
+{
+  "source_notes": {
+    "CREA": "energyandcleanair.org — monthly refinery capacity reports",
+    "strikes": "GUR @DefenceU, @RALee85, @ChrisO_wiki — confirmed infrastructure strikes",
+    "exports": "Kpler public data — Novorossiysk weekly crude+product volumes"
+  },
+  "strike_weights": {
+    "refinery": 3,
+    "storage": 2,
+    "export_terminal": 3,
+    "pipeline": 2,
+    "notes": "Weighted score capped at 100. Rolling 30-day window."
+  },
+  "export_baseline": {
+    "year": 2021,
+    "description": "Pre-war annual average Novorossiysk crude+product export volume used as 100% baseline for inversion score."
+  },
+  "monthly_readings": [
+    {"month": "2025-06", "capacity_util_pct": 78, "capacity_pressure": 22, "strike_score": 31, "export_pressure": 18, "RPI": 24, "real": false},
+    {"month": "2025-07", "capacity_util_pct": 76, "capacity_pressure": 24, "strike_score": 38, "export_pressure": 21, "RPI": 28, "real": false},
+    {"month": "2025-08", "capacity_util_pct": 74, "capacity_pressure": 26, "strike_score": 42, "export_pressure": 24, "RPI": 31, "real": false},
+    {"month": "2025-09", "capacity_util_pct": 73, "capacity_pressure": 27, "strike_score": 45, "export_pressure": 26, "RPI": 33, "real": false},
+    {"month": "2025-10", "capacity_util_pct": 71, "capacity_pressure": 29, "strike_score": 48, "export_pressure": 28, "RPI": 35, "real": false},
+    {"month": "2025-11", "capacity_util_pct": 70, "capacity_pressure": 30, "strike_score": 51, "export_pressure": 30, "RPI": 37, "real": false},
+    {"month": "2025-12", "capacity_util_pct": 69, "capacity_pressure": 31, "strike_score": 54, "export_pressure": 31, "RPI": 39, "real": false},
+    {"month": "2026-01", "capacity_util_pct": 68, "capacity_pressure": 32, "strike_score": 57, "export_pressure": 33, "RPI": 41, "real": false},
+    {"month": "2026-02", "capacity_util_pct": 67, "capacity_pressure": 33, "strike_score": 59, "export_pressure": 35, "RPI": 42, "real": false},
+    {"month": "2026-03", "capacity_util_pct": 66, "capacity_pressure": 34, "strike_score": 61, "export_pressure": 36, "RPI": 44, "real": false},
+    {"month": "2026-04", "capacity_util_pct": 65, "capacity_pressure": 35, "strike_score": 63, "export_pressure": 37, "RPI": 45, "real": false},
+    {"month": "2026-05", "capacity_util_pct": 64, "capacity_pressure": 36, "strike_score": 65, "export_pressure": 39, "RPI": 47, "real": false},
+    {"month": "2026-06", "capacity_util_pct": null, "capacity_pressure": null, "strike_score": null, "export_pressure": null, "RPI": null, "real": false, "note": "Awaiting CREA June report and Kpler weekly pull"}
+  ],
+  "alert_thresholds": {
+    "critical_above": 70,
+    "warning_above": 50,
+    "watch_above": 35,
+    "notes": "Above 50 = meaningful fiscal pressure on occupation funding. Above 70 = acute threat to SCI sustainability."
+  }
+}
