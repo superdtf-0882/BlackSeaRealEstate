@@ -184,6 +184,11 @@
     .perm-city-card .pcc-spark { margin-top: 8px; }
     .perm-city-card canvas     { display: block; }
 
+    /* ── Allspread provenance legend ── */
+    .allspread-provenance { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .provenance-solid  { color: var(--text); font-weight: 600; margin-right: 4px; }
+    .provenance-dashed { color: var(--text); font-weight: 600; margin-right: 4px; margin-left: 16px; }
+
     /* ── Buckwheat note ── */
     .buckwheat-note {
       background: rgba(188,140,255,0.07);
@@ -323,9 +328,13 @@
   <!-- Chart: Multi-city spread -->
   <div class="chart-panel" id="tab-allspread">
     <h2>Composite Spread — All Cities (12 months)</h2>
-    <div class="chart-desc">B − (SCI×0.4 + A×0.6) weighted by city · Above zero = residential confidence leads · Below zero = fragility zone · Dashed = estimated data</div>
+    <div class="chart-desc">B − (SCI×0.4 + A×0.6) weighted by city · Above zero = residential confidence leads · Below zero = fragility zone · Solid = real data anchors (Mariupol, Crimea) · Dashed = estimated (Donetsk, Luhansk, Berdiansk)</div>
     <div class="chart-wrap" style="height:320px"><canvas id="chart-allspread"></canvas></div>
     <div class="events-legend" id="events-allspread"></div>
+    <div class="allspread-provenance">
+      <span class="provenance-solid">— Solid lines</span> Mariupol and Crimea are anchored by sourced data (PSB/ЕИСЖС disclosures, Restate.ru price series).
+      <span class="provenance-dashed">- - Dashed lines</span> Donetsk, Luhansk, and Berdiansk spreads are calibrated estimates — improve with Домклик listing trend data and Avito rental scrapes.
+    </div>
   </div>
 
   <!-- Chart: Composite -->
@@ -942,11 +951,15 @@ function buildAllSpreadChart() {
 
   const datasets = [];
 
+  // Mariupol and Crimea have real data anchors in the spread calculation.
+  // Donetsk, Luhansk, Berdiansk have no independent sourced Track A or B data.
+  const SOLID_CITIES = new Set(['mariupol', 'crimea']);
+
   for (const [cityKey, city] of Object.entries(SCORES.cities)) {
-    const color   = CITY_COLORS[cityKey] || "#8b949e";
-    const weight  = CITY_WEIGHTS[cityKey] ?? 1.0;
-    const byMonth = Object.fromEntries((city.history || []).map(h => [h.month, h]));
-    const allEst  = (city.history || []).every(h => h.data_quality !== "real");
+    const color    = CITY_COLORS[cityKey] || "#8b949e";
+    const weight   = CITY_WEIGHTS[cityKey] ?? 1.0;
+    const byMonth  = Object.fromEntries((city.history || []).map(h => [h.month, h]));
+    const isDashed = !SOLID_CITIES.has(cityKey);
 
     // Weighted spread: B − composite, scaled by city weight
     const data = labels.map(m => {
@@ -957,15 +970,16 @@ function buildAllSpreadChart() {
     });
 
     datasets.push({
-      label: city.display_name + (weight !== 1.0 ? ` (×${weight})` : ""),
+      label:           city.display_name + (weight !== 1.0 ? ` (×${weight})` : ""),
       data,
-      borderColor: color,
+      borderColor:     color,
       backgroundColor: "transparent",
-      borderDash: allEst ? [5, 4] : [],
-      borderWidth: 2,
-      pointRadius: 3,
-      tension: 0.3,
-      spanGaps: false,
+      borderDash:      isDashed ? [5, 4] : [],
+      borderWidth:     2,
+      pointRadius:     isDashed ? 2 : 3,
+      pointStyle:      'circle',
+      tension:         0.3,
+      spanGaps:        false,
     });
   }
 
