@@ -193,7 +193,7 @@
 <header>
   <div>
     <h1>⬡ Black Sea Monitor</h1>
-    <div class="header-sub">Geopolitical Early Warning — Real Estate Signal Tracker · Methodology v3.0</div>
+    <div class="header-sub">Geopolitical Early Warning — Real Estate Signal Tracker · Methodology v4.0</div>
   </div>
   <div class="header-right">
     <div id="last-updated">Loading…</div>
@@ -730,20 +730,66 @@ function updateDials(cityKey) {
   chg("tb-chg",     latest, prev, "track_b");
   chg("spread-chg", latest, prev, "spread");
 
-  // Quality badge
+  // Quality badge — spread is always MIXED (computed from real + estimated sub-indicators)
   const bw = document.getElementById("quality-badge-wrap");
-  bw.innerHTML = `<span class="quality-badge ${qualityClass(latest.data_quality)}">${qualityLabel(latest.data_quality)}</span>`;
+  bw.innerHTML = `<span class="quality-badge quality-mixed">◑ MIXED</span>`;
 
-  // Alert
-  const alert = document.getElementById("alert-banner");
+  // Alert — city spread conditions
+  const alertEl  = document.getElementById("alert-banner");
   const composite = latest.composite ?? Math.round(latest.SCI * 0.4 + latest.track_a * 0.6);
   const alerts = [];
+
   if (latest.spread <= -20)
     alerts.push(`⚠ ${cityData.display_name}: Composite (${composite}) outpaces B (${latest.track_b}) by ${Math.abs(latest.spread)} pts — state+private activity well ahead of residential reality.`);
   if (latest.spread >= 15)
     alerts.push(`↑ ${cityData.display_name}: B (${latest.track_b}) leads composite (${composite}) by +${latest.spread} pts — residential confidence running ahead of state+private signal.`);
-  if (alerts.length) { alert.innerHTML = alerts.join("<br>"); alert.classList.add("visible"); }
-  else { alert.classList.remove("visible"); }
+
+  // RPI threshold alerts
+  const rpiReadings = (RPI?.monthly_readings || []).filter(r => r.RPI != null);
+  const latestRpi   = rpiReadings[rpiReadings.length - 1];
+  const prevRpi     = rpiReadings.length > 1 ? rpiReadings[rpiReadings.length - 2] : null;
+  const rpiThr      = RPI?.alert_thresholds || {};
+  if (latestRpi) {
+    const rv = latestRpi.RPI;
+    if (rv >= (rpiThr.critical_above ?? 70))
+      alerts.push(`🔴 RPI ${rv}: CRITICAL — acute threat to SCI sustainability and occupation funding base.`);
+    else if (rv >= (rpiThr.warning_above ?? 50))
+      alerts.push(`🟠 RPI ${rv}: WARNING — meaningful fiscal pressure on occupation funding.`);
+    else if (rv >= (rpiThr.watch_above ?? 35))
+      alerts.push(`🟡 RPI ${rv}: Watch — refinery pressure trending upward.`);
+  }
+
+  // CCI threshold alerts
+  const cciReadings = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
+  const latestCci   = cciReadings[cciReadings.length - 1];
+  const prevCci     = cciReadings.length > 1 ? cciReadings[cciReadings.length - 2] : null;
+  const cciThr      = CCI_DATA?.alert_thresholds || {};
+  if (latestCci) {
+    const cv = latestCci.CCI;
+    if (cv >= (cciThr.critical_above ?? 65))
+      alerts.push(`🔴 CCI ${cv}: CRITICAL — buckwheat index activating, systemic civilian confidence failure.`);
+    else if (cv >= (cciThr.warning_above ?? 45))
+      alerts.push(`🟠 CCI ${cv}: WARNING — multi-signal shortage confirmation.`);
+    else if (cv >= (cciThr.watch_above ?? 25))
+      alerts.push(`🟡 CCI ${cv}: Watch — elevated civilian stress in informal channels.`);
+  }
+
+  // Compound: CCI rising + any city's permanence ratio falling in same period
+  if (latestCci && prevCci && latestCci.CCI > prevCci.CCI) {
+    const permCities = Object.entries(PERM?.cities ?? {});
+    for (const [ck, city] of permCities) {
+      const pr = (city.monthly_readings || []).filter(r => r.ratio != null);
+      if (pr.length >= 2) {
+        const delta = pr[pr.length - 1].ratio - pr[pr.length - 2].ratio;
+        if (delta <= -3) {
+          alerts.push(`⚡ COMPOUND: CCI rising (+${(latestCci.CCI - prevCci.CCI).toFixed(0)}) while ${ck} permanence ratio falling (${delta > 0 ? '+' : ''}${delta}) — behavioral change likely imminent.`);
+        }
+      }
+    }
+  }
+
+  if (alerts.length) { alertEl.innerHTML = alerts.join("<br>"); alertEl.classList.add("visible"); }
+  else { alertEl.classList.remove("visible"); }
 }
 
 // ── Chart: Crimea prices ──────────────────────────────────────────────────
@@ -1088,7 +1134,19 @@ function updatePressureDials() {
       }
     }
     const bandEl = document.getElementById(bandId);
-    if (bandEl) bandEl.textContent = latest?.real === false ? "estimated" : "";
+    if (bandEl && val != null) {
+      // Confidence band: ±20% for estimated, ±10% for mixed, none for real
+      const isReal = latest?.real === true && !latest?.partial;
+      const isMixed = latest?.partial === true;
+      if (!isReal) {
+        const pct = isMixed ? 0.10 : 0.20;
+        const lo  = Math.max(0,   Math.round(val * (1 - pct)));
+        const hi  = Math.min(100, Math.round(val * (1 + pct)));
+        bandEl.textContent = `${lo}–${hi}`;
+      } else {
+        bandEl.textContent = "";
+      }
+    }
   }
 
   setPressureDial("gauge-rpi", "rpi-val", "rpi-band", "rpi-chg", rpiColor, RPI?.monthly_readings);
