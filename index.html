@@ -40,7 +40,20 @@
     .main { padding: 16px 24px 32px; max-width: 1400px; margin: 0 auto; }
 
     /* ── Dials row ── */
-    .dials-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
+    .dials-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 12px; }
+
+    /* ── Summary row (ECS + MTCS) ── */
+    .summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px 16px 16px; text-align: center; }
+    .mtcs-card { border-color: rgba(88,166,255,0.25); background: linear-gradient(160deg, var(--surface) 55%, #181f2e); }
+    .mtcs-gauge-wrap { position: relative; width: 120px; height: 120px; margin: 0 auto 10px; }
+    .mtcs-gauge-wrap canvas { width: 120px !important; height: 120px !important; }
+    .ecs-value  { font-size: 30px; font-weight: 700; line-height: 1; }
+    .mtcs-value { font-size: 40px; font-weight: 700; line-height: 1; }
+    .mtcs-status  { font-size: 13px; font-weight: 500; margin-top: 6px; }
+    .card-sublabel { font-size: 10px; color: var(--muted); margin-top: 3px; }
+    .mtcs-footnote { font-size: 10px; color: var(--muted); margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); line-height: 1.5; text-align: left; }
+    @media (max-width: 600px) { .summary-row { grid-template-columns: 1fr; } }
 
     .dial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 14px 16px; text-align: center; }
     .dial-card .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-top: 10px; }
@@ -256,6 +269,32 @@
     </div>
   </div>
 
+  <!-- Summary dials: ECS + MTCS -->
+  <div class="summary-row">
+
+    <!-- ECS — Energy & Consumer Stress Composite -->
+    <div class="summary-card ecs-card">
+      <div class="dial-canvas-wrap" style="margin-bottom:12px"><canvas id="gauge-ecs"></canvas></div>
+      <div class="ecs-value" id="ecs-val">—</div>
+      <div class="dial-band" id="ecs-band"></div>
+      <div class="dial-change" id="ecs-chg"></div>
+      <span class="quality-badge quality-estimated" id="ecs-badge" style="margin-top:6px;display:inline-block">○ EST</span>
+      <div class="card-label" style="margin-top:8px">Energy &amp; Consumer Stress</div>
+      <div class="card-sublabel">RPI × 0.5 + CCI × 0.5</div>
+    </div>
+
+    <!-- MTCS — Master Territorial Confidence Signal -->
+    <div class="summary-card mtcs-card">
+      <div class="mtcs-gauge-wrap"><canvas id="gauge-mtcs"></canvas></div>
+      <div class="mtcs-value" id="mtcs-val">—</div>
+      <div class="mtcs-status" id="mtcs-status">Computing…</div>
+      <span class="quality-badge quality-mixed" style="margin-top:6px;display:inline-block">◑ MIXED</span>
+      <div class="card-label" style="margin-top:8px">Master Territorial Confidence Signal</div>
+      <div class="mtcs-footnote">Equal-weighted: real estate sector (50%) + energy/consumer sector (50%). Weighting subject to revision once live data replaces seed estimates.</div>
+    </div>
+
+  </div>
+
   <!-- Tabs -->
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="prices">Crimea Price Index</button>
@@ -374,6 +413,16 @@ function spreadColor(s) { return s >= 15 ? "#3fb950" : s >= 0 ? "#58a6ff" : s >=
 // Pressure indices: high = bad → red
 function rpiColor(v)  { return v >= 70 ? "#f85149" : v >= 50 ? "#d29922" : v >= 35 ? "#58a6ff" : "#3fb950"; }
 function cciColor(v)  { return v >= 65 ? "#f85149" : v >= 45 ? "#d29922" : v >= 25 ? "#58a6ff" : "#3fb950"; }
+// Summary composites
+function ecsColor(v)  { return v >= 65 ? "#f85149" : v >= 45 ? "#d29922" : v >= 25 ? "#58a6ff" : "#3fb950"; }
+function mtcsColor(v) { return v > 80 ? "#ff3333" : v > 65 ? "#f85149" : v > 50 ? "#d29922" : v > 30 ? "#58a6ff" : "#3fb950"; }
+function mtcsStatus(v) {
+  if (v > 80) return "🔴🔴 Acute — immediate behavioral change expected";
+  if (v > 65) return "🔴 Fragility confirmed — structural stress across sectors";
+  if (v > 50) return "⚠ Warning — multi-sector pressure confirmed";
+  if (v > 30) return "Monitoring — elevated pressure in one or more sectors";
+  return "System stable — no early warning signal";
+}
 
 function qualityClass(q) {
   return { real: "quality-real", mixed: "quality-mixed", estimated: "quality-estimated", uncertain: "quality-uncertain" }[q] || "quality-estimated";
@@ -383,16 +432,32 @@ function qualityLabel(q) {
   return { real: "● REAL", mixed: "◑ MIXED", estimated: "○ EST", uncertain: "? UNCERTAIN" }[q] || q.toUpperCase();
 }
 
-// ── Gauge renderer ────────────────────────────────────────────────────────
+// ── Gauge renderers ───────────────────────────────────────────────────────
 const gaugeInstances = {};
+
+// Half-moon (180°) — used by SCI, Track A, Track B, RPI, CCI, ECS
 function drawGauge(id, value, color) {
   const pct = Math.min(Math.max(value, 0), 100) / 100;
-  const ctx = document.getElementById(id).getContext("2d");
+  const el  = document.getElementById(id);
+  if (!el) return;
   if (gaugeInstances[id]) gaugeInstances[id].destroy();
-  gaugeInstances[id] = new Chart(ctx, {
+  gaugeInstances[id] = new Chart(el.getContext("2d"), {
     type: "doughnut",
     data: { datasets: [{ data: [pct, 1 - pct], backgroundColor: [color, "#21262d"], borderWidth: 0, circumference: 180, rotation: 270 }] },
     options: { responsive: false, cutout: "72%", plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 500 } }
+  });
+}
+
+// Full circle (360°) — used exclusively by MTCS as master instrument
+function drawFullGauge(id, value, color) {
+  const pct = Math.min(Math.max(value, 0), 100) / 100;
+  const el  = document.getElementById(id);
+  if (!el) return;
+  if (gaugeInstances[id]) gaugeInstances[id].destroy();
+  gaugeInstances[id] = new Chart(el.getContext("2d"), {
+    type: "doughnut",
+    data: { datasets: [{ data: [pct, 1 - pct], backgroundColor: [color, "#21262d"], borderWidth: 0, circumference: 360, rotation: -90 }] },
+    options: { responsive: false, cutout: "68%", plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 700, easing: "easeOutQuart" } }
   });
 }
 
@@ -788,6 +853,16 @@ function updateDials(cityKey) {
         }
       }
     }
+  }
+
+  // MTCS threshold alerts (computed globally — not city-specific)
+  const _ecs  = computeEcsVal();
+  const _mtcs = computeMtcsVal(_ecs);
+  if (_mtcs != null) {
+    if (_mtcs > 80)
+      alerts.push(`🔴🔴 MTCS ${_mtcs}: Acute multi-sector signal — monitor for immediate behavioral change in occupied territories.`);
+    else if (_mtcs > 65)
+      alerts.push(`🔴 MTCS ${_mtcs}: Fragility confirmed across real estate and energy sectors.`);
   }
 
   if (alerts.length) { alertEl.innerHTML = alerts.join("<br>"); alertEl.classList.add("visible"); }
@@ -1208,6 +1283,80 @@ function buildCciChart() {
   }, opts);
 }
 
+// ── ECS + MTCS computation helpers ────────────────────────────────────────
+
+function computeEcsVal() {
+  const rpiR = (RPI?.monthly_readings || []).filter(r => r.RPI != null);
+  const cciR = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
+  const lr = rpiR[rpiR.length - 1];
+  const lc = cciR[cciR.length - 1];
+  return (lr && lc) ? Math.round(lr.RPI * 0.5 + lc.CCI * 0.5) : null;
+}
+
+function computeMtcsVal(ecsVal) {
+  if (ecsVal == null || !SCORES?.cities) return null;
+  const WEIGHTS = { mariupol: 1.0, donetsk: 1.0, luhansk: 1.0, crimea: 1.2, berdiansk: 0.7 };
+  let totalW = 0, wREP = 0;
+  for (const [key, city] of Object.entries(SCORES.cities)) {
+    const h = (city.history || [])[city.history.length - 1];
+    if (!h) continue;
+    const spread = h.spread ?? (h.track_b - Math.round(h.SCI * 0.4 + h.track_a * 0.6));
+    const w = WEIGHTS[key] ?? 1.0;
+    wREP   += (50 - spread) * w;
+    totalW += w;
+  }
+  if (!totalW) return null;
+  return Math.round((wREP / totalW) * 0.5 + ecsVal * 0.5);
+}
+
+// ── Summary dials: ECS + MTCS ──────────────────────────────────────────────
+function buildSummaryDials() {
+  // ── ECS ──────────────────────────────────────────────────────────────────
+  const rpiR  = (RPI?.monthly_readings  || []).filter(r => r.RPI != null);
+  const cciR  = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
+  const lrpi  = rpiR[rpiR.length - 1];
+  const lcci  = cciR[cciR.length - 1];
+  const prpi  = rpiR.length > 1 ? rpiR[rpiR.length - 2] : null;
+  const pcci  = cciR.length > 1 ? cciR[cciR.length - 2] : null;
+
+  const ecsVal  = (lrpi && lcci) ? Math.round(lrpi.RPI * 0.5 + lcci.CCI * 0.5) : null;
+  const prevEcs = (prpi && pcci) ? Math.round(prpi.RPI * 0.5 + pcci.CCI * 0.5) : null;
+
+  if (ecsVal != null) {
+    const col = ecsColor(ecsVal);
+    drawGauge("gauge-ecs", ecsVal, col);
+
+    const ev = document.getElementById("ecs-val");
+    if (ev) { ev.textContent = ecsVal; ev.style.color = col; }
+
+    // Confidence band: ±20% (both RPI and CCI are estimated)
+    const bnd = document.getElementById("ecs-band");
+    if (bnd) bnd.textContent = `${Math.max(0, Math.round(ecsVal * 0.8))}–${Math.min(100, Math.round(ecsVal * 1.2))}`;
+
+    // Change indicator
+    const chg = document.getElementById("ecs-chg");
+    if (chg && prevEcs != null) {
+      const d = ecsVal - prevEcs;
+      if (d === 0) { chg.textContent = "Stable"; chg.className = "dial-change"; }
+      else { chg.textContent = (d > 0 ? "▲ +" : "▼ ") + d; chg.className = "dial-change " + (d > 0 ? "up" : "down"); }
+    }
+  }
+
+  // ── MTCS ─────────────────────────────────────────────────────────────────
+  const mtcsVal = computeMtcsVal(ecsVal);
+
+  if (mtcsVal != null) {
+    const col = mtcsColor(mtcsVal);
+    drawFullGauge("gauge-mtcs", mtcsVal, col);
+
+    const mv = document.getElementById("mtcs-val");
+    if (mv) { mv.textContent = mtcsVal; mv.style.color = col; }
+
+    const ms = document.getElementById("mtcs-status");
+    if (ms) { ms.textContent = mtcsStatus(mtcsVal); ms.style.color = col; }
+  }
+}
+
 // ── City switch ───────────────────────────────────────────────────────────
 function switchCity(cityKey) {
   activeCityKey = cityKey;
@@ -1468,6 +1617,7 @@ async function init() {
   // Build everything
   updateDials(activeCityKey);
   updatePressureDials();
+  buildSummaryDials();
   buildPriceChart();
   buildAllSpreadChart();
   buildCompositeChart(activeCityKey);
