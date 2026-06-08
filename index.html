@@ -450,7 +450,8 @@ function drawGauge(id, value, color) {
 
 // Full circle (360°) — used exclusively by MTCS as master instrument
 function drawFullGauge(id, value, color) {
-  const pct = Math.min(Math.max(value, 0), 100) / 100;
+  // 8% floor: prevents gauge looking broken when system is genuinely stable at low values
+  const pct = Math.max(0.08, Math.min(Math.max(value, 0), 100) / 100);
   const el  = document.getElementById(id);
   if (!el) return;
   if (gaugeInstances[id]) gaugeInstances[id].destroy();
@@ -1297,16 +1298,49 @@ function computeMtcsVal(ecsVal) {
   if (ecsVal == null || !SCORES?.cities) return null;
   const WEIGHTS = { mariupol: 1.0, donetsk: 1.0, luhansk: 1.0, crimea: 1.2, berdiansk: 0.7 };
   let totalW = 0, wREP = 0;
+
+  console.group("🗺 computeMtcsVal — per-city REP breakdown");
   for (const [key, city] of Object.entries(SCORES.cities)) {
-    const h = (city.history || [])[city.history.length - 1];
-    if (!h) continue;
-    const spread = h.spread ?? (h.track_b - Math.round(h.SCI * 0.4 + h.track_a * 0.6));
-    const w = WEIGHTS[key] ?? 1.0;
-    wREP   += (50 - spread) * w;
+    const hist = city.history || [];
+    const h    = hist[hist.length - 1];
+    if (!h) { console.warn(`  ${key}: no history entry`); continue; }
+
+    // Spread: use stored value, or recompute from raw scores as fallback
+    const storedSpread    = h.spread;
+    const computedSpread  = h.track_b - Math.round(h.SCI * 0.4 + h.track_a * 0.6);
+    const spread          = storedSpread ?? computedSpread;
+    const rep             = 50 - spread;
+    const w               = WEIGHTS[key] ?? 1.0;
+    const contribution    = rep * w;
+    wREP   += contribution;
     totalW += w;
+
+    console.log(
+      `  ${key.padEnd(10)} month=${h.month}` +
+      `  spread=${String(spread).padStart(4)} (stored=${storedSpread ?? "—"}, computed=${computedSpread})` +
+      `  REP=${String(rep).padStart(4)}` +
+      `  weight=×${w}` +
+      `  contribution=${contribution.toFixed(1)}`
+    );
   }
+
+  const corridorREP = totalW > 0 ? wREP / totalW : 0;
+  console.log(`  ${"─".repeat(72)}`);
+  console.log(
+    `  totalWeight=${totalW.toFixed(1)}` +
+    `  weightedSum=${wREP.toFixed(1)}` +
+    `  corridorREP=${corridorREP.toFixed(2)}`
+  );
+  console.log(
+    `  ECS=${ecsVal}` +
+    `  MTCS = (${corridorREP.toFixed(2)} × 0.5) + (${ecsVal} × 0.5)` +
+    ` = ${(corridorREP * 0.5 + ecsVal * 0.5).toFixed(2)}` +
+    ` → rounded ${Math.round(corridorREP * 0.5 + ecsVal * 0.5)}`
+  );
+  console.groupEnd();
+
   if (!totalW) return null;
-  return Math.round((wREP / totalW) * 0.5 + ecsVal * 0.5);
+  return Math.round(corridorREP * 0.5 + ecsVal * 0.5);
 }
 
 // ── Summary dials: ECS + MTCS ──────────────────────────────────────────────
