@@ -232,7 +232,7 @@ def compute_rpi(capacity_util_pct, strike_score, export_pressure) -> tuple[int |
     if export_pressure is not None:
         scores.append(export_pressure)
 
-    if not scores:
+    if len(scores) < 2:
         return None, True
     partial = len(scores) < 3
     return round(sum(scores) / len(scores)), partial

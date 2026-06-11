@@ -130,9 +130,9 @@
       "capacity_pressure": null,
       "strike_score": 0,
       "export_pressure": null,
-      "RPI": 0,
+      "RPI": null,
       "real": false,
-      "note": "Awaiting CREA June report and Kpler weekly pull",
+      "note": "Partial: only Telegram strikes scanned (0 hits). Awaiting CREA and Kpler.",
       "partial": true
     }
   ],

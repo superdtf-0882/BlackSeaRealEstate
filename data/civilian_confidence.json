@@ -141,9 +141,9 @@
       "fuel_score": null,
       "panic_keyword_score": 0,
       "avito_premium_score": null,
-      "CCI": 0,
+      "CCI": null,
       "real": false,
-      "note": "Awaiting Rosstat weekly pull, Telegram scrape, Avito fetch",
+      "note": "Partial: only Telegram scanned (0 panic hits). Awaiting Rosstat and Avito.",
       "partial": true
     }
   ],

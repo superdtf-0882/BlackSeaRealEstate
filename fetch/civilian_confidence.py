@@ -308,7 +308,8 @@ def fetch_avito_staples() -> dict:
 
 def compute_cci(fuel_score, panic_score, avito_score) -> tuple[int | None, bool]:
     scores = [s for s in [fuel_score, panic_score, avito_score] if s is not None]
-    if not scores:
+    if len(scores) < 2:
+        # Single sub-indicator isn't meaningful enough to overwrite composite
         return None, True
     return round(sum(scores) / len(scores)), len(scores) < 3
 
