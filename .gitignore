@@ -1,0 +1,12 @@
+# Scheduler logs — keep directory, ignore content
+logs/*.log
+logs/*.log.*
+logs/.last_run
+
+# Python scraper debug dumps
+fetch/debug_*.html
+data/*_raw.json
+
+# Python cache
+__pycache__/
+*.pyc
