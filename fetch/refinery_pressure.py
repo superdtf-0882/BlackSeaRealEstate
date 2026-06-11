@@ -28,6 +28,7 @@ Usage:
 """
 
 import re
+import ssl
 import sys
 import json
 import time
@@ -35,6 +36,8 @@ import urllib.request
 import urllib.error
 from datetime import date, datetime, timedelta
 from pathlib import Path
+
+_SSL_CTX = ssl._create_unverified_context()
 
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data"
@@ -55,16 +58,17 @@ HEADERS = {
 def get(url: str, timeout: int = 20) -> str:
     try:
         req = urllib.request.Request(url, headers=HEADERS)
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with urllib.request.urlopen(req, timeout=timeout, context=_SSL_CTX) as r:
             return r.read().decode("utf-8", errors="replace")
     except Exception as e:
-        print(f"  GET {url} → {e}", file=sys.stderr)
+        print(f"  GET {url} -> {e}", file=sys.stderr)
         return ""
 
 
 # ── 1. CREA capacity utilization ─────────────────────────────────────────
 
 CREA_URLS = [
+    "https://energyandcleanair.org/product/russia-fossil-tracker/",
     "https://energyandcleanair.org/russia-fossil-fuels-tracker/",
     "https://energyandcleanair.org/russia-fossil-tracker/",
 ]

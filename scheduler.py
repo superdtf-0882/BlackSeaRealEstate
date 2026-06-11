@@ -70,12 +70,15 @@ def run_script(rel_path: str, extra_args: list[str] | None = None) -> bool:
     label = rel_path
     log.info("START  %s", label)
     try:
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
         result = subprocess.run(
             args,
             cwd=str(ROOT),
             capture_output=True,
             text=True,
             timeout=300,  # 5-minute hard timeout per script
+            env=env,
         )
     except subprocess.TimeoutExpired:
         log.error("TIMEOUT  %s  (exceeded 300s)", label)
@@ -106,8 +109,10 @@ def run_compute() -> bool:
     args = [PYTHON, str(FETCH / "compute.py"), "--write"]
     log.info("START  compute.py --write")
     try:
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
         result = subprocess.run(
-            args, cwd=str(ROOT), capture_output=True, text=True, timeout=120
+            args, cwd=str(ROOT), capture_output=True, text=True, timeout=120, env=env,
         )
     except Exception as exc:
         log.error("ERROR  compute.py — %s", exc)

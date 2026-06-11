@@ -1,9 +1,10 @@
 """
-fetch/restate.py — scrape Crimea biweekly price index from Restate.ru
+fetch/restate.py -- scrape Crimea biweekly price index from Restate.ru
 
-Target: krym.restate.ru/graph/
-Extracts the biweekly ₽/m² table for secondary apartments and appends
-new readings to data/crimea_prices.json.
+Target: krym.restate.ru/graph2/data/ (JSON API, discovered from page source)
+The page loads chart data via fetch(item.dataset.href) in graphChart.js.
+data-href value: /graph2/data/?region=60983&type=112&period=2&influence=3&op=1&form=9&sy=1
+  region=60983 = Crimea, type=112 = secondary apartments, op=1 = sell
 
 Usage:
     python fetch/restate.py           # dry-run: print new readings only
@@ -13,171 +14,144 @@ Usage:
 
 import sys
 import json
-import re
 import time
 import urllib.request
 import urllib.error
 from datetime import datetime, date
 from pathlib import Path
 
-ROOT    = Path(__file__).parent.parent
-DATA    = ROOT / "data" / "crimea_prices.json"
-URL     = "https://krym.restate.ru/graph/"
+ROOT = Path(__file__).parent.parent
+DATA = ROOT / "data" / "crimea_prices.json"
+
+API_URL = (
+    "https://krym.restate.ru/graph2/data/"
+    "?region=60983&type=112&period=2&influence=3"
+    "&money=&metro=&area=&okrug=&op=1&form=9&sy=1"
+)
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                   "AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/124.0.0.0 Safari/537.36",
     "Accept-Language": "ru-RU,ru;q=0.9",
-    "Referer": "https://krym.restate.ru/",
+    "Referer": "https://krym.restate.ru/graph/",
 }
 
 
-# ── HTTP fetch ────────────────────────────────────────────────────────────
+# -- HTTP fetch ---------------------------------------------------------------
 
-def fetch_html(url: str, retries: int = 3) -> str:
+def fetch_json(url: str, retries: int = 3) -> dict | None:
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers=HEADERS)
             with urllib.request.urlopen(req, timeout=20) as resp:
-                return resp.read().decode("utf-8", errors="replace")
+                return json.loads(resp.read().decode("utf-8"))
         except urllib.error.URLError as e:
             print(f"  Attempt {attempt+1}/{retries} failed: {e}", file=sys.stderr)
             if attempt < retries - 1:
                 time.sleep(3 * (attempt + 1))
-    raise RuntimeError(f"Failed to fetch {url} after {retries} attempts")
+        except json.JSONDecodeError as e:
+            print(f"  JSON parse error: {e}", file=sys.stderr)
+            return None
+    return None
 
 
-# ── Parse ─────────────────────────────────────────────────────────────────
+# -- Parse --------------------------------------------------------------------
 
-def parse_readings(html: str) -> list[dict]:
+def parse_readings(data: dict) -> list[dict]:
     """
-    Restate.ru embeds price data as a JS array inside the page, typically in
-    one of these forms:
-        var graph_data = [[timestamp_ms, price], ...];
-        data: [[1718000000000, 173540], ...]
-    We also try parsing an HTML table as a fallback.
+    API response schema:
+      {"columns": [{"name": "Даты"}, {"name": "Квартиры (вторичный рынок)"}, ...],
+       "rows": [["24.06.25", 180625.68, 71.79], ...]}
+    Column 0 = date string DD.MM.YY, column 1 = RUB/m2 price.
     """
     readings = []
-
-    # Strategy 1: JS array of [unix_ms, value] pairs
-    pat_js = re.compile(
-        r'(?:graph_data|graphData|chartData|data)\s*[=:]\s*\[(\[[\s\S]*?\])\]',
-        re.IGNORECASE
-    )
-    m = pat_js.search(html)
-    if m:
-        raw = m.group(0)
-        pairs = re.findall(r'\[\s*(\d{10,13})\s*,\s*([\d.]+)\s*\]', raw)
-        for ts_str, val_str in pairs:
-            ts = int(ts_str)
-            if ts > 1e11:   # milliseconds → seconds
-                ts //= 1000
-            dt = datetime.utcfromtimestamp(ts).date()
-            readings.append({"date": str(dt), "value": float(val_str), "real": True})
-
-    # Strategy 2: HTML table rows  <td>DD.MM.YYYY</td><td>NNN NNN</td>
-    if not readings:
-        rows = re.findall(
-            r'<td[^>]*>(\d{1,2}\.\d{2}\.\d{4})</td>\s*<td[^>]*>([\d\s,.]+)</td>',
-            html
-        )
-        for date_str, val_str in rows:
-            try:
-                dt = datetime.strptime(date_str, "%d.%m.%Y").date()
-                value = float(val_str.replace(" ", "").replace(",", "."))
-                readings.append({"date": str(dt), "value": value, "real": True})
-            except ValueError:
-                continue
-
-    # Strategy 3: any dense numeric pairs that look like (date_string, price)
-    if not readings:
-        pat_text = re.compile(r'(\d{2}\.\d{2}\.\d{4})[^\d]*([\d\s]{6,})')
-        for m in pat_text.finditer(html):
-            try:
-                dt    = datetime.strptime(m.group(1), "%d.%m.%Y").date()
-                value = float(m.group(2).replace(" ", ""))
-                if 50_000 < value < 1_000_000:   # sanity: ₽/m² range
-                    readings.append({"date": str(dt), "value": value, "real": True})
-            except ValueError:
-                continue
-
-    # Deduplicate and sort
+    for row in data.get("rows", []):
+        if len(row) < 2 or row[1] is None:
+            continue
+        try:
+            dt = datetime.strptime(str(row[0]), "%d.%m.%y").date()
+            price = float(row[1])
+            if 50_000 < price < 1_000_000:
+                readings.append({"date": str(dt), "value": round(price, 2), "real": True})
+        except (ValueError, TypeError):
+            continue
     seen = {}
     for r in readings:
         seen[r["date"]] = r
     return sorted(seen.values(), key=lambda x: x["date"])
 
 
-# ── Load / save JSON ──────────────────────────────────────────────────────
+# -- Load / save JSON ---------------------------------------------------------
 
 def load_existing() -> dict:
     if not DATA.exists():
         return {
-            "source": "Restate.ru — krym.restate.ru/graph/",
+            "source": "Restate.ru -- krym.restate.ru/graph/",
             "market": "Crimea secondary apartments",
-            "unit": "RUB per m²",
+            "unit": "RUB per m2",
             "cadence": "biweekly",
-            "readings": []
+            "readings": [],
         }
     with open(DATA, encoding="utf-8") as f:
         return json.load(f)
 
 
-def save(data: dict) -> None:
+def save(payload: dict) -> None:
     with open(DATA, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
-# ── Diff ──────────────────────────────────────────────────────────────────
+# -- Diff ---------------------------------------------------------------------
 
-def find_new(existing_readings: list, scraped: list) -> list:
-    known_dates = {r["date"] for r in existing_readings}
-    return [r for r in scraped if r["date"] not in known_dates]
+def find_new(existing: list, scraped: list) -> list:
+    known = {r["date"] for r in existing}
+    return [r for r in scraped if r["date"] not in known]
 
 
-# ── Main ──────────────────────────────────────────────────────────────────
+# -- Main ---------------------------------------------------------------------
 
 def main():
-    write  = "--write" in sys.argv
-    show_all = "--all" in sys.argv
+    write    = "--write" in sys.argv
+    show_all = "--all"   in sys.argv
 
-    print(f"Fetching {URL} …")
-    html = fetch_html(URL)
-    print(f"  Got {len(html):,} bytes")
-
-    scraped = parse_readings(html)
-    if not scraped:
-        print("ERROR: No readings parsed. Page structure may have changed.", file=sys.stderr)
-        print("  Saving raw HTML to debug_restate.html for inspection.", file=sys.stderr)
-        Path("debug_restate.html").write_text(html, encoding="utf-8")
+    print(f"Fetching {API_URL} ...")
+    raw = fetch_json(API_URL)
+    if not raw:
+        print("ERROR: Failed to fetch or parse JSON response.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"  Parsed {len(scraped)} readings ({scraped[0]['date']} → {scraped[-1]['date']})")
+    scraped = parse_readings(raw)
+    if not scraped:
+        print("ERROR: No readings parsed from API response.", file=sys.stderr)
+        print(f"  Raw keys: {list(raw.keys())}", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"  Parsed {len(scraped)} readings ({scraped[0]['date']} -> {scraped[-1]['date']})")
 
     if show_all:
         for r in scraped:
-            print(f"  {r['date']}  {r['value']:>10,.0f} ₽/m²")
+            print(f"  {r['date']}  {r['value']:>10,.0f} RUB/m2")
         return
 
-    data = load_existing()
-    new  = find_new(data["readings"], scraped)
+    payload = load_existing()
+    new = find_new(payload["readings"], scraped)
 
     if not new:
-        print("No new readings — already up to date.")
+        print("No new readings -- already up to date.")
         return
 
     print(f"  {len(new)} new reading(s):")
     for r in new:
-        print(f"    {r['date']}  {r['value']:>10,.0f} ₽/m²")
+        print(f"    {r['date']}  {r['value']:>10,.0f} RUB/m2")
 
     if write:
-        data["readings"].extend(new)
-        data["readings"].sort(key=lambda x: x["date"])
-        data["data_type"] = f"real — scraped {date.today()}"
-        save(data)
-        print(f"  Written → {DATA}")
+        payload["readings"].extend(new)
+        payload["readings"].sort(key=lambda x: x["date"])
+        payload["data_type"] = f"real -- scraped {date.today()}"
+        save(payload)
+        print(f"  Written -> {DATA}")
     else:
-        print("  (dry-run — pass --write to save)")
+        print("  (dry-run -- pass --write to save)")
 
 
 if __name__ == "__main__":
