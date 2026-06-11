@@ -14,21 +14,52 @@
       "url_houses": "https://doneck.domclick.ru/pokupka/doma",
       "url_all": "https://doneck.domclick.ru/pokupka",
       "readings": [
-        {"date": "2026-06-06", "apartments": 385, "houses": 130, "total_residential": 252, "real": true, "source": "Домклик live pull"}
+        {
+          "date": "2026-06-06",
+          "apartments": 385,
+          "houses": 130,
+          "total_residential": 252,
+          "real": true,
+          "source": "Домклик live pull"
+        },
+        {
+          "date": "2026-06-10",
+          "real": true,
+          "source": "Домклик live pull",
+          "apartments": 380,
+          "houses": 140
+        }
       ]
     },
     "luhansk": {
       "url_houses": "https://lugansk.domclick.ru/pokupka/doma",
       "url_all": "https://lugansk.domclick.ru/pokupka",
       "readings": [
-        {"date": "2026-06-06", "houses": 856, "real": true, "source": "Домклик live pull"}
+        {
+          "date": "2026-06-06",
+          "houses": 856,
+          "real": true,
+          "source": "Домклик live pull"
+        },
+        {
+          "date": "2026-06-10",
+          "real": true,
+          "source": "Домклик live pull",
+          "houses": 974
+        }
       ]
     },
     "mariupol": {
       "notes": "Secondary market thin — new build dominant. Домклик presence limited. GID.HOUSE is primary source for Mariupol.",
       "url_gid": "https://gid.house/mariupol/novostrojki",
       "readings": [
-        {"date": "2026-06-06", "developer_buildings": 68, "developer_complexes": 29, "real": true, "source": "GID.HOUSE live count Mar 2026"}
+        {
+          "date": "2026-06-06",
+          "developer_buildings": 68,
+          "developer_complexes": 29,
+          "real": true,
+          "source": "GID.HOUSE live count Mar 2026"
+        }
       ]
     }
   }

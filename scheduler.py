@@ -64,7 +64,7 @@ log.addHandler(_stdout)
 # Script runner
 # ---------------------------------------------------------------------------
 
-def run_script(rel_path: str, extra_args: list[str] | None = None) -> bool:
+def run_script(rel_path: str, extra_args: list[str] | None = None, timeout: int = 300) -> bool:
     """Run a fetch script. Returns True on success, False on failure."""
     args = [PYTHON, str(FETCH / rel_path)] + (extra_args or [])
     label = rel_path
@@ -76,21 +76,25 @@ def run_script(rel_path: str, extra_args: list[str] | None = None) -> bool:
             args,
             cwd=str(ROOT),
             capture_output=True,
-            text=True,
-            timeout=300,  # 5-minute hard timeout per script
+            encoding="utf-8",   # explicit — overrides system cp1252 default
+            errors="replace",   # don't crash on any stray non-UTF-8 bytes
+            timeout=timeout,
             env=env,
         )
     except subprocess.TimeoutExpired:
-        log.error("TIMEOUT  %s  (exceeded 300s)", label)
+        log.error("TIMEOUT  %s  (exceeded %ds)", label, timeout)
         return False
     except Exception as exc:
         log.error("ERROR  %s  — %s", label, exc)
         return False
 
+    stdout = result.stdout or ""
+    stderr = result.stderr or ""
+
     if result.returncode == 0:
         log.info("OK     %s", label)
-        if result.stdout.strip():
-            for line in result.stdout.strip().splitlines():
+        if stdout.strip():
+            for line in stdout.strip().splitlines():
                 log.debug("  [stdout] %s", line)
         return True
     else:
@@ -98,8 +102,8 @@ def run_script(rel_path: str, extra_args: list[str] | None = None) -> bool:
             "FAIL   %s  (exit %d)\n  stdout: %s\n  stderr: %s",
             label,
             result.returncode,
-            result.stdout.strip()[:500],
-            result.stderr.strip()[:500],
+            stdout.strip()[:500],
+            stderr.strip()[:500],
         )
         return False
 
@@ -112,11 +116,15 @@ def run_compute() -> bool:
         env = os.environ.copy()
         env["PYTHONIOENCODING"] = "utf-8"
         result = subprocess.run(
-            args, cwd=str(ROOT), capture_output=True, text=True, timeout=120, env=env,
+            args, cwd=str(ROOT), capture_output=True,
+            encoding="utf-8", errors="replace", timeout=120, env=env,
         )
     except Exception as exc:
         log.error("ERROR  compute.py — %s", exc)
         return False
+
+    stdout = result.stdout or ""
+    stderr = result.stderr or ""
 
     if result.returncode == 0:
         log.info("OK     compute.py --write")
@@ -125,8 +133,8 @@ def run_compute() -> bool:
         log.warning(
             "FAIL   compute.py (exit %d)\n  stdout: %s\n  stderr: %s",
             result.returncode,
-            result.stdout.strip()[:500],
-            result.stderr.strip()[:500],
+            stdout.strip()[:500],
+            stderr.strip()[:500],
         )
         return False
 
@@ -161,12 +169,12 @@ def _save_state(state: dict[str, datetime]) -> None:
 # ---------------------------------------------------------------------------
 
 JOBS: list[dict] = [
-    # script (relative to fetch/), interval, extra_args
-    {"script": "avito_rental.py",         "interval": timedelta(days=1),  "args": ["--write"]},
-    {"script": "civilian_confidence.py",  "interval": timedelta(days=1),  "args": ["--write"]},
-    {"script": "domclick.py",             "interval": timedelta(weeks=1), "args": ["--write"]},
-    {"script": "restate.py",              "interval": timedelta(weeks=1), "args": ["--write"]},
-    {"script": "refinery_pressure.py",    "interval": timedelta(days=30), "args": ["--write"]},
+    # script (relative to fetch/), interval, extra_args, timeout (seconds)
+    {"script": "avito_rental.py",         "interval": timedelta(days=1),  "args": ["--write"], "timeout": 600},
+    {"script": "civilian_confidence.py",  "interval": timedelta(days=1),  "args": ["--write"], "timeout": 300},
+    {"script": "domclick.py",             "interval": timedelta(weeks=1), "args": ["--write"], "timeout": 120},
+    {"script": "restate.py",              "interval": timedelta(weeks=1), "args": ["--write"], "timeout": 60},
+    {"script": "refinery_pressure.py",    "interval": timedelta(days=30), "args": ["--write"], "timeout": 300},
 ]
 
 
@@ -187,7 +195,7 @@ def run_now(jobs: list[dict] | None = None) -> None:
     log.info("=== RUN-NOW: %d script(s) ===", len(targets))
     any_succeeded = False
     for job in targets:
-        ok = run_script(job["script"], job.get("args"))
+        ok = run_script(job["script"], job.get("args"), timeout=job.get("timeout", 300))
         if ok:
             any_succeeded = True
     if any_succeeded:
@@ -207,7 +215,7 @@ def run_scheduler(poll_seconds: int = 60) -> None:
             log.info("--- Tick: %d job(s) due ---", len(due_jobs))
             any_succeeded = False
             for job in due_jobs:
-                ok = run_script(job["script"], job.get("args"))
+                ok = run_script(job["script"], job.get("args"), timeout=job.get("timeout", 300))
                 state[job["script"]] = datetime.now()
                 if ok:
                     any_succeeded = True
