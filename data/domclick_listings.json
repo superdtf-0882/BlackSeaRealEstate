@@ -45,7 +45,10 @@
           "date": "2026-06-10",
           "real": true,
           "source": "Домклик live pull",
-          "houses": 974
+          "houses": 974,
+          "delta_houses": 118,
+          "delta_pct": 13.8,
+          "note": "MONITOR: Luhansk listing surge (+118, +14%) concurrent with RPI/CCI spike week (Mariupol port disabled, R-280 -71%, Sevastopol fuel rationing). First Track B-adjacent movement in dataset. Monitor next 2-3 readings for sustained trend vs. one-time data artifact — sustained increase would indicate seller flight beginning."
         }
       ]
     },

@@ -104,6 +104,20 @@
     .alert-new { background: rgba(248,81,73,0.25); color: #ffa198; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; padding: 1px 5px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
     .alert-row-new { border-left: 2px solid rgba(248,81,73,0.6); padding-left: 6px; margin-left: -6px; }
 
+    /* ── Time scrubber ── */
+    #time-scrubber { padding: 0 24px 0; margin-bottom: 10px; }
+    .scrubber-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 6px; }
+    .scrubber-months { display: flex; gap: 5px; flex-wrap: wrap; }
+    .month-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-size: 11px; padding: 3px 10px; border-radius: 14px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .month-btn:hover { color: var(--text); border-color: var(--muted); }
+    .month-btn.active { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
+    .month-btn.latest { border-color: rgba(56,139,253,0.4); }
+
+    /* ── Historical view banner ── */
+    #hist-banner { display: none; background: rgba(56,139,253,0.1); border: 1px solid rgba(56,139,253,0.4); border-radius: 6px; padding: 8px 14px; margin-bottom: 10px; font-size: 12px; color: #58a6ff; }
+    #hist-banner.visible { display: flex; align-items: center; gap: 10px; }
+    #hist-banner a { color: #58a6ff; text-decoration: underline; cursor: pointer; }
+
     /* ── What Changed strip ── */
     #diff-strip { display: none; margin-bottom: 14px; }
     #diff-strip.visible { display: block; }
@@ -245,6 +259,18 @@
   <div id="diff-strip">
     <div class="diff-strip-title" id="diff-strip-title">Since last update</div>
     <div class="diff-chips" id="diff-chips"></div>
+  </div>
+
+  <!-- Time scrubber -->
+  <div id="time-scrubber" style="display:none">
+    <div class="scrubber-label">Historical view — select month</div>
+    <div class="scrubber-months" id="scrubber-months"></div>
+  </div>
+
+  <!-- Historical view banner -->
+  <div id="hist-banner">
+    <span id="hist-banner-text"></span>
+    <a id="hist-return" onclick="setViewMonth(null)">↩ Return to current</a>
   </div>
 
   <!-- Dials -->
@@ -791,6 +817,27 @@ const SEED_CCI = {"monthly_readings":[
 // ── State ─────────────────────────────────────────────────────────────────
 let PRICES, DEVS, MORT, SCORES, PERM, DOMCLICK, RPI, CCI_DATA;
 let activeCityKey = "mariupol";
+let activeViewMonth = null; // null = latest; "YYYY-MM" = historical view
+
+// Return [entry, prevEntry] from a sorted-by-month array, filtered to entries
+// where arr[i][key] != null, capped at viewMonth (or latest if null).
+function histAt(arr, key, viewMonth) {
+  const valid = (arr || []).filter(r => r[key] != null);
+  if (!valid.length) return [null, null];
+  if (!viewMonth) return [valid[valid.length - 1], valid.length > 1 ? valid[valid.length - 2] : null];
+  const idx = valid.reduce((best, r, i) => r.month <= viewMonth ? i : best, -1);
+  if (idx < 0) return [null, null];
+  return [valid[idx], idx > 0 ? valid[idx - 1] : null];
+}
+
+// Same for city history arrays (keyed by .month directly)
+function cityHistAt(hist, viewMonth) {
+  if (!hist || !hist.length) return [null, null];
+  if (!viewMonth) return [hist[hist.length - 1], hist.length > 1 ? hist[hist.length - 2] : null];
+  const idx = hist.reduce((best, r, i) => r.month <= viewMonth ? i : best, -1);
+  if (idx < 0) return [null, null];
+  return [hist[idx], idx > 0 ? hist[idx - 1] : null];
+}
 
 // ── Loader ────────────────────────────────────────────────────────────────
 async function fetchJSON(path, seed) {
@@ -806,8 +853,7 @@ function updateDials(cityKey) {
   const cityData = SCORES.cities[cityKey];
   if (!cityData) return;
   const hist = cityData.history;
-  const latest = hist[hist.length - 1];
-  const prev   = hist.length > 1 ? hist[hist.length - 2] : null;
+  const [latest, prev] = cityHistAt(hist, activeViewMonth);
 
   drawGauge("gauge-sci", latest.SCI,     sciColor(latest.SCI));
   drawGauge("gauge-ta",  latest.track_a, trackAColor(latest.track_a));
@@ -915,7 +961,7 @@ function updateDials(cityKey) {
 
   // Prev city history entry for the same city
   const cityHist   = cityData.history || [];
-  const prevLatest = cityHist.length > 1 ? cityHist[cityHist.length - 2] : null;
+  const [, prevLatest] = cityHistAt(cityHist, activeViewMonth);
 
   // Compute prev-period MTCS for new-detection
   function prevMtcs() {
@@ -924,9 +970,7 @@ function updateDials(cityKey) {
     const WEIGHTS = { mariupol:1.0, donetsk:1.0, luhansk:1.0, crimea:1.2, berdiansk:0.7 };
     let tw = 0, ws = 0;
     for (const [k, c] of Object.entries(SCORES?.cities ?? {})) {
-      const h = c.history || [];
-      // use second-to-last history entry as prev
-      const hp = h.length > 1 ? h[h.length - 2] : h[h.length - 1];
+      const [, hp] = cityHistAt(c.history || [], activeViewMonth);
       if (!hp) continue;
       const sp = hp.spread ?? (hp.track_b - Math.round(hp.SCI*0.4 + hp.track_a*0.6));
       const w  = WEIGHTS[k] ?? 1.0;
@@ -1007,8 +1051,7 @@ function updateDials(cityKey) {
       const WEIGHTS = { mariupol:1.0, donetsk:1.0, luhansk:1.0, crimea:1.2, berdiansk:0.7 };
       let tw = 0, ws = 0;
       for (const [k, c] of Object.entries(SCORES?.cities ?? {})) {
-        const h = c.history || [];
-        const hp = h.length > 1 ? h[h.length - 2] : h[h.length - 1];
+        const [, hp] = cityHistAt(c.history || [], activeViewMonth);
         if (!hp) continue;
         const sp = hp.spread ?? (hp.track_b - Math.round(hp.SCI*0.4 + hp.track_a*0.6));
         const w  = WEIGHTS[k] ?? 1.0;
@@ -1380,8 +1423,7 @@ function updatePressureDials() {
     const valid = (readings || []).filter(r => r != null && typeof r === "object");
     const withVal = valid.filter(r => r.RPI != null || r.CCI != null);
     const key = withVal.length && withVal[0].RPI != null ? "RPI" : "CCI";
-    const latest = withVal[withVal.length - 1];
-    const prev   = withVal.length > 1 ? withVal[withVal.length - 2] : null;
+    const [latest, prev] = histAt(withVal, key, activeViewMonth);
     const val    = latest?.[key] ?? null;
 
     const el = document.getElementById(valId);
@@ -1484,23 +1526,23 @@ function buildCciChart() {
 
 // ── ECS + MTCS computation helpers ────────────────────────────────────────
 
-function computeEcsVal() {
-  const rpiR = (RPI?.monthly_readings || []).filter(r => r.RPI != null);
-  const cciR = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
-  const lr = rpiR[rpiR.length - 1];
-  const lc = cciR[cciR.length - 1];
+function computeEcsVal(viewMonth) {
+  const vm = viewMonth !== undefined ? viewMonth : activeViewMonth;
+  const [lr] = histAt(RPI?.monthly_readings, "RPI", vm);
+  const [lc] = histAt(CCI_DATA?.monthly_readings, "CCI", vm);
   return (lr && lc) ? Math.round(lr.RPI * 0.5 + lc.CCI * 0.5) : null;
 }
 
-function computeMtcsVal(ecsVal) {
+function computeMtcsVal(ecsVal, viewMonth) {
   if (ecsVal == null || !SCORES?.cities) return null;
+  const vm = viewMonth !== undefined ? viewMonth : activeViewMonth;
   const WEIGHTS = { mariupol: 1.0, donetsk: 1.0, luhansk: 1.0, crimea: 1.2, berdiansk: 0.7 };
   let totalW = 0, wREP = 0;
 
   console.group("🗺 computeMtcsVal — per-city REP breakdown");
   for (const [key, city] of Object.entries(SCORES.cities)) {
     const hist = city.history || [];
-    const h    = hist[hist.length - 1];
+    const [h]  = cityHistAt(hist, vm);
     if (!h) { console.warn(`  ${key}: no history entry`); continue; }
 
     // Spread: use stored value, or recompute from raw scores as fallback
@@ -1544,12 +1586,8 @@ function computeMtcsVal(ecsVal) {
 // ── Summary dials: ECS + MTCS ──────────────────────────────────────────────
 function buildSummaryDials() {
   // ── ECS ──────────────────────────────────────────────────────────────────
-  const rpiR  = (RPI?.monthly_readings  || []).filter(r => r.RPI != null);
-  const cciR  = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
-  const lrpi  = rpiR[rpiR.length - 1];
-  const lcci  = cciR[cciR.length - 1];
-  const prpi  = rpiR.length > 1 ? rpiR[rpiR.length - 2] : null;
-  const pcci  = cciR.length > 1 ? cciR[cciR.length - 2] : null;
+  const [lrpi, prpi] = histAt(RPI?.monthly_readings, "RPI", activeViewMonth);
+  const [lcci, pcci] = histAt(CCI_DATA?.monthly_readings, "CCI", activeViewMonth);
 
   const ecsVal  = (lrpi && lcci) ? Math.round(lrpi.RPI * 0.5 + lcci.CCI * 0.5) : null;
   const prevEcs = (prpi && pcci) ? Math.round(prpi.RPI * 0.5 + pcci.CCI * 0.5) : null;
@@ -1589,10 +1627,81 @@ function buildSummaryDials() {
   }
 }
 
+// ── Time scrubber ─────────────────────────────────────────────────────────
+function buildScrubber() {
+  // Collect all months present in the active city's history
+  const cityData = SCORES.cities[activeCityKey];
+  const months = (cityData?.history || []).map(h => h.month);
+  if (months.length < 2) return; // no scrubbing possible with <2 readings
+
+  const container = document.getElementById("scrubber-months");
+  const scrubber  = document.getElementById("time-scrubber");
+  if (!container || !scrubber) return;
+
+  const latestMonth = months[months.length - 1];
+  const fmt = m => { const [y, mo] = m.split("-"); return new Date(+y, +mo - 1).toLocaleString("en", {month:"short"}) + " " + y.slice(2); };
+
+  container.innerHTML = months.map(m =>
+    `<button class="month-btn${m === latestMonth ? " latest" : ""}${(activeViewMonth ?? latestMonth) === m ? " active" : ""}"
+      onclick="setViewMonth('${m}')">${fmt(m)}</button>`
+  ).join("");
+
+  scrubber.style.display = "";
+}
+
+function setViewMonth(month) {
+  const cityData  = SCORES.cities[activeCityKey];
+  const hist      = cityData?.history || [];
+  const latestMo  = hist.length ? hist[hist.length - 1].month : null;
+  const isLatest  = !month || month === latestMo;
+
+  activeViewMonth = isLatest ? null : month;
+
+  // Update scrubber button highlight
+  document.querySelectorAll(".month-btn").forEach(b => {
+    const bm = b.textContent; // not useful directly — use onclick attr approach
+    b.classList.remove("active");
+  });
+  // Re-highlight via re-render of scrubber buttons
+  const container = document.getElementById("scrubber-months");
+  if (container) {
+    const months  = hist.map(h => h.month);
+    const selMonth = activeViewMonth ?? latestMo;
+    const fmt = m => { const [y, mo] = m.split("-"); return new Date(+y, +mo - 1).toLocaleString("en", {month:"short"}) + " " + y.slice(2); };
+    container.innerHTML = months.map(m =>
+      `<button class="month-btn${m === latestMo ? " latest" : ""}${selMonth === m ? " active" : ""}"
+        onclick="setViewMonth('${m}')">${fmt(m)}</button>`
+    ).join("");
+  }
+
+  // Historical banner
+  const banner = document.getElementById("hist-banner");
+  const bannerText = document.getElementById("hist-banner-text");
+  if (banner && bannerText) {
+    if (activeViewMonth) {
+      const [y, mo] = activeViewMonth.split("-");
+      const label = new Date(+y, +mo - 1).toLocaleString("en", {month:"long", year:"numeric"});
+      const latestDate = new Date(+latestMo.split("-")[0], +latestMo.split("-")[1] - 1);
+      const viewDate   = new Date(+y, +mo - 1);
+      const diffMonths = Math.round((latestDate - viewDate) / (1000 * 60 * 60 * 24 * 30.44));
+      bannerText.textContent = `Viewing: ${label} — ${diffMonths} month${diffMonths !== 1 ? "s" : ""} ago`;
+      banner.classList.add("visible");
+    } else {
+      banner.classList.remove("visible");
+    }
+  }
+
+  // Re-render all dials with new viewMonth
+  updateDials(activeCityKey);
+  updatePressureDials();
+  buildSummaryDials();
+}
+
 // ── City switch ───────────────────────────────────────────────────────────
 function switchCity(cityKey) {
   activeCityKey = cityKey;
   document.querySelectorAll(".city-btn").forEach(b => b.classList.toggle("active", b.dataset.city === cityKey));
+  buildScrubber();
   updateDials(cityKey);
   buildCompositeChart(cityKey);
   buildSpreadChart(cityKey);
@@ -1845,6 +1954,9 @@ async function init() {
   const dataDate = SCORES?.last_updated || priceReadings[priceReadings.length - 1]?.date || "2026-06-06";
   document.getElementById("st-latest").textContent = dataDate;
   document.getElementById("last-updated").textContent = "Data: " + dataDate;
+
+  // Build scrubber
+  buildScrubber();
 
   // Build everything
   updateDials(activeCityKey);
