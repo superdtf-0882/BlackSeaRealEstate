@@ -603,6 +603,12 @@
       "label": "R-280 Crimea corridor traffic down 71% in two weeks per Ukrainian drone command — primary GLOC to Crimea via Mariupol/Berdiansk",
       "category": "infrastructure",
       "significance": "high"
+    },
+    {
+      "date": "2026-06-12",
+      "label": "Crimea food/fuel crisis confirmed by Ukrainian govt official: гречка/rice/salt/sugar shortages, ~30% dairy self-sufficiency, few weeks of food stock remaining, real estate agency offering villa stays for fuel canisters",
+      "category": "civilian",
+      "significance": "high"
     }
   ]
 }
