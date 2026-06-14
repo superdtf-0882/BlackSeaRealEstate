@@ -101,6 +101,18 @@
     /* ── Alert banner ── */
     .alert-banner { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.4); border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #ffa198; display: none; }
     .alert-banner.visible { display: block; }
+    .alert-new { background: rgba(248,81,73,0.25); color: #ffa198; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; padding: 1px 5px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+    .alert-row-new { border-left: 2px solid rgba(248,81,73,0.6); padding-left: 6px; margin-left: -6px; }
+
+    /* ── What Changed strip ── */
+    #diff-strip { display: none; margin-bottom: 14px; }
+    #diff-strip.visible { display: block; }
+    .diff-strip-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 7px; }
+    .diff-chips { display: flex; flex-wrap: wrap; gap: 6px; overflow-x: auto; }
+    .diff-chip { display: flex; flex-direction: column; gap: 2px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; font-size: 11px; min-width: 80px; }
+    .diff-chip-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .diff-chip-vals  { color: var(--fg); white-space: nowrap; }
+    .diff-chip-delta { font-size: 10px; font-weight: 600; }
 
     /* ── Events legend ── */
     .events-legend { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 14px; }
@@ -228,6 +240,12 @@
 
   <!-- Alert -->
   <div class="alert-banner" id="alert-banner"></div>
+
+  <!-- What Changed strip -->
+  <div id="diff-strip">
+    <div class="diff-strip-title" id="diff-strip-title">Since last update</div>
+    <div class="diff-chips" id="diff-chips"></div>
+  </div>
 
   <!-- Dials -->
   <div class="dials-row">
@@ -592,7 +610,7 @@ const SEED_MORT = {"totals":[
   ]}
 }};
 
-const SEED_SCORES = {"cities":{
+const SEED_SCORES = {"last_updated":"2026-06-12","cities":{
   "mariupol":{"display_name":"Mariupol","weight":1.0,"history":[
     {"month":"2025-06","SCI":52,"SCI_lo":48,"SCI_hi":56,"track_a":22,"a_lo":17,"a_hi":27,"track_b":23,"b_lo":19,"b_hi":27,"composite":34,"spread":-11,"data_quality":"estimated"},
     {"month":"2025-07","SCI":55,"SCI_lo":51,"SCI_hi":59,"track_a":24,"a_lo":19,"a_hi":29,"track_b":23,"b_lo":19,"b_hi":27,"composite":36,"spread":-13,"data_quality":"estimated"},
@@ -827,86 +845,215 @@ function updateDials(cityKey) {
   const bw = document.getElementById("quality-badge-wrap");
   bw.innerHTML = `<span class="quality-badge quality-mixed">◑ MIXED</span>`;
 
-  // Alert — city spread conditions
-  const alertEl  = document.getElementById("alert-banner");
+  // ── Alert system: severity + new-this-update detection ───────────────────
+  const alertEl   = document.getElementById("alert-banner");
   const composite = latest.composite ?? Math.round(latest.SCI * 0.4 + latest.track_a * 0.6);
-  const alerts = [];
 
-  if (latest.spread <= -20)
-    alerts.push(`⚠ ${cityData.display_name}: Composite (${composite}) outpaces B (${latest.track_b}) by ${Math.abs(latest.spread)} pts — state+private activity well ahead of residential reality.`);
-  if (latest.spread >= 15)
-    alerts.push(`↑ ${cityData.display_name}: B (${latest.track_b}) leads composite (${composite}) by +${latest.spread} pts — residential confidence running ahead of state+private signal.`);
-
-  // RPI threshold alerts
   const rpiReadings = (RPI?.monthly_readings || []).filter(r => r.RPI != null);
   const latestRpi   = rpiReadings[rpiReadings.length - 1];
   const prevRpi     = rpiReadings.length > 1 ? rpiReadings[rpiReadings.length - 2] : null;
   const rpiThr      = RPI?.alert_thresholds || {};
-  if (latestRpi) {
-    const rv = latestRpi.RPI;
-    if (rv >= (rpiThr.critical_above ?? 70))
-      alerts.push(`🔴 RPI ${rv}: CRITICAL — acute threat to SCI sustainability and occupation funding base.`);
-    else if (rv >= (rpiThr.warning_above ?? 50))
-      alerts.push(`🟠 RPI ${rv}: WARNING — meaningful fiscal pressure on occupation funding.`);
-    else if (rv >= (rpiThr.watch_above ?? 35))
-      alerts.push(`🟡 RPI ${rv}: Watch — refinery pressure trending upward.`);
-  }
 
-  // CCI threshold alerts
   const cciReadings = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
   const latestCci   = cciReadings[cciReadings.length - 1];
   const prevCci     = cciReadings.length > 1 ? cciReadings[cciReadings.length - 2] : null;
   const cciThr      = CCI_DATA?.alert_thresholds || {};
-  if (latestCci) {
-    const cv = latestCci.CCI;
-    if (cv >= (cciThr.critical_above ?? 65))
-      alerts.push(`🔴 CCI ${cv}: CRITICAL — buckwheat index activating, systemic civilian confidence failure.`);
-    else if (cv >= (cciThr.warning_above ?? 45))
-      alerts.push(`🟠 CCI ${cv}: WARNING — multi-signal shortage confirmation.`);
-    else if (cv >= (cciThr.watch_above ?? 25))
-      alerts.push(`🟡 CCI ${cv}: Watch — elevated civilian stress in informal channels.`);
+
+  const _ecs  = computeEcsVal();
+  const _mtcs = computeMtcsVal(_ecs);
+
+  // Returns the set of condition keys that are active for a given snapshot of readings.
+  // cityH = latest city history entry, permReadings = per-city perm ratio arrays.
+  function conditionKeys(cityH, rpiR, cciR, prevCciR, mtcsVal, permCities) {
+    const keys = new Set();
+    // Per-city spread
+    if (cityH) {
+      const comp = cityH.composite ?? Math.round(cityH.SCI * 0.4 + cityH.track_a * 0.6);
+      if (cityH.spread <= -20) keys.add('city_spread_low');
+      if (cityH.spread >= 15)  keys.add('city_spread_high');
+    }
+    // RPI thresholds
+    const rv = rpiR?.RPI;
+    if (rv != null) {
+      if (rv >= (rpiThr.critical_above ?? 70))      keys.add('rpi_critical');
+      else if (rv >= (rpiThr.warning_above ?? 50))  keys.add('rpi_warning');
+      else if (rv >= (rpiThr.watch_above   ?? 35))  keys.add('rpi_watch');
+    }
+    // CCI thresholds
+    const cv = cciR?.CCI;
+    if (cv != null) {
+      if (cv >= (cciThr.critical_above ?? 65))      keys.add('cci_critical');
+      else if (cv >= (cciThr.warning_above ?? 45))  keys.add('cci_warning');
+      else if (cv >= (cciThr.watch_above   ?? 25))  keys.add('cci_watch');
+    }
+    // Compound: CCI rising + permanence ratio falling
+    if (cciR && prevCciR && cciR.CCI > prevCciR.CCI && permCities) {
+      for (const [ck, city] of permCities) {
+        const pr = (city.monthly_readings || []).filter(r => r.ratio != null);
+        if (pr.length >= 2 && (pr[pr.length-1].ratio - pr[pr.length-2].ratio) <= -3)
+          keys.add(`compound_${ck}`);
+      }
+    }
+    // Structural spikes ≥25pts
+    if (rpiR && prevRpi) {
+      const ep = rpiR.export_pressure, ep0 = prevRpi.export_pressure;
+      if (ep != null && ep0 != null && (ep - ep0) >= 25) keys.add('structural_export_pressure');
+    }
+    if (cciR && prevCciR) {
+      const fs = cciR.fuel_score, fs0 = prevCciR.fuel_score;
+      if (fs != null && fs0 != null && (fs - fs0) >= 25) keys.add('structural_fuel_score');
+    }
+    // MTCS thresholds
+    if (mtcsVal != null) {
+      if (mtcsVal > 80)      keys.add('mtcs_critical');
+      else if (mtcsVal > 65) keys.add('mtcs_warning');
+    }
+    return keys;
   }
 
-  // Compound: CCI rising + any city's permanence ratio falling in same period
-  if (latestCci && prevCci && latestCci.CCI > prevCci.CCI) {
-    const permCities = Object.entries(PERM?.cities ?? {});
-    for (const [ck, city] of permCities) {
-      const pr = (city.monthly_readings || []).filter(r => r.ratio != null);
-      if (pr.length >= 2) {
-        const delta = pr[pr.length - 1].ratio - pr[pr.length - 2].ratio;
-        if (delta <= -3) {
-          alerts.push(`⚡ COMPOUND: CCI rising (+${(latestCci.CCI - prevCci.CCI).toFixed(0)}) while ${ck} permanence ratio falling (${delta > 0 ? '+' : ''}${delta}) — behavioral change likely imminent.`);
-        }
-      }
+  const permCities = Object.entries(PERM?.cities ?? {});
+
+  // Prev city history entry for the same city
+  const cityHist   = cityData.history || [];
+  const prevLatest = cityHist.length > 1 ? cityHist[cityHist.length - 2] : null;
+
+  // Compute prev-period MTCS for new-detection
+  function prevMtcs() {
+    if (!prevRpi || !prevCci) return null;
+    const ecsP = Math.round(prevRpi.RPI * 0.5 + prevCci.CCI * 0.5);
+    const WEIGHTS = { mariupol:1.0, donetsk:1.0, luhansk:1.0, crimea:1.2, berdiansk:0.7 };
+    let tw = 0, ws = 0;
+    for (const [k, c] of Object.entries(SCORES?.cities ?? {})) {
+      const h = c.history || [];
+      // use second-to-last history entry as prev
+      const hp = h.length > 1 ? h[h.length - 2] : h[h.length - 1];
+      if (!hp) continue;
+      const sp = hp.spread ?? (hp.track_b - Math.round(hp.SCI*0.4 + hp.track_a*0.6));
+      const w  = WEIGHTS[k] ?? 1.0;
+      ws += (50 - sp) * w;
+      tw += w;
+    }
+    return tw > 0 ? Math.round(ws / tw * 0.5 + ecsP * 0.5) : null;
+  }
+
+  const currentKeys = conditionKeys(latest, latestRpi, latestCci, prevCci, _mtcs, permCities);
+  const prevKeys    = conditionKeys(prevLatest, prevRpi, prevCci, null, prevMtcs(), permCities);
+
+  // severity: 3=critical, 2=warning, 1=watch, 0=city
+  const KEY_META = {
+    city_spread_low:             { sev: 0, text: () => `⚠ ${cityData.display_name}: Composite (${composite}) outpaces B (${latest.track_b}) by ${Math.abs(latest.spread)} pts — state+private activity well ahead of residential reality.` },
+    city_spread_high:            { sev: 0, text: () => `↑ ${cityData.display_name}: B (${latest.track_b}) leads composite (${composite}) by +${latest.spread} pts — residential confidence running ahead of state+private signal.` },
+    rpi_watch:                   { sev: 1, text: () => `🟡 RPI ${latestRpi.RPI}: Watch — refinery pressure trending upward.` },
+    cci_watch:                   { sev: 1, text: () => `🟡 CCI ${latestCci.CCI}: Watch — elevated civilian stress in informal channels.` },
+    rpi_warning:                 { sev: 2, text: () => `🟠 RPI ${latestRpi.RPI}: WARNING — meaningful fiscal pressure on occupation funding.` },
+    cci_warning:                 { sev: 2, text: () => `🟠 CCI ${latestCci.CCI}: WARNING — multi-signal shortage confirmation.` },
+    mtcs_warning:                { sev: 2, text: () => `🔴 MTCS ${_mtcs}: Fragility confirmed across real estate and energy sectors.` },
+    rpi_critical:                { sev: 3, text: () => `🔴 RPI ${latestRpi.RPI}: CRITICAL — acute threat to SCI sustainability and occupation funding base.` },
+    cci_critical:                { sev: 3, text: () => `🔴 CCI ${latestCci.CCI}: CRITICAL — buckwheat index activating, systemic civilian confidence failure.` },
+    mtcs_critical:               { sev: 3, text: () => `🔴🔴 MTCS ${_mtcs}: Acute multi-sector signal — monitor for immediate behavioral change in occupied territories.` },
+    structural_export_pressure:  { sev: 3, text: () => { const ep=latestRpi.export_pressure, ep0=prevRpi.export_pressure; return `🔴 STRUCTURAL EVENT: RPI export_pressure +${ep-ep0} pts in one period (${ep0}→${ep}) — verify against key_events for kinetic triggers before treating as noise.`; } },
+    structural_fuel_score:       { sev: 3, text: () => { const fs=latestCci.fuel_score, fs0=prevCci.fuel_score; return `🔴 STRUCTURAL EVENT: CCI fuel_score +${fs-fs0} pts in one period (${fs0}→${fs}) — verify against key_events for kinetic/policy triggers before treating as noise.`; } },
+  };
+  // Compound keys are dynamic (per city) — add them
+  for (const [ck] of permCities) {
+    if (currentKeys.has(`compound_${ck}`)) {
+      const delta = (() => { const pr=(PERM.cities[ck]?.monthly_readings||[]).filter(r=>r.ratio!=null); return pr.length>=2 ? pr[pr.length-1].ratio-pr[pr.length-2].ratio : 0; })();
+      KEY_META[`compound_${ck}`] = { sev: 2, text: () => `⚡ COMPOUND: CCI rising (+${latestCci.CCI - prevCci.CCI}) while ${ck} permanence ratio falling (${delta}) — behavioral change likely imminent.` };
     }
   }
 
-  // Structural event: single-period spike ≥25pts in export_pressure or fuel_score
-  if (latestRpi && prevRpi) {
-    const epNow  = latestRpi.export_pressure;
-    const epPrev = prevRpi.export_pressure;
-    if (epNow != null && epPrev != null && (epNow - epPrev) >= 25)
-      alerts.push(`🔴 STRUCTURAL EVENT: RPI export_pressure +${epNow - epPrev} pts in one period (${epPrev}→${epNow}) — verify against key_events for kinetic triggers before treating as noise.`);
-  }
-  if (latestCci && prevCci) {
-    const fsNow  = latestCci.fuel_score;
-    const fsPrev = prevCci.fuel_score;
-    if (fsNow != null && fsPrev != null && (fsNow - fsPrev) >= 25)
-      alerts.push(`🔴 STRUCTURAL EVENT: CCI fuel_score +${fsNow - fsPrev} pts in one period (${fsPrev}→${fsNow}) — verify against key_events for kinetic/policy triggers before treating as noise.`);
+  const alertItems = [...currentKeys]
+    .filter(k => KEY_META[k])
+    .map(k => ({ key: k, sev: KEY_META[k].sev, isNew: !prevKeys.has(k), text: KEY_META[k].text() }))
+    .sort((a, b) => (b.isNew - a.isNew) || (b.sev - a.sev));
+
+  if (alertItems.length) {
+    alertEl.innerHTML = alertItems.map(a =>
+      `<span class="alert-row${a.isNew ? ' alert-row-new' : ''}">${a.isNew ? '<span class="alert-new">NEW</span> ' : ''}${a.text}</span>`
+    ).join("<br>");
+    alertEl.classList.add("visible");
+  } else {
+    alertEl.classList.remove("visible");
   }
 
-  // MTCS threshold alerts (computed globally — not city-specific)
-  const _ecs  = computeEcsVal();
-  const _mtcs = computeMtcsVal(_ecs);
-  if (_mtcs != null) {
-    if (_mtcs > 80)
-      alerts.push(`🔴🔴 MTCS ${_mtcs}: Acute multi-sector signal — monitor for immediate behavioral change in occupied territories.`);
-    else if (_mtcs > 65)
-      alerts.push(`🔴 MTCS ${_mtcs}: Fragility confirmed across real estate and energy sectors.`);
-  }
+  // ── What Changed diff strip ───────────────────────────────────────────────
+  (function buildDiffStrip() {
+    const stripEl  = document.getElementById("diff-strip");
+    const titleEl  = document.getElementById("diff-strip-title");
+    const chipsEl  = document.getElementById("diff-chips");
+    if (!stripEl) return;
 
-  if (alerts.length) { alertEl.innerHTML = alerts.join("<br>"); alertEl.classList.add("visible"); }
-  else { alertEl.classList.remove("visible"); }
+    // Color for a delta value: uses the metric's absolute-value color fn applied to the magnitude,
+    // but we want to signal intensity of change rather than level, so threshold on |delta|.
+    function deltaColor(absDelta, colorFn, absVal) {
+      // Use the color function on the absolute value so color semantics are preserved,
+      // but only if the delta is meaningful; otherwise muted.
+      return absDelta < 1 ? "var(--muted)" : colorFn(absVal);
+    }
+
+    // Previous period label — use month of previous reading where available
+    const prevLabel = prev?.month || prevRpi?.month || prevCci?.month || "prev";
+    const curLabel  = latest?.month || latestRpi?.month || latestCci?.month || "cur";
+
+    // ECS prev/cur (already computed above in updateDials scope via computeEcsVal)
+    const ecsVal  = computeEcsVal();
+    const prevEcs = (prevRpi && prevCci) ? Math.round(prevRpi.RPI * 0.5 + prevCci.CCI * 0.5) : null;
+
+    // MTCS prev
+    const mtcsVal = computeMtcsVal(ecsVal);
+    const prevMtcsVal = (function() {
+      if (!prevRpi || !prevCci) return null;
+      const eP = Math.round(prevRpi.RPI * 0.5 + prevCci.CCI * 0.5);
+      const WEIGHTS = { mariupol:1.0, donetsk:1.0, luhansk:1.0, crimea:1.2, berdiansk:0.7 };
+      let tw = 0, ws = 0;
+      for (const [k, c] of Object.entries(SCORES?.cities ?? {})) {
+        const h = c.history || [];
+        const hp = h.length > 1 ? h[h.length - 2] : h[h.length - 1];
+        if (!hp) continue;
+        const sp = hp.spread ?? (hp.track_b - Math.round(hp.SCI*0.4 + hp.track_a*0.6));
+        const w  = WEIGHTS[k] ?? 1.0;
+        ws += (50 - sp) * w;
+        tw += w;
+      }
+      return tw > 0 ? Math.round(ws / tw * 0.5 + eP * 0.5) : null;
+    })();
+
+    // Build metric descriptors
+    const metrics = [
+      { label: "SCI",    cur: latest?.SCI,      prv: prev?.SCI,           colorFn: sciColor    },
+      { label: "Trk A",  cur: latest?.track_a,  prv: prev?.track_a,       colorFn: trackAColor },
+      { label: "Trk B",  cur: latest?.track_b,  prv: prev?.track_b,       colorFn: trackBColor },
+      { label: "Spread", cur: latest?.spread,   prv: prev?.spread,        colorFn: spreadColor },
+      { label: "RPI",    cur: latestRpi?.RPI,   prv: prevRpi?.RPI,        colorFn: rpiColor    },
+      { label: "CCI",    cur: latestCci?.CCI,   prv: prevCci?.CCI,        colorFn: cciColor    },
+      { label: "ECS",    cur: ecsVal,            prv: prevEcs,             colorFn: ecsColor    },
+      { label: "MTCS",   cur: mtcsVal,           prv: prevMtcsVal,         colorFn: mtcsColor   },
+    ];
+
+    const THRESHOLD = 3;
+    const anyMoved  = metrics.some(m => m.cur != null && m.prv != null && Math.abs(m.cur - m.prv) >= THRESHOLD);
+
+    if (!anyMoved) { stripEl.classList.remove("visible"); return; }
+
+    titleEl.textContent = `Since last update (${prevLabel})`;
+    chipsEl.innerHTML = metrics.map(m => {
+      const { label, cur, prv, colorFn } = m;
+      if (cur == null) return `<div class="diff-chip"><span class="diff-chip-label">${label}</span><span class="diff-chip-vals" style="color:var(--muted)">—</span></div>`;
+      if (prv == null) return `<div class="diff-chip"><span class="diff-chip-label">${label}</span><span class="diff-chip-vals">${cur}</span></div>`;
+      const d        = cur - prv;
+      const absDelta = Math.abs(d);
+      const arrow    = d > 0 ? "▲" : d < 0 ? "▼" : "";
+      const sign     = d > 0 ? "+" : "";
+      const col      = deltaColor(absDelta, colorFn, cur);
+      return `<div class="diff-chip">
+        <span class="diff-chip-label">${label}</span>
+        <span class="diff-chip-vals">${prv} → ${cur}</span>
+        <span class="diff-chip-delta" style="color:${col}">${arrow} ${sign}${d.toFixed(0)}</span>
+      </div>`;
+    }).join("");
+
+    stripEl.classList.add("visible");
+  })();
 }
 
 // ── Chart: Crimea prices ──────────────────────────────────────────────────
