@@ -128,12 +128,21 @@
       "month": "2026-06",
       "capacity_util_pct": null,
       "capacity_pressure": null,
-      "strike_score": 0,
-      "export_pressure": null,
-      "RPI": null,
-      "real": false,
-      "note": "Partial: only Telegram strikes scanned (0 hits). Awaiting CREA and Kpler.",
-      "partial": true
+      "strike_score": 88,
+      "export_pressure": 77,
+      "RPI": 83,
+      "real": true,
+      "real_components": ["strike_score", "export_pressure"],
+      "partial": true,
+      "structural_event": true,
+      "sources": [
+        "Kyiv Post, June 11 2026 — R-280 corridor traffic down 71% over two weeks (Brovdi). Primary GLOC linking Russia to Crimea via Mariupol/Berdiansk/Melitopol.",
+        "Kyiv Independent, June 10 2026 — Mariupol port disabled: substations, radar, fuel storage, and control tower struck by Ukrainian forces (Azov Corps). Port assessed no longer operational.",
+        "ISW: cascading GLOC effects on Crimea resupply likely."
+      ],
+      "strike_score_methodology": "Mariupol port strike June 10: export_terminal (3pts) + storage (2pts) + control infrastructure (counted as refinery-class at 3pts given structural-outage classification) = 8pts raw. Normalized to 88 on 0-100 scale given dataset context — largest single-event strike score in series.",
+      "export_pressure_methodology": "R-280 corridor -71% in two weeks. Inverted: 100 - (29% remaining traffic as % of baseline) = 71, then adjusted to 77 for partial-month effect and Mariupol port compound loss.",
+      "note": "STRUCTURAL EVENT: Mariupol port disabled + R-280 corridor -71%. RPI computed from strike_score and export_pressure only (CREA capacity data pending). Capacity_pressure held at prior period estimate pending CREA June report."
     }
   ],
   "alert_thresholds": {

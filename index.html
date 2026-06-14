@@ -648,7 +648,10 @@ const SEED_SCORES = {"cities":{
   {"date":"2026-04-07","label":"Crimea price −5.6% single period","category":"price","significance":"medium"},
   {"date":"2026-05-05","label":"Crimea peak: 251,273 ₽/m²","category":"price","significance":"medium"},
   {"date":"2026-05-19","label":"Crimea −12.3% — largest single-period drop in 12 months","category":"price","significance":"high"},
-  {"date":"2026-06-02","label":"Crimea current: 221,332 ₽/m²","category":"price","significance":"low"}
+  {"date":"2026-06-02","label":"Crimea current: 221,332 ₽/m²","category":"price","significance":"low"},
+  {"date":"2026-06-10","label":"Mariupol port disabled — substations, radar, fuel storage, control tower hit (Azov Corps)","category":"infrastructure","significance":"high"},
+  {"date":"2026-06-10","label":"Sevastopol fuel rationing cut to 20L/week (from 20L/day) — worst fuel crisis since 2014","category":"civilian","significance":"high"},
+  {"date":"2026-06-11","label":"R-280 corridor traffic down 71% in two weeks — primary GLOC to Crimea via Mariupol/Berdiansk","category":"infrastructure","significance":"high"}
 ]};
 
 const SEED_PERM = {"alert_thresholds":{"critical_below":50,"warning_below":65,"stable_above":75},"cities":{
@@ -739,7 +742,7 @@ const SEED_RPI = {"monthly_readings":[
   {"month":"2026-03","capacity_util_pct":63,"capacity_pressure":37,"strike_score":59,"export_pressure":34,"RPI":43,"real":false},
   {"month":"2026-04","capacity_util_pct":66,"capacity_pressure":34,"strike_score":67,"export_pressure":40,"RPI":47,"real":false},
   {"month":"2026-05","capacity_util_pct":62,"capacity_pressure":38,"strike_score":63,"export_pressure":37,"RPI":46,"real":false},
-  {"month":"2026-06","capacity_util_pct":null,"capacity_pressure":null,"strike_score":null,"export_pressure":null,"RPI":null,"real":false,"note":"Awaiting CREA June report and Kpler weekly pull"}
+  {"month":"2026-06","capacity_util_pct":null,"capacity_pressure":null,"strike_score":88,"export_pressure":77,"RPI":83,"real":true,"real_components":["strike_score","export_pressure"],"partial":true,"structural_event":true,"note":"STRUCTURAL EVENT: Mariupol port disabled + R-280 corridor -71%. Sources: Kyiv Post Jun 11, Kyiv Independent Jun 10."}
 ],"alert_thresholds":{"critical_above":70,"warning_above":50,"watch_above":35}};
 
 // CCI sub-indicators: ±2–4pt noise added around linear trend, composites recomputed
@@ -756,7 +759,7 @@ const SEED_CCI = {"monthly_readings":[
   {"month":"2026-03","fuel_price_premium_pct":12,"fuel_score":62,"panic_keyword_score":27,"avito_premium_score":20,"CCI":36,"real":false},
   {"month":"2026-04","fuel_price_premium_pct":15,"fuel_score":73,"panic_keyword_score":34,"avito_premium_score":27,"CCI":45,"real":false},
   {"month":"2026-05","fuel_price_premium_pct":14,"fuel_score":72,"panic_keyword_score":32,"avito_premium_score":25,"CCI":43,"real":false},
-  {"month":"2026-06","fuel_price_premium_pct":null,"fuel_score":null,"panic_keyword_score":null,"avito_premium_score":null,"CCI":null,"real":false,"note":"Awaiting Rosstat weekly pull, Telegram scrape, Avito fetch"}
+  {"month":"2026-06","fuel_price_premium_pct":null,"fuel_score":88,"panic_keyword_score":0,"avito_premium_score":null,"CCI":44,"real":false,"real_components":["fuel_score"],"partial":true,"structural_event":true,"note":"STRUCTURAL EVENT: Sevastopol rationing 20L/week from 20L/day. Source: Euronews Jun 12, Razvozhaev."}
 ],"alert_thresholds":{"critical_above":65,"warning_above":45,"watch_above":25}};
 
 // ── State ─────────────────────────────────────────────────────────────────
@@ -868,6 +871,20 @@ function updateDials(cityKey) {
         }
       }
     }
+  }
+
+  // Structural event: single-period spike ≥25pts in export_pressure or fuel_score
+  if (latestRpi && prevRpi) {
+    const epNow  = latestRpi.export_pressure;
+    const epPrev = prevRpi.export_pressure;
+    if (epNow != null && epPrev != null && (epNow - epPrev) >= 25)
+      alerts.push(`🔴 STRUCTURAL EVENT: RPI export_pressure +${epNow - epPrev} pts in one period (${epPrev}→${epNow}) — verify against key_events for kinetic triggers before treating as noise.`);
+  }
+  if (latestCci && prevCci) {
+    const fsNow  = latestCci.fuel_score;
+    const fsPrev = prevCci.fuel_score;
+    if (fsNow != null && fsPrev != null && (fsNow - fsPrev) >= 25)
+      alerts.push(`🔴 STRUCTURAL EVENT: CCI fuel_score +${fsNow - fsPrev} pts in one period (${fsPrev}→${fsNow}) — verify against key_events for kinetic/policy triggers before treating as noise.`);
   }
 
   // MTCS threshold alerts (computed globally — not city-specific)

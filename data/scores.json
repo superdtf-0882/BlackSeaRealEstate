@@ -585,6 +585,24 @@
       "label": "Crimea Restate index: 221,332 ₽/m² — current reading",
       "category": "price",
       "significance": "low"
+    },
+    {
+      "date": "2026-06-10",
+      "label": "Mariupol port disabled by Ukrainian strikes — substations, radar, fuel storage, control tower hit (Azov Corps)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-10",
+      "label": "Sevastopol fuel rationing cut to 20L/week (from 20L/day) — QR-code system via Max messenger app, worst fuel crisis since 2014",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-11",
+      "label": "R-280 Crimea corridor traffic down 71% in two weeks per Ukrainian drone command — primary GLOC to Crimea via Mariupol/Berdiansk",
+      "category": "infrastructure",
+      "significance": "high"
     }
   ]
 }

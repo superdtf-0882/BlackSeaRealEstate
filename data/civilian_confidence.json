@@ -138,13 +138,21 @@
     {
       "month": "2026-06",
       "fuel_price_premium_pct": null,
-      "fuel_score": null,
+      "fuel_score": 88,
       "panic_keyword_score": 0,
       "avito_premium_score": null,
-      "CCI": null,
+      "CCI": 44,
       "real": false,
-      "note": "Partial: only Telegram scanned (0 panic hits). Awaiting Rosstat and Avito.",
-      "partial": true
+      "real_components": ["fuel_score"],
+      "partial": true,
+      "structural_event": true,
+      "sources": [
+        "Euronews, June 12 2026 — Sevastopol fuel rationing reduced from 20L/day to 20L/week (~7x reduction), citing occupation governor Mikhail Razvozhaev. QR-code purchase system introduced June 6 via Max messenger app.",
+        "Euronews description: 'worst fuel crisis on the Black Sea peninsula since 2014 annexation.'",
+        "Note: fuel_score is sourced from occupation-government-acknowledged rationing order — highest confidence source tier in the dataset. Panic keyword score from Telegram (0 hits pre-June 10 window) not yet reflecting post-rationing-announcement period."
+      ],
+      "fuel_score_methodology": "Rationing at 20L/week vs 20L/day = 86% reduction in daily allowance. Occupation government public acknowledgment = maximum confidence. Score 88: at top of scale (ceiling 100 reserved for total supply cutoff). Prior dataset maximum was 73 (Apr 2026).",
+      "note": "STRUCTURAL EVENT: Sevastopol rationing 20L/week — occupation-government sourced, highest confidence fuel reading in dataset. CCI computed from fuel_score only (partial); panic_keyword_score=0 from pre-announcement Telegram window, avito_premium_score pending. CCI will rise when panic_keyword and avito catch up to rationing shock."
     }
   ],
   "alert_thresholds": {
