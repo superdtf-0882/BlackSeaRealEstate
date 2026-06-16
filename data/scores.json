@@ -1,5 +1,5 @@
 {
-  "methodology_version": "3.1",
+  "methodology_version": "4.0",
   "last_updated": "2026-06-14",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
@@ -587,6 +587,24 @@
       "significance": "low"
     },
     {
+      "date": "2026-06-02",
+      "label": "Occupied Luhansk imposes 20L/person fuel rationing (gasoline + diesel) — mirrors Crimea restrictions, cites logistics bottlenecks",
+      "category": "civilian",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-06-03",
+      "label": "Russian fuel rationing spreads nationally to 20+ regions including Moscow and St. Petersburg — ~40% of primary refining capacity offline; Crimea crisis is leading edge of national crisis, not isolated",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-05",
+      "label": "Ukraine strikes cargo vessels in Mariupol/Berdiansk ports — 5 Azerbaijani crew members killed (BBC)",
+      "category": "infrastructure",
+      "significance": "medium"
+    },
+    {
       "date": "2026-06-10",
       "label": "Mariupol port disabled by Ukrainian strikes — substations, radar, fuel storage, control tower hit (Azov Corps)",
       "category": "infrastructure",
@@ -599,9 +617,21 @@
       "significance": "high"
     },
     {
+      "date": "2026-06-10",
+      "label": "Ukrainian drones strike Sevastopol's Panorama Museum alongside Mariupol port and Russian oil refineries — Sevastopol governor Razvozhayev confirms damage",
+      "category": "infrastructure",
+      "significance": "low"
+    },
+    {
       "date": "2026-06-11",
       "label": "R-280 Crimea corridor traffic down 71% in two weeks per Ukrainian drone command — primary GLOC to Crimea via Mariupol/Berdiansk",
       "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-11",
+      "label": "Sevastopol fuel rationing coupons fully suspended — tanker trucks unable to reach city after corridor strikes; refueling priority restricted to public transport, utilities, emergency, and government vehicles only",
+      "category": "civilian",
       "significance": "high"
     },
     {
