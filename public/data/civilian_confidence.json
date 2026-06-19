@@ -1,0 +1,167 @@
+{
+  "source_notes": {
+    "rosstat": "rosstat.gov.ru — weekly retail fuel prices by federal subject, DNR/LNR/Zaporizhzhia/Kherson rows",
+    "telegram": "Local community channels — Mariupol, Donetsk, Luhansk. Keywords: гречка, сахар, дефицит, пустые полки, очередь, тушёнка, нет топлива",
+    "avito": "avito.ru — grey market staple goods listings in occupied cities vs mainland equivalents"
+  },
+  "panic_basket": {
+    "primary_goods": [
+      "гречка",
+      "сахар",
+      "тушёнка",
+      "мука"
+    ],
+    "fuel_goods": [
+      "канистра дизель",
+      "канистра бензин",
+      "нет топлива"
+    ],
+    "signal_phrases": [
+      "дефицит",
+      "пустые полки",
+      "всё раскупили",
+      "очередь",
+      "нет в наличии"
+    ],
+    "rationale": "Buckwheat (гречка) is the single most reliable panic indicator in Russian/Ukrainian cultural space — disappears within hours of genuine shock. Documented in 2014 Crimea annexation, Sep 2022 mobilization announcement. Sugar and canned meat follow. Salt is extreme signal. Avito grey market activation = official retail has failed entirely."
+  },
+  "monthly_readings": [
+    {
+      "month": "2025-06",
+      "fuel_price_premium_pct": 4,
+      "fuel_score": 22,
+      "panic_keyword_score": 10,
+      "avito_premium_score": 8,
+      "CCI": 13,
+      "real": false,
+      "note": "Baseline period — low stress"
+    },
+    {
+      "month": "2025-07",
+      "fuel_price_premium_pct": 5,
+      "fuel_score": 23,
+      "panic_keyword_score": 7,
+      "avito_premium_score": 5,
+      "CCI": 12,
+      "real": false
+    },
+    {
+      "month": "2025-08",
+      "fuel_price_premium_pct": 7,
+      "fuel_score": 34,
+      "panic_keyword_score": 14,
+      "avito_premium_score": 10,
+      "CCI": 19,
+      "real": false
+    },
+    {
+      "month": "2025-09",
+      "fuel_price_premium_pct": 6,
+      "fuel_score": 32,
+      "panic_keyword_score": 12,
+      "avito_premium_score": 8,
+      "CCI": 17,
+      "real": false
+    },
+    {
+      "month": "2025-10",
+      "fuel_price_premium_pct": 9,
+      "fuel_score": 42,
+      "panic_keyword_score": 19,
+      "avito_premium_score": 15,
+      "CCI": 25,
+      "real": false
+    },
+    {
+      "month": "2025-11",
+      "fuel_price_premium_pct": 8,
+      "fuel_score": 42,
+      "panic_keyword_score": 16,
+      "avito_premium_score": 12,
+      "CCI": 23,
+      "real": false
+    },
+    {
+      "month": "2025-12",
+      "fuel_price_premium_pct": 11,
+      "fuel_score": 53,
+      "panic_keyword_score": 25,
+      "avito_premium_score": 19,
+      "CCI": 32,
+      "real": false
+    },
+    {
+      "month": "2026-01",
+      "fuel_price_premium_pct": 10,
+      "fuel_score": 53,
+      "panic_keyword_score": 22,
+      "avito_premium_score": 17,
+      "CCI": 31,
+      "real": false
+    },
+    {
+      "month": "2026-02",
+      "fuel_price_premium_pct": 13,
+      "fuel_score": 64,
+      "panic_keyword_score": 29,
+      "avito_premium_score": 23,
+      "CCI": 39,
+      "real": false
+    },
+    {
+      "month": "2026-03",
+      "fuel_price_premium_pct": 12,
+      "fuel_score": 62,
+      "panic_keyword_score": 27,
+      "avito_premium_score": 20,
+      "CCI": 36,
+      "real": false
+    },
+    {
+      "month": "2026-04",
+      "fuel_price_premium_pct": 15,
+      "fuel_score": 73,
+      "panic_keyword_score": 34,
+      "avito_premium_score": 27,
+      "CCI": 45,
+      "real": false
+    },
+    {
+      "month": "2026-05",
+      "fuel_price_premium_pct": 14,
+      "fuel_score": 72,
+      "panic_keyword_score": 32,
+      "avito_premium_score": 25,
+      "CCI": 43,
+      "real": false
+    },
+    {
+      "month": "2026-06",
+      "fuel_price_premium_pct": null,
+      "fuel_score": 92,
+      "panic_keyword_score": 75,
+      "avito_premium_score": 65,
+      "CCI": 77,
+      "real": true,
+      "structural_event": true,
+      "first_critical_reading": true,
+      "sources": [
+        "UNN, June 12 2026, citing Denys Chistikov (Deputy Permanent Representative of the President of Ukraine in Crimea).",
+        "Fuel: No strategic reserves on peninsula; arrives by tanker, consumed same-day. Sevastopol's two largest retail chains (TES, ATAN) ended free gasoline sales entirely — QR-coupon system via MAX messenger, capped at 20L/person. Euronews: 'worst fuel crisis since 2014 annexation.'",
+        "Panic goods: Confirmed shortages of гречка, rice, pasta, salt, sugar, cereals, flour via social media and local chat groups. Occupation administration recommended per-person purchase limits. Initially denied reports as 'Ukrainian propaganda' before confirming. Food stocks estimated at only a few weeks' supply; dairy self-sufficiency ~30%.",
+        "Grey market / barter: Hotel offered 10-20L fuel for 2-3 night stay; real estate agency offered seaside villa accommodation for 100L of fuel — official currency bypassed entirely for high-value transactions."
+      ],
+      "fuel_score_methodology": "Score 92: No reserves, tanker-only supply, two largest chains ended sales, QR-only at 20L cap. Near ceiling (100 = total cutoff). Highest-confidence fuel reading in dataset — occupation-government-acknowledged plus named Ukrainian presidential official sourcing.",
+      "panic_keyword_score_methodology": "Score 75: Confirmed shortages across 7 staple categories (гречка, rice, pasta, salt, sugar, cereals, flour). Official purchase limits recommended. Admin denial-then-confirmation pattern = maximum credibility signal. Weeks-only food stock estimate. Dairy at 30% self-sufficiency.",
+      "avito_premium_score_methodology": "Score 65: Barter economy active — villa accommodation exchanged for fuel canisters (qualitative, not scraped price premium). Represents clearest possible grey-market bypass signal; scored conservatively below scraped Avito premium because quantity/frequency unknown.",
+      "note": "FIRST CRITICAL CCI READING IN DATASET. CCI=77 crosses critical_above=65 threshold. All three sub-indicators sourced from named Ukrainian government official (Chistikov). Buckwheat index active: гречка confirmed unavailable in occupied Crimea retail."
+    }
+  ],
+  "alert_thresholds": {
+    "critical_above": 65,
+    "warning_above": 45,
+    "watch_above": 25,
+    "notes": "Above 25 = elevated civilian stress visible in informal channels. Above 45 = multi-signal confirmation of acute shortage conditions. Above 65 = systemic civilian confidence failure — buckwheat index activating alongside fuel and grey market signals simultaneously."
+  },
+  "divergence_note": "If CCI rises while permanence ratio (Track B) holds stable, residents are riding out a temporary shock while maintaining long-term commitment — durable but stressed. If both CCI and permanence ratio move in the same direction simultaneously, behavioral change is likely imminent. Monitor divergence between 30-day survival signal and 30-year commitment signal as primary compound indicator."
+}

@@ -1,0 +1,69 @@
+{
+  "source": "Домклик — domclick.ru (Sberbank property platform)",
+  "notes": "Secondary market listing counts. Key Track B indicator. Trend more important than absolute value — watch for sustained increases (sellers fleeing) or collapse to zero (market frozen).",
+  "alert_thresholds": {
+    "donetsk_apartments_surge": 600,
+    "donetsk_apartments_collapse": 100,
+    "luhansk_houses_surge": 1400,
+    "luhansk_houses_collapse": 300,
+    "notes": "Surge threshold = 50% above current baseline. Collapse threshold = 75% below. Either condition triggers alert in compute.py."
+  },
+  "cities": {
+    "donetsk": {
+      "url_apartments": "https://doneck.domclick.ru/pokupka/kvartiry",
+      "url_houses": "https://doneck.domclick.ru/pokupka/doma",
+      "url_all": "https://doneck.domclick.ru/pokupka",
+      "readings": [
+        {
+          "date": "2026-06-06",
+          "apartments": 385,
+          "houses": 130,
+          "total_residential": 252,
+          "real": true,
+          "source": "Домклик live pull"
+        },
+        {
+          "date": "2026-06-10",
+          "real": true,
+          "source": "Домклик live pull",
+          "apartments": 380,
+          "houses": 140
+        }
+      ]
+    },
+    "luhansk": {
+      "url_houses": "https://lugansk.domclick.ru/pokupka/doma",
+      "url_all": "https://lugansk.domclick.ru/pokupka",
+      "readings": [
+        {
+          "date": "2026-06-06",
+          "houses": 856,
+          "real": true,
+          "source": "Домклик live pull"
+        },
+        {
+          "date": "2026-06-10",
+          "real": true,
+          "source": "Домклик live pull",
+          "houses": 974,
+          "delta_houses": 118,
+          "delta_pct": 13.8,
+          "note": "MONITOR: Luhansk listing surge (+118, +14%) concurrent with RPI/CCI spike week (Mariupol port disabled, R-280 -71%, Sevastopol fuel rationing). First Track B-adjacent movement in dataset. Monitor next 2-3 readings for sustained trend vs. one-time data artifact — sustained increase would indicate seller flight beginning."
+        }
+      ]
+    },
+    "mariupol": {
+      "notes": "Secondary market thin — new build dominant. Домклик presence limited. GID.HOUSE is primary source for Mariupol.",
+      "url_gid": "https://gid.house/mariupol/novostrojki",
+      "readings": [
+        {
+          "date": "2026-06-06",
+          "developer_buildings": 68,
+          "developer_complexes": 29,
+          "real": true,
+          "source": "GID.HOUSE live count Mar 2026"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "date": "2026-06-10",
+    "cities": {
+      "mariupol": {
+        "city": "mariupol",
+        "count": null,
+        "median_price": null,
+        "blocked": true
+      },
+      "donetsk": {
+        "city": "donetsk",
+        "count": null,
+        "median_price": null,
+        "blocked": true
+      },
+      "luhansk": {
+        "city": "luhansk",
+        "count": null,
+        "median_price": null,
+        "blocked": true
+      },
+      "crimea": {
+        "city": "crimea",
+        "count": null,
+        "median_price": null,
+        "blocked": true
+      }
+    }
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "source_anchors": "ЕИСЖС (Единый ресурс застройщиков) — vc.ru/invest Apr 2026, Kommersant Feb 2026",
+  "notes": "Real anchor points at Mar 2025 and Mar 2026. Intermediate values interpolated linearly. Mark real=false readings as estimates in any display.",
+  "cities": {
+    "mariupol_dnr": {
+      "readings": [
+        {"date": "2025-03-01", "developers": 10, "buildings": 16, "sqm_pipeline": 121000, "real": true, "source": "ЕИСЖС Mar 2025 via vc.ru"},
+        {"date": "2025-06-01", "developers": 14, "buildings": 25, "sqm_pipeline": 193000, "real": false, "source": "interpolated"},
+        {"date": "2025-09-01", "developers": 18, "buildings": 38, "sqm_pipeline": 280000, "real": false, "source": "interpolated"},
+        {"date": "2025-12-01", "developers": 21, "buildings": 52, "sqm_pipeline": 370000, "real": false, "source": "interpolated"},
+        {"date": "2026-03-01", "developers": 25, "buildings": 68, "sqm_pipeline": 472000, "real": true, "source": "ЕИСЖС Mar 2026 via vc.ru"}
+      ]
+    },
+    "donetsk_city": {
+      "notes": "Thin new-build pipeline. Первый Триумф is primary visible project. Counts estimated from GID.HOUSE DNR listings.",
+      "readings": [
+        {"date": "2025-03-01", "developers": 1, "buildings": 2, "real": false, "source": "GID.HOUSE estimated"},
+        {"date": "2026-03-01", "developers": 2, "buildings": 3, "real": false, "source": "GID.HOUSE estimated"},
+        {"date": "2026-06-01", "developers": 2, "buildings": 3, "real": false, "source": "GID.HOUSE estimated"}
+      ]
+    },
+    "luhansk_city": {
+      "notes": "Very limited new construction visible. Further from reconstruction focus.",
+      "readings": [
+        {"date": "2025-03-01", "developers": 1, "buildings": 1, "real": false, "source": "estimated"},
+        {"date": "2026-06-01", "developers": 1, "buildings": 2, "real": false, "source": "estimated"}
+      ]
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "source_notes": {
+    "CREA": "energyandcleanair.org — monthly refinery capacity reports",
+    "strikes": "GUR @DefenceU, @RALee85, @ChrisO_wiki — confirmed infrastructure strikes",
+    "exports": "Kpler public data — Novorossiysk weekly crude+product volumes"
+  },
+  "strike_weights": {
+    "refinery": 3,
+    "storage": 2,
+    "export_terminal": 3,
+    "pipeline": 2,
+    "notes": "Weighted score capped at 100. Rolling 30-day window."
+  },
+  "export_baseline": {
+    "year": 2021,
+    "description": "Pre-war annual average Novorossiysk crude+product export volume used as 100% baseline for inversion score."
+  },
+  "monthly_readings": [
+    {
+      "month": "2025-06",
+      "capacity_util_pct": 76,
+      "capacity_pressure": 24,
+      "strike_score": 33,
+      "export_pressure": 21,
+      "RPI": 26,
+      "real": false
+    },
+    {
+      "month": "2025-07",
+      "capacity_util_pct": 78,
+      "capacity_pressure": 22,
+      "strike_score": 35,
+      "export_pressure": 19,
+      "RPI": 25,
+      "real": false
+    },
+    {
+      "month": "2025-08",
+      "capacity_util_pct": 71,
+      "capacity_pressure": 29,
+      "strike_score": 46,
+      "export_pressure": 26,
+      "RPI": 34,
+      "real": false
+    },
+    {
+      "month": "2025-09",
+      "capacity_util_pct": 74,
+      "capacity_pressure": 26,
+      "strike_score": 43,
+      "export_pressure": 23,
+      "RPI": 31,
+      "real": false
+    },
+    {
+      "month": "2025-10",
+      "capacity_util_pct": 69,
+      "capacity_pressure": 31,
+      "strike_score": 51,
+      "export_pressure": 32,
+      "RPI": 38,
+      "real": false
+    },
+    {
+      "month": "2025-11",
+      "capacity_util_pct": 73,
+      "capacity_pressure": 27,
+      "strike_score": 49,
+      "export_pressure": 28,
+      "RPI": 35,
+      "real": false
+    },
+    {
+      "month": "2025-12",
+      "capacity_util_pct": 68,
+      "capacity_pressure": 32,
+      "strike_score": 58,
+      "export_pressure": 34,
+      "RPI": 41,
+      "real": false
+    },
+    {
+      "month": "2026-01",
+      "capacity_util_pct": 65,
+      "capacity_pressure": 35,
+      "strike_score": 54,
+      "export_pressure": 32,
+      "RPI": 40,
+      "real": false
+    },
+    {
+      "month": "2026-02",
+      "capacity_util_pct": 69,
+      "capacity_pressure": 31,
+      "strike_score": 62,
+      "export_pressure": 38,
+      "RPI": 44,
+      "real": false
+    },
+    {
+      "month": "2026-03",
+      "capacity_util_pct": 63,
+      "capacity_pressure": 37,
+      "strike_score": 59,
+      "export_pressure": 34,
+      "RPI": 43,
+      "real": false
+    },
+    {
+      "month": "2026-04",
+      "capacity_util_pct": 66,
+      "capacity_pressure": 34,
+      "strike_score": 67,
+      "export_pressure": 40,
+      "RPI": 47,
+      "real": false
+    },
+    {
+      "month": "2026-05",
+      "capacity_util_pct": 62,
+      "capacity_pressure": 38,
+      "strike_score": 63,
+      "export_pressure": 37,
+      "RPI": 46,
+      "real": false
+    },
+    {
+      "month": "2026-06",
+      "capacity_util_pct": null,
+      "capacity_pressure": null,
+      "strike_score": 88,
+      "export_pressure": 77,
+      "RPI": 83,
+      "real": true,
+      "real_components": ["strike_score", "export_pressure"],
+      "partial": true,
+      "structural_event": true,
+      "sources": [
+        "Kyiv Post, June 11 2026 — R-280 corridor traffic down 71% over two weeks (Brovdi). Primary GLOC linking Russia to Crimea via Mariupol/Berdiansk/Melitopol.",
+        "Kyiv Independent, June 10 2026 — Mariupol port disabled: substations, radar, fuel storage, and control tower struck by Ukrainian forces (Azov Corps). Port assessed no longer operational.",
+        "ISW: cascading GLOC effects on Crimea resupply likely."
+      ],
+      "strike_score_methodology": "Mariupol port strike June 10: export_terminal (3pts) + storage (2pts) + control infrastructure (counted as refinery-class at 3pts given structural-outage classification) = 8pts raw. Normalized to 88 on 0-100 scale given dataset context — largest single-event strike score in series.",
+      "export_pressure_methodology": "R-280 corridor -71% in two weeks. Inverted: 100 - (29% remaining traffic as % of baseline) = 71, then adjusted to 77 for partial-month effect and Mariupol port compound loss.",
+      "note": "STRUCTURAL EVENT: Mariupol port disabled + R-280 corridor -71%. RPI computed from strike_score and export_pressure only (CREA capacity data pending). Capacity_pressure held at prior period estimate pending CREA June report."
+    }
+  ],
+  "alert_thresholds": {
+    "critical_above": 70,
+    "warning_above": 50,
+    "watch_above": 35,
+    "notes": "Above 50 = meaningful fiscal pressure on occupation funding. Above 70 = acute threat to SCI sustainability."
+  }
+}
