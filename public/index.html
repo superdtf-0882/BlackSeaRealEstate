@@ -2017,7 +2017,8 @@ function showDigestLink(date) {
   a.href = '/api/digest/latest';
   a.target = '_blank';
   a.rel = 'noopener noreferrer';
-  a.textContent = ' · Latest digest: ' + label + ' →';
+  anchor.appendChild(document.createElement('br'));
+  a.textContent = 'Latest digest: ' + label + ' →';
   a.style.cssText = 'font-size:11px;color:#8b949e;text-decoration:none;';
   a.onmouseover = () => a.style.textDecoration = 'underline';
   a.onmouseout  = () => a.style.textDecoration = 'none';
