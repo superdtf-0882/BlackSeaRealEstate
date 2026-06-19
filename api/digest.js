@@ -8,9 +8,10 @@ module.exports = (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Extract optional date param from URL: /api/digest/YYYY-MM-DD or /api/digest/latest
-  const urlParts = req.url.split('/').filter(Boolean);
-  const dateParam = urlParts[urlParts.length - 1];
+  // Extract date param — Vercel rewrites pass it as query string (?date=latest)
+  // Express router passes it as req.params.date; fall back to URL path parsing
+  const dateParam = req.query?.date || req.params?.date
+    || req.url.split('/').filter(Boolean).pop();
 
   if (!fs.existsSync(DIGESTS_DIR)) {
     return res.status(404).json({ error: 'No digests yet' });
