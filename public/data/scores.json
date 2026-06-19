@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-14",
+  "last_updated": "2026-06-18",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -594,13 +594,13 @@
     },
     {
       "date": "2026-06-03",
-      "label": "Russian fuel rationing spreads nationally to 20+ regions including Moscow and St. Petersburg — ~40% of primary refining capacity offline; Crimea crisis is leading edge of national crisis, not isolated",
+      "label": "Russian fuel rationing spreads to 20+ regions including Moscow and St. Petersburg — ~40% primary refining capacity offline; Crimea crisis is leading edge of national crisis",
       "category": "macro",
       "significance": "high"
     },
     {
       "date": "2026-06-05",
-      "label": "Ukraine strikes cargo vessels in Mariupol/Berdiansk ports — 5 Azerbaijani crew members killed (BBC)",
+      "label": "Ukraine strikes cargo vessels in Mariupol/Berdiansk ports — 5 Azerbaijani crew members killed (BBC/GlobalSecurity)",
       "category": "infrastructure",
       "significance": "medium"
     },
@@ -618,7 +618,7 @@
     },
     {
       "date": "2026-06-10",
-      "label": "Ukrainian drones strike Sevastopol's Panorama Museum alongside Mariupol port and Russian oil refineries — Sevastopol governor Razvozhayev confirms damage",
+      "label": "Ukrainian drones strike Sevastopol Panorama Museum alongside Mariupol port and Russian oil refineries — governor Razvozhayev confirms damage",
       "category": "infrastructure",
       "significance": "low"
     },
@@ -630,7 +630,7 @@
     },
     {
       "date": "2026-06-11",
-      "label": "Sevastopol fuel rationing coupons fully suspended — tanker trucks unable to reach city after corridor strikes; refueling priority restricted to public transport, utilities, emergency, and government vehicles only",
+      "label": "Sevastopol fuel rationing coupons fully suspended — tanker trucks unable to reach city after corridor strikes; refueling restricted to emergency and essential services only",
       "category": "civilian",
       "significance": "high"
     },
@@ -638,6 +638,12 @@
       "date": "2026-06-12",
       "label": "Crimea food/fuel crisis confirmed by Ukrainian govt official: гречка/rice/salt/sugar shortages, ~30% dairy self-sufficiency, few weeks of food stock remaining, real estate agency offering villa stays for fuel canisters",
       "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-18",
+      "label": "Ukraine strikes Moscow Kapotnya oil refinery — second hit in one week, four airports halted operations; fuel rationing now confirmed in 53 Russian regions; crude processing at 21-year low per Energy Intelligence",
+      "category": "macro",
       "significance": "high"
     }
   ]

@@ -636,7 +636,7 @@ const SEED_MORT = {"totals":[
   ]}
 }};
 
-const SEED_SCORES = {"last_updated":"2026-06-14","cities":{
+const SEED_SCORES = {"last_updated":"2026-06-18","cities":{
   "mariupol":{"display_name":"Mariupol","weight":1.0,"history":[
     {"month":"2025-06","SCI":52,"SCI_lo":48,"SCI_hi":56,"track_a":22,"a_lo":17,"a_hi":27,"track_b":23,"b_lo":19,"b_hi":27,"composite":34,"spread":-11,"data_quality":"estimated"},
     {"month":"2025-07","SCI":55,"SCI_lo":51,"SCI_hi":59,"track_a":24,"a_lo":19,"a_hi":29,"track_b":23,"b_lo":19,"b_hi":27,"composite":36,"spread":-13,"data_quality":"estimated"},
@@ -708,7 +708,8 @@ const SEED_SCORES = {"last_updated":"2026-06-14","cities":{
   {"date":"2026-06-10","label":"Ukrainian drones strike Sevastopol's Panorama Museum alongside Mariupol port and Russian oil refineries — Sevastopol governor Razvozhayev confirms damage","category":"infrastructure","significance":"low"},
   {"date":"2026-06-11","label":"R-280 corridor traffic down 71% in two weeks — primary GLOC to Crimea via Mariupol/Berdiansk","category":"infrastructure","significance":"high"},
   {"date":"2026-06-11","label":"Sevastopol fuel rationing coupons fully suspended — tanker trucks unable to reach city after corridor strikes; refueling priority restricted to public transport, utilities, emergency, and government vehicles only","category":"civilian","significance":"high"},
-  {"date":"2026-06-12","label":"Crimea food/fuel crisis confirmed by Ukrainian govt official: гречка/rice/salt/sugar shortages, ~30% dairy self-sufficiency, few weeks of food stock, villa stays for fuel canisters","category":"civilian","significance":"high"}
+  {"date":"2026-06-12","label":"Crimea food/fuel crisis confirmed by Ukrainian govt official: гречка/rice/salt/sugar shortages, ~30% dairy self-sufficiency, few weeks of food stock, villa stays for fuel canisters","category":"civilian","significance":"high"},
+  {"date":"2026-06-18","label":"Ukraine strikes Moscow Kapotnya oil refinery — second hit in one week, four airports halted; fuel rationing confirmed in 53 Russian regions; crude processing at 21-year low per Energy Intelligence","category":"macro","significance":"high"}
 ]};
 
 const SEED_PERM = {"alert_thresholds":{"critical_below":50,"warning_below":65,"stable_above":75},"cities":{
@@ -799,7 +800,7 @@ const SEED_RPI = {"monthly_readings":[
   {"month":"2026-03","capacity_util_pct":63,"capacity_pressure":37,"strike_score":59,"export_pressure":34,"RPI":43,"real":false},
   {"month":"2026-04","capacity_util_pct":66,"capacity_pressure":34,"strike_score":67,"export_pressure":40,"RPI":47,"real":false},
   {"month":"2026-05","capacity_util_pct":62,"capacity_pressure":38,"strike_score":63,"export_pressure":37,"RPI":46,"real":false},
-  {"month":"2026-06","capacity_util_pct":null,"capacity_pressure":null,"strike_score":88,"export_pressure":77,"RPI":83,"real":true,"real_components":["strike_score","export_pressure"],"partial":true,"structural_event":true,"note":"STRUCTURAL EVENT: Mariupol port disabled + R-280 corridor -71%. Sources: Kyiv Post Jun 11, Kyiv Independent Jun 10."}
+  {"month":"2026-06","capacity_util_pct":null,"capacity_pressure":null,"strike_score":88,"export_pressure":77,"RPI":88,"real":true,"real_components":["strike_score","export_pressure"],"partial":true,"structural_event":true,"note":"STRUCTURAL EVENT: Mariupol port disabled (Jun 10) + R-280 -71% (Jun 11) + Moscow Kapotnya refinery struck twice in one week (Jun 12, Jun 18) — 53 regions rationing, 21-year processing low. Sources: Kyiv Post, RFE/RL, Energy Intelligence Jun 18 2026."}
 ],"alert_thresholds":{"critical_above":70,"warning_above":50,"watch_above":35}};
 
 // CCI sub-indicators: ±2–4pt noise added around linear trend, composites recomputed

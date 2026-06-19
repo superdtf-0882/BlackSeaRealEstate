@@ -128,9 +128,11 @@
       "month": "2026-06",
       "capacity_util_pct": null,
       "capacity_pressure": null,
-      "strike_score": 88,
+      "strike_score": 95,
       "export_pressure": 77,
-      "RPI": 83,
+      "RPI": 88,
+      "RPI_lo": 80,
+      "RPI_hi": 96,
       "real": true,
       "real_components": ["strike_score", "export_pressure"],
       "partial": true,
@@ -138,11 +140,13 @@
       "sources": [
         "Kyiv Post, June 11 2026 — R-280 corridor traffic down 71% over two weeks (Brovdi). Primary GLOC linking Russia to Crimea via Mariupol/Berdiansk/Melitopol.",
         "Kyiv Independent, June 10 2026 — Mariupol port disabled: substations, radar, fuel storage, and control tower struck by Ukrainian forces (Azov Corps). Port assessed no longer operational.",
-        "ISW: cascading GLOC effects on Crimea resupply likely."
+        "ISW: cascading GLOC effects on Crimea resupply likely.",
+        "RFE/RL June 18 2026 — Moscow Kapotnya oil refinery struck for second time in one week; fuel rationing confirmed in 53 Russian regions.",
+        "Energy Intelligence via Inkorr June 18 2026 — 16 refinery facilities hit total, including 8 of Russia's 10 largest; ~2.14 million barrels/day offline; crude processing at 21-year low."
       ],
-      "strike_score_methodology": "Mariupol port strike June 10: export_terminal (3pts) + storage (2pts) + control infrastructure (counted as refinery-class at 3pts given structural-outage classification) = 8pts raw. Normalized to 88 on 0-100 scale given dataset context — largest single-event strike score in series.",
-      "export_pressure_methodology": "R-280 corridor -71% in two weeks. Inverted: 100 - (29% remaining traffic as % of baseline) = 71, then adjusted to 77 for partial-month effect and Mariupol port compound loss.",
-      "note": "STRUCTURAL EVENT: Mariupol port disabled + R-280 corridor -71%. RPI computed from strike_score and export_pressure only (CREA capacity data pending). Capacity_pressure held at prior period estimate pending CREA June report."
+      "strike_score_methodology": "Mariupol port strike June 10: export_terminal (3pts) + storage (2pts) + control infrastructure (3pts structural-outage classification) = 8pts. Moscow Kapotnya June 12 + June 18 (two hits): refinery (3pts × 2) = 6pts additional. 16 facilities total including 8 of Russia's 10 largest — cumulative series now at 95/100, reflecting ~2.14 million bbl/day offline.",
+      "export_pressure_methodology": "R-280 corridor -71% in two weeks. Inverted: 100 - (29% remaining traffic as % of baseline) = 71, then adjusted to 77 for partial-month effect and Mariupol port compound loss. Held at 77 pending updated corridor report.",
+      "note": "STRUCTURAL EVENT: Mariupol port disabled + R-280 corridor -71% + Moscow Kapotnya struck twice in one week. RPI updated to 88 (lo:80/hi:96) reflecting escalation of national fuel crisis to 53 regions. CREA capacity data pending."
     }
   ],
   "alert_thresholds": {

@@ -11,3 +11,7 @@ data/*_raw.json
 __pycache__/
 *.pyc
 node_modules/
+
+# Firecrawl test artifacts
+.env
+scripts/last-run.json
