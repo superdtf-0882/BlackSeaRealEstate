@@ -64,20 +64,21 @@ module.exports = async (req, res) => {
 
     // 6. Detect significance
     const isSignificant = !digest.includes('No items meet dashboard-update threshold');
+    const digestApiUrl = `https://black-sea-real-estate.vercel.app/api/digest/${today}`;
 
     if (!isSignificant) {
       // Condition 2 — nothing dashboard-relevant
       writePending({
         pending: false,
         last_digest_date: today,
-        digest_url: blob.url,
+        digest_url: digestApiUrl,
         summary,
         resultsCount: newsResults.length,
       });
       try {
-        await sendMessage(`📰 Monitor ran — ${newsResults.length} results, nothing dashboard-relevant today. Digest at ${blob.url}`);
+        await sendMessage(`📰 Monitor ran — ${newsResults.length} results, nothing dashboard-relevant today. Digest at ${digestApiUrl}`);
       } catch (_) {}
-      return res.status(200).json({ ok: true, significant: false, date: today, resultsCount: newsResults.length, digestUrl: blob.url });
+      return res.status(200).json({ ok: true, significant: false, date: today, resultsCount: newsResults.length, digestUrl: digestApiUrl });
     }
 
     // Condition 3 — dashboard-relevant
@@ -87,7 +88,7 @@ module.exports = async (req, res) => {
       summary,
       resultsCount: newsResults.length,
       last_digest_date: today,
-      digest_url: blob.url,
+      digest_url: digestApiUrl,
     });
 
     try {
