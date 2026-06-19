@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@mendable/firecrawl-js": "^4.28.1",
+    "@vercel/blob": "^2.4.1",
     "dotenv": "^17.4.2",
     "express": "^4.19.2"
   }

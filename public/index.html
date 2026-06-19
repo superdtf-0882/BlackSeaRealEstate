@@ -2005,7 +2005,7 @@ async function init() {
 
 init();
 
-function showDigestLink(date) {
+function showDigestLink(date, digestUrl) {
   if (!date) return;
   if (document.getElementById('digestLink')) return;
   const anchor = document.getElementById('last-updated');
@@ -2014,7 +2014,7 @@ function showDigestLink(date) {
   const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   const a = document.createElement('a');
   a.id = 'digestLink';
-  a.href = '/api/digest/latest';
+  a.href = digestUrl || '/api/digest/latest';
   a.target = '_blank';
   a.rel = 'noopener noreferrer';
   anchor.appendChild(document.createElement('br'));
@@ -2052,7 +2052,7 @@ async function checkPending() {
       if (dataDate >= digestDate) {
         // Already ingested — auto-clear and show quiet link
         await fetch('/api/pending', { method: 'DELETE' });
-        showDigestLink(data.date);
+        showDigestLink(data.date, data.digest_url);
       } else {
         // Pending and not yet ingested — show green banner
         showPendingBanner(data);
@@ -2060,7 +2060,7 @@ async function checkPending() {
     } else {
       // Not pending — show quiet link if we have a last digest date
       if (data.last_digest_date) {
-        showDigestLink(data.last_digest_date);
+        showDigestLink(data.last_digest_date, data.digest_url);
       }
     }
   } catch(e) { /* silent fail */ }

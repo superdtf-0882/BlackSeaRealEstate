@@ -2,6 +2,7 @@ require('dotenv').config({ path: '.env', override: true });
 
 const fs      = require('fs');
 const path    = require('path');
+const { put } = require('@vercel/blob');
 const storage = require('../lib/storage');
 const { fetchNews }    = require('../lib/firecrawl');
 const { synthesize }   = require('../lib/claude');
@@ -54,11 +55,12 @@ module.exports = async (req, res) => {
       digest  = raw.trim();
     }
 
-    // 5. Write digest file
-    const digestsDir = path.join(__dirname, '..', 'public', 'digests');
-    if (!fs.existsSync(digestsDir)) fs.mkdirSync(digestsDir, { recursive: true });
-    const digestPath = path.join(digestsDir, `${today}.md`);
-    fs.writeFileSync(digestPath, digest, 'utf8');
+    // 5. Write digest to Vercel Blob
+    const blob = await put(`digests/${today}.md`, digest, {
+      access: 'public',
+      contentType: 'text/markdown',
+      addRandomSuffix: false,
+    });
 
     // 6. Detect significance
     const isSignificant = !digest.includes('No items meet dashboard-update threshold');
@@ -68,13 +70,14 @@ module.exports = async (req, res) => {
       writePending({
         pending: false,
         last_digest_date: today,
+        digest_url: blob.url,
         summary,
         resultsCount: newsResults.length,
       });
       try {
-        await sendMessage(`📰 Monitor ran — ${newsResults.length} results, nothing dashboard-relevant today. Digest at /api/digest/latest`);
+        await sendMessage(`📰 Monitor ran — ${newsResults.length} results, nothing dashboard-relevant today. Digest at ${blob.url}`);
       } catch (_) {}
-      return res.status(200).json({ ok: true, significant: false, date: today, resultsCount: newsResults.length });
+      return res.status(200).json({ ok: true, significant: false, date: today, resultsCount: newsResults.length, digestUrl: blob.url });
     }
 
     // Condition 3 — dashboard-relevant
@@ -84,6 +87,7 @@ module.exports = async (req, res) => {
       summary,
       resultsCount: newsResults.length,
       last_digest_date: today,
+      digest_url: blob.url,
     });
 
     try {
@@ -97,7 +101,7 @@ module.exports = async (req, res) => {
       significant: true,
       date: today,
       resultsCount: newsResults.length,
-      digestPath: `public/digests/${today}.md`,
+      digestUrl: blob.url,
     });
 
   } catch (err) {

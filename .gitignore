@@ -18,3 +18,4 @@ scripts/last-run.json
 
 .vercel
 .env*
+public/digests/
