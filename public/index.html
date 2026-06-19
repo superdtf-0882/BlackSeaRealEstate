@@ -2006,36 +2006,61 @@ async function init() {
 init();
 
 function showDigestLink(date) {
-  // stub — will be built in next step
-  console.log('[digest] already ingested for', date);
+  if (!date) return;
+  if (document.getElementById('digestLink')) return;
+  const anchor = document.getElementById('last-updated');
+  if (!anchor) return;
+  const d = new Date(date + 'T00:00:00');
+  const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const a = document.createElement('a');
+  a.id = 'digestLink';
+  a.href = '/api/digest/latest';
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.textContent = ' · Latest digest: ' + label + ' →';
+  a.style.cssText = 'font-size:11px;color:#8b949e;text-decoration:none;';
+  a.onmouseover = () => a.style.textDecoration = 'underline';
+  a.onmouseout  = () => a.style.textDecoration = 'none';
+  anchor.appendChild(a);
+}
+
+function showPendingBanner(data) {
+  const existing = document.getElementById('pendingAlert');
+  if (existing) return;
+  const alertBanner = document.querySelector('.alert-banner') || document.querySelector('[id*="alert"]');
+  const div = document.createElement('div');
+  div.id = 'pendingAlert';
+  div.style.cssText = 'background:#1f2d1f;border-left:3px solid #3fb950;padding:10px 16px;margin-bottom:8px;font-size:12px;color:#c9d1d9;border-radius:4px;';
+  div.innerHTML = '📋 <strong style="color:#3fb950">New digest pending review</strong> — ' + data.date + ' · ' + data.summary + ' · <a href="/api/digest/latest" style="color:#58a6ff">Read full digest →</a>';
+  if (alertBanner && alertBanner.parentNode) {
+    alertBanner.parentNode.insertBefore(div, alertBanner);
+  } else {
+    document.body.prepend(div);
+  }
 }
 
 async function checkPending() {
   try {
     const res = await fetch('/api/pending');
     const data = await res.json();
-    if (!data.pending) return;
 
-    const lastUpdated = SCORES?.last_updated || '';
-    if (lastUpdated >= data.date) {
-      // Digest already ingested — auto-clear and skip banner
-      await fetch('/api/pending', { method: 'DELETE' });
-      showDigestLink(data.date);
-      return;
-    }
+    if (data.pending) {
+      const digestDate = new Date(data.date + 'T00:00:00');
+      const dataDate   = new Date((SCORES?.last_updated || '') + 'T00:00:00');
 
-    // Digest not yet ingested — show green banner
-    const existing = document.getElementById('pendingAlert');
-    if (existing) return;
-    const alertBanner = document.querySelector('.alert-banner') || document.querySelector('[id*="alert"]');
-    const div = document.createElement('div');
-    div.id = 'pendingAlert';
-    div.style.cssText = 'background:#1f2d1f;border-left:3px solid #3fb950;padding:10px 16px;margin-bottom:8px;font-size:12px;color:#c9d1d9;border-radius:4px;';
-    div.innerHTML = '📋 <strong style="color:#3fb950">New digest pending review</strong> — ' + data.date + ' · ' + data.summary + ' · <a href="/api/digest/latest" style="color:#58a6ff">Read full digest →</a>';
-    if (alertBanner && alertBanner.parentNode) {
-      alertBanner.parentNode.insertBefore(div, alertBanner);
+      if (dataDate >= digestDate) {
+        // Already ingested — auto-clear and show quiet link
+        await fetch('/api/pending', { method: 'DELETE' });
+        showDigestLink(data.date);
+      } else {
+        // Pending and not yet ingested — show green banner
+        showPendingBanner(data);
+      }
     } else {
-      document.body.prepend(div);
+      // Not pending — show quiet link if we have a last digest date
+      if (data.last_digest_date) {
+        showDigestLink(data.last_digest_date);
+      }
     }
   } catch(e) { /* silent fail */ }
 }
