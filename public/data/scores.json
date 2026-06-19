@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-18",
+  "last_updated": "2026-06-19",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -460,12 +460,13 @@
         {
           "month": "2026-06",
           "SCI": 62,
-          "track_a": 58,
+          "track_a": 54,
           "track_b": 46,
-          "composite": 60,
-          "spread": -14,
+          "composite": 57,
+          "spread": -11,
           "crimea_price_rub_m2": 221332,
-          "data_quality": "real"
+          "data_quality": "real",
+          "note": "Track A reduced: ISW Jun 18 confirms 80% June tourist booking cancellations, up to 18% annual peninsula revenue at risk. Hard economic number from named source — first confirmed commercial market impact."
         }
       ]
     },
@@ -644,6 +645,24 @@
       "date": "2026-06-18",
       "label": "Ukraine strikes Moscow Kapotnya oil refinery — second hit in one week, four airports halted operations; fuel rationing now confirmed in 53 Russian regions; crude processing at 21-year low per Energy Intelligence",
       "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-18",
+      "label": "555-drone attack: Kapotnya refinery struck second time in one week, Gukovo oil depot hit, four Moscow airports halted, five refinery locations damaged — ISW confirms fires at combined oil refining unit and oil tank farm",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-18",
+      "label": "Russia begins importing gasoline from Asia by sea — first time; previously managed domestic supply without imports in 2025, confirming 2026 shortage is materially worse. ~33% of refining capacity offline before this attack.",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-18",
+      "label": "Putin signs FEZ investment threshold reduction 30%→10% across occupied Donetsk, Luhansk, Zaporizhzhia, Kherson — explicit legislative acknowledgment that private investment attraction has failed",
+      "category": "policy",
       "significance": "high"
     }
   ]
