@@ -2001,6 +2001,28 @@ async function init() {
 }
 
 init();
+
+async function checkPending() {
+  try {
+    const res = await fetch('/api/pending');
+    const data = await res.json();
+    if (data.pending) {
+      const existing = document.getElementById('pendingAlert');
+      if (existing) return;
+      const alertBanner = document.querySelector('.alert-banner') || document.querySelector('[id*="alert"]');
+      const div = document.createElement('div');
+      div.id = 'pendingAlert';
+      div.style.cssText = 'background:#1f2d1f;border-left:3px solid #3fb950;padding:10px 16px;margin-bottom:8px;font-size:12px;color:#c9d1d9;border-radius:4px;';
+      div.innerHTML = '📋 <strong style="color:#3fb950">New digest pending review</strong> — ' + data.date + ' · ' + data.summary + ' · <a href="/api/digest/latest" style="color:#58a6ff">Read full digest →</a>';
+      if (alertBanner && alertBanner.parentNode) {
+        alertBanner.parentNode.insertBefore(div, alertBanner);
+      } else {
+        document.body.prepend(div);
+      }
+    }
+  } catch(e) { /* silent fail */ }
+}
+checkPending();
 </script>
 </body>
 </html>
