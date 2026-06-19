@@ -2005,23 +2005,37 @@ async function init() {
 
 init();
 
+function showDigestLink(date) {
+  // stub — will be built in next step
+  console.log('[digest] already ingested for', date);
+}
+
 async function checkPending() {
   try {
     const res = await fetch('/api/pending');
     const data = await res.json();
-    if (data.pending) {
-      const existing = document.getElementById('pendingAlert');
-      if (existing) return;
-      const alertBanner = document.querySelector('.alert-banner') || document.querySelector('[id*="alert"]');
-      const div = document.createElement('div');
-      div.id = 'pendingAlert';
-      div.style.cssText = 'background:#1f2d1f;border-left:3px solid #3fb950;padding:10px 16px;margin-bottom:8px;font-size:12px;color:#c9d1d9;border-radius:4px;';
-      div.innerHTML = '📋 <strong style="color:#3fb950">New digest pending review</strong> — ' + data.date + ' · ' + data.summary + ' · <a href="/api/digest/latest" style="color:#58a6ff">Read full digest →</a>';
-      if (alertBanner && alertBanner.parentNode) {
-        alertBanner.parentNode.insertBefore(div, alertBanner);
-      } else {
-        document.body.prepend(div);
-      }
+    if (!data.pending) return;
+
+    const lastUpdated = SCORES?.last_updated || '';
+    if (lastUpdated >= data.date) {
+      // Digest already ingested — auto-clear and skip banner
+      await fetch('/api/pending', { method: 'DELETE' });
+      showDigestLink(data.date);
+      return;
+    }
+
+    // Digest not yet ingested — show green banner
+    const existing = document.getElementById('pendingAlert');
+    if (existing) return;
+    const alertBanner = document.querySelector('.alert-banner') || document.querySelector('[id*="alert"]');
+    const div = document.createElement('div');
+    div.id = 'pendingAlert';
+    div.style.cssText = 'background:#1f2d1f;border-left:3px solid #3fb950;padding:10px 16px;margin-bottom:8px;font-size:12px;color:#c9d1d9;border-radius:4px;';
+    div.innerHTML = '📋 <strong style="color:#3fb950">New digest pending review</strong> — ' + data.date + ' · ' + data.summary + ' · <a href="/api/digest/latest" style="color:#58a6ff">Read full digest →</a>';
+    if (alertBanner && alertBanner.parentNode) {
+      alertBanner.parentNode.insertBefore(div, alertBanner);
+    } else {
+      document.body.prepend(div);
     }
   } catch(e) { /* silent fail */ }
 }

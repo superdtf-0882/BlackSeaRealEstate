@@ -42,13 +42,16 @@ module.exports = async (req, res) => {
     const digestPath = path.join(digestsDir, `${today}.md`);
     fs.writeFileSync(digestPath, digest, 'utf8');
 
-    // 6. Write pending state
+    // 6. Write pending state (preserve last_digest_date across future clears)
     const pendingPath = path.join(__dirname, '..', 'public', 'data', 'pending.json');
+    let existing = {};
+    try { existing = JSON.parse(fs.readFileSync(pendingPath, 'utf8')); } catch (_) {}
     fs.writeFileSync(pendingPath, JSON.stringify({
       pending: true,
       date: today,
       summary,
       resultsCount: newsResults.length,
+      last_digest_date: today,
     }, null, 2), 'utf8');
 
     // 7. Send Telegram

@@ -20,7 +20,12 @@ module.exports = (req, res) => {
 
   if (req.method === 'DELETE') {
     try {
-      fs.writeFileSync(PENDING_PATH, JSON.stringify({ pending: false }, null, 2), 'utf8');
+      let existing = {};
+      try { existing = JSON.parse(fs.readFileSync(PENDING_PATH, 'utf8')); } catch (_) {}
+      fs.writeFileSync(PENDING_PATH, JSON.stringify({
+        pending: false,
+        last_digest_date: existing.last_digest_date || existing.date || null,
+      }, null, 2), 'utf8');
       return res.status(200).json({ ok: true, cleared: true });
     } catch (err) {
       return res.status(500).json({ error: 'Failed to clear pending state' });
