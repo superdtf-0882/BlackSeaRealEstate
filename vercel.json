@@ -11,8 +11,5 @@
       ]
     }
   ],
-  "crons": [],
-  "_pending_crons": [
-    { "path": "/api/monitor", "schedule": "0 7 * * *" }
-  ]
+  "crons": []
 }
