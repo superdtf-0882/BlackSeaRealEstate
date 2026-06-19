@@ -11,5 +11,8 @@
       ]
     }
   ],
-  "crons": []
+  "crons": [],
+  "rewrites": [
+    { "source": "/api/digest/:date", "destination": "/api/digest" }
+  ]
 }
