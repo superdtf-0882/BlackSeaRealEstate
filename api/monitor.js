@@ -1,21 +1,17 @@
 require('dotenv').config({ path: '.env', override: true });
 
-const fs      = require('fs');
-const path    = require('path');
-const { put } = require('@vercel/blob');
+const { put, list } = require('@vercel/blob');
 const storage = require('../lib/storage');
 const { fetchNews }    = require('../lib/firecrawl');
 const { synthesize }   = require('../lib/claude');
 const { sendMessage }  = require('../lib/telegram');
 
-const PENDING_PATH = path.join(__dirname, '..', 'public', 'data', 'pending.json');
-
-function readPending() {
-  try { return JSON.parse(fs.readFileSync(PENDING_PATH, 'utf8')); } catch (_) { return {}; }
-}
-
-function writePending(data) {
-  fs.writeFileSync(PENDING_PATH, JSON.stringify(data, null, 2), 'utf8');
+async function writePending(data) {
+  await put('pending.json', JSON.stringify(data), {
+    access: 'public',
+    contentType: 'application/json',
+    addRandomSuffix: false,
+  });
 }
 
 module.exports = async (req, res) => {
@@ -76,7 +72,7 @@ module.exports = async (req, res) => {
 
     if (!isSignificant) {
       // Condition 2 — nothing dashboard-relevant
-      writePending({
+      await writePending({
         pending: false,
         last_digest_date: today,
         digest_url: digestApiUrl,
@@ -90,7 +86,7 @@ module.exports = async (req, res) => {
     }
 
     // Condition 3 — dashboard-relevant
-    writePending({
+    await writePending({
       pending: true,
       date: today,
       summary,

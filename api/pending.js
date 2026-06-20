@@ -1,18 +1,33 @@
-const fs   = require('fs');
-const path = require('path');
+require('dotenv').config({ path: '.env', override: true });
 
-const PENDING_PATH = path.join(__dirname, '..', 'public', 'data', 'pending.json');
+const { put, list } = require('@vercel/blob');
 
-module.exports = (req, res) => {
+async function readPending() {
+  try {
+    const { blobs } = await list({ prefix: 'pending.json' });
+    const blob = blobs.find(b => b.pathname === 'pending.json');
+    if (!blob) return null;
+    const res = await fetch(blob.url);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (_) { return null; }
+}
+
+async function writePending(data) {
+  await put('pending.json', JSON.stringify(data), {
+    access: 'public',
+    contentType: 'application/json',
+    addRandomSuffix: false,
+  });
+}
+
+module.exports = async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
 
   if (req.method === 'GET') {
-    if (!fs.existsSync(PENDING_PATH)) {
-      return res.status(200).json({ pending: false });
-    }
     try {
-      const data = JSON.parse(fs.readFileSync(PENDING_PATH, 'utf8'));
-      return res.status(200).json(data);
+      const data = await readPending();
+      return res.status(200).json(data || { pending: false });
     } catch (err) {
       return res.status(500).json({ error: 'Failed to read pending state' });
     }
@@ -20,12 +35,12 @@ module.exports = (req, res) => {
 
   if (req.method === 'DELETE') {
     try {
-      let existing = {};
-      try { existing = JSON.parse(fs.readFileSync(PENDING_PATH, 'utf8')); } catch (_) {}
-      fs.writeFileSync(PENDING_PATH, JSON.stringify({
+      const existing = await readPending() || {};
+      await writePending({
         pending: false,
         last_digest_date: existing.last_digest_date || existing.date || null,
-      }, null, 2), 'utf8');
+        digest_url: existing.digest_url || null,
+      });
       return res.status(200).json({ ok: true, cleared: true });
     } catch (err) {
       return res.status(500).json({ error: 'Failed to clear pending state' });
