@@ -11,6 +11,7 @@ async function writePending(data) {
     access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 }
 
@@ -64,6 +65,7 @@ module.exports = async (req, res) => {
       access: 'public',
       contentType: 'text/markdown',
       addRandomSuffix: false,
+      allowOverwrite: true,
     });
 
     // 6. Detect significance
