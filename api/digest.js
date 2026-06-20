@@ -1,59 +1,91 @@
 require('dotenv').config({ path: '.env', override: true });
 
-const { list }   = require('@vercel/blob');
+const { head }   = require('@vercel/blob');
 const { marked } = require('marked');
+
+function formatDate(d) {
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Extract date param — Vercel rewrites pass it as query string (?date=latest)
   const dateParam = req.query?.date || req.params?.date
     || req.url.split('/').filter(Boolean).pop();
+  const requestedDate = (!dateParam || dateParam === 'latest' || dateParam === 'digest')
+    ? null
+    : dateParam;
 
   try {
-    const { blobs } = await list({ prefix: 'digests/' });
+    // Load index
+    let index = [];
+    try {
+      const indexBlob = await head('digests/index.json');
+      index = await fetch(indexBlob.url).then(r => r.json());
+    } catch (_) {}
 
-    const digests = blobs
-      .filter(b => b.pathname.endsWith('.md'))
-      .sort((a, b) => b.pathname.localeCompare(a.pathname));
-
-    if (!digests.length) {
-      return res.status(404).json({ error: 'No digests yet' });
+    if (!index.length) {
+      return res.status(404).send('No digests yet.');
     }
 
-    let target;
-    if (!dateParam || dateParam === 'latest' || dateParam === 'digest') {
-      target = digests[0];
-    } else {
-      target = digests.find(b => b.pathname === `digests/${dateParam}.md`);
-      if (!target) {
-        return res.status(404).json({ error: `No digest for ${dateParam}` });
-      }
+    // Resolve primary
+    const primary = requestedDate
+      ? index.find(d => d.date === requestedDate)
+      : index[0];
+
+    if (!primary) {
+      return res.status(404).send(`No digest found for ${requestedDate}`);
     }
 
-    const fetchRes = await fetch(target.url);
-    if (!fetchRes.ok) {
-      return res.status(502).json({ error: 'Failed to fetch digest from storage' });
-    }
-    const content = await fetchRes.text();
-    const date = target.pathname.replace('digests/', '').replace('.md', '');
+    // Fetch primary content
+    const primaryContent = await fetch(primary.url).then(r => r.text());
+    const primaryHtml = marked.parse(primaryContent);
+
+    // Sidebar — everything except current primary
+    const sidebarItems = index.filter(d => d.date !== primary.date);
+    const sidebarHtml = sidebarItems.map(item => {
+      const excerpt = item.summary.length > 120
+        ? item.summary.slice(0, 120) + '…'
+        : item.summary;
+      return `<a href="/api/digest/${item.date}" class="sidebar-card">
+        <div class="sidebar-date">${formatDate(item.date)}</div>
+        <div class="sidebar-excerpt">${excerpt}</div>
+        <div class="sidebar-arrow">→</div>
+      </a>`;
+    }).join('');
 
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Black Sea Monitor — Digest ${date}</title>
+  <title>Black Sea Monitor — Digest ${primary.date}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      max-width: 740px; margin: 40px auto; padding: 0 24px 60px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 14px; line-height: 1.7;
       color: #c9d1d9; background: #0d1117;
     }
+    .layout {
+      display: grid;
+      grid-template-columns: 4fr 1fr;
+      min-height: 100vh;
+    }
+    .main {
+      padding: 32px 40px 60px;
+      max-width: 740px;
+    }
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 16px; margin-bottom: 8px;
+      border-bottom: 1px solid #21262d;
+      font-size: 12px; color: #8b949e;
+    }
+    .nav a { color: #58a6ff; text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
     h1 {
       font-size: 20px; font-weight: 600; color: #e6edf3;
       margin: 32px 0 8px; padding-bottom: 12px;
@@ -68,47 +100,67 @@ module.exports = async (req, res) => {
     p { margin-bottom: 12px; color: #c9d1d9; }
     strong { color: #e6edf3; font-weight: 600; }
     em { color: #8b949e; font-style: italic; }
-    a { color: #58a6ff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .nav {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 16px 0; margin-bottom: 8px;
-      border-bottom: 1px solid #21262d;
-      font-size: 12px; color: #8b949e;
-    }
-    .nav a { color: #58a6ff; }
-    .badge {
-      display: inline-block; font-size: 11px; padding: 2px 8px;
-      border-radius: 20px; margin-right: 4px; font-weight: 500;
-    }
-    .high { background: #3d1f1f; color: #f85149; }
-    .medium { background: #2d2a1f; color: #d29922; }
-    .low { background: #1f2d1f; color: #3fb950; }
-    .source { font-size: 11px; color: #8b949e; }
-    hr { border: none; border-top: 1px solid #21262d; margin: 24px 0; }
+    a { color: #58a6ff; }
     .footer {
       margin-top: 48px; padding-top: 16px;
       border-top: 1px solid #21262d;
       font-size: 11px; color: #8b949e;
-      display: flex; justify-content: space-between;
+    }
+    .sidebar {
+      background: #161b22;
+      border-left: 1px solid #21262d;
+      padding: 32px 16px;
+      overflow-y: auto;
+      max-height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    .sidebar-header {
+      font-size: 11px; font-weight: 600; color: #8b949e;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px solid #21262d;
+    }
+    .sidebar-card {
+      display: block;
+      text-decoration: none;
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      transition: border-color 0.15s ease;
+    }
+    .sidebar-card:hover { border-color: #58a6ff; }
+    .sidebar-date { font-size: 11px; font-weight: 600; color: #58a6ff; margin-bottom: 6px; }
+    .sidebar-excerpt { font-size: 12px; line-height: 1.5; color: #8b949e; margin-bottom: 6px; }
+    .sidebar-arrow { font-size: 12px; color: #58a6ff; text-align: right; }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { border-left: none; border-top: 1px solid #21262d; position: static; max-height: none; }
     }
   </style>
 </head>
 <body>
-  <div class="nav">
-    <a href="https://black-sea-real-estate.vercel.app">← Black Sea Monitor</a>
-    <span>Digest · ${date}</span>
-  </div>
-  ${marked.parse(content)}
-  <div class="footer">
-    <span>Black Sea Monitor · Methodology v4.0</span>
-    <a href="https://black-sea-real-estate.vercel.app">Return to dashboard →</a>
+  <div class="layout">
+    <div class="main">
+      <div class="nav">
+        <a href="https://black-sea-real-estate.vercel.app">← Black Sea Monitor</a>
+        <span>${formatDate(primary.date)}</span>
+      </div>
+      ${primaryHtml}
+      <div class="footer">Black Sea Monitor · Methodology v4.0</div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-header">Previous Digests</div>
+      ${sidebarHtml || '<div style="font-size:12px;color:#8b949e">No earlier digests yet.</div>'}
+    </div>
   </div>
 </body>
 </html>`;
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.setHeader('X-Digest-Date', date);
+    res.setHeader('X-Digest-Date', primary.date);
     res.status(200).send(html);
 
   } catch (err) {

@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '.env', override: true });
 
-const { put, list } = require('@vercel/blob');
+const { put, head } = require('@vercel/blob');
 const storage = require('../lib/storage');
 const { fetchNews }    = require('../lib/firecrawl');
 const { synthesize }   = require('../lib/claude');
@@ -68,7 +68,23 @@ module.exports = async (req, res) => {
       allowOverwrite: true,
     });
 
-    // 6. Detect significance
+    // 6. Update digest index
+    let index = [];
+    try {
+      const indexBlob = await head('digests/index.json');
+      index = await fetch(indexBlob.url).then(r => r.json());
+    } catch (_) {}
+    index = index.filter(entry => entry.date !== today);
+    index.unshift({ date: today, summary, url: blob.url });
+    index.sort((a, b) => new Date(b.date) - new Date(a.date));
+    await put('digests/index.json', JSON.stringify(index), {
+      access: 'public',
+      contentType: 'application/json',
+      addRandomSuffix: false,
+      allowOverwrite: true,
+    });
+
+    // 7. Detect significance
     const isSignificant = !digest.includes('No items meet dashboard-update threshold');
     const digestApiUrl = `https://black-sea-real-estate.vercel.app/api/digest/${today}`;
 
