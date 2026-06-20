@@ -11,7 +11,9 @@
       ]
     }
   ],
-  "crons": [],
+  "crons": [
+    { "path": "/api/monitor", "schedule": "0 7 * * *" }
+  ],
   "rewrites": [
     { "source": "/api/digest/:date", "destination": "/api/digest" }
   ]
