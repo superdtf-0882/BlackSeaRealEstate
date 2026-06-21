@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-21T14:00:00Z",
+  "last_updated": "2026-06-21T20:00:00Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -461,12 +461,12 @@
           "month": "2026-06",
           "SCI": 62,
           "track_a": 50,
-          "track_b": 46,
+          "track_b": 38,
           "composite": 55,
-          "spread": -9,
+          "spread": -17,
           "crimea_price_rub_m2": 221332,
           "data_quality": "real",
-          "note": "Hotel booking collapse confirmed worsening into June (31% overall, 40% Sevastopol), commercial seasonal revenue base continuing to erode. Track A 54→50. composite = 62×0.4 + 50×0.6 = 54.8 → 55. spread = 46 − 55 = −9."
+          "note": "Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. First substantive Track B movement of the monitoring period. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise — 30-year mortgage commitment hard to rationalize where legal civilian fuel purchase is currently impossible. Composite stays 55 (SCI and Track A unchanged). RPI held at 96 — fuel ban is distribution/access policy downstream of existing RPI pressure, not new refinery/export infrastructure damage."
         }
       ]
     },
