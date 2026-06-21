@@ -636,7 +636,7 @@ const SEED_MORT = {"totals":[
   ]}
 }};
 
-const SEED_SCORES = {"last_updated":"2026-06-19","cities":{
+const SEED_SCORES = {"last_updated":"2026-06-21T20:00:00Z","cities":{
   "mariupol":{"display_name":"Mariupol","weight":1.0,"history":[
     {"month":"2025-06","SCI":52,"SCI_lo":48,"SCI_hi":56,"track_a":22,"a_lo":17,"a_hi":27,"track_b":23,"b_lo":19,"b_hi":27,"composite":34,"spread":-11,"data_quality":"estimated"},
     {"month":"2025-07","SCI":55,"SCI_lo":51,"SCI_hi":59,"track_a":24,"a_lo":19,"a_hi":29,"track_b":23,"b_lo":19,"b_hi":27,"composite":36,"spread":-13,"data_quality":"estimated"},
@@ -679,7 +679,7 @@ const SEED_SCORES = {"last_updated":"2026-06-19","cities":{
     {"month":"2026-03","SCI":62,"track_a":58,"track_b":46,"composite":60,"spread":-14,"crimea_price_rub_m2":212007,"data_quality":"real"},
     {"month":"2026-04","SCI":62,"track_a":58,"track_b":46,"composite":60,"spread":-14,"crimea_price_rub_m2":214906,"data_quality":"real"},
     {"month":"2026-05","SCI":62,"track_a":58,"track_b":47,"composite":60,"spread":-13,"crimea_price_rub_m2":237508,"data_quality":"real"},
-    {"month":"2026-06","SCI":62,"track_a":54,"track_b":46,"composite":57,"spread":-11,"crimea_price_rub_m2":221332,"data_quality":"real","note":"Track A reduced: ISW Jun 18 confirms 80% June tourist booking cancellations, up to 18% annual peninsula revenue at risk. Hard economic number from named source — first confirmed commercial market impact."}
+    {"month":"2026-06","SCI":62,"track_a":50,"track_b":38,"composite":55,"spread":-17,"crimea_price_rub_m2":221332,"data_quality":"real","note":"Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise. Composite stays 55 (SCI and Track A unchanged)."}
   ]},
   "berdiansk":{"display_name":"Berdiansk","weight":0.7,"history":[
     {"month":"2025-06","SCI":22,"track_a":18,"track_b":12,"composite":20,"spread":-8,"data_quality":"uncertain"},
@@ -803,7 +803,7 @@ const SEED_RPI = {"monthly_readings":[
   {"month":"2026-03","capacity_util_pct":63,"capacity_pressure":37,"strike_score":59,"export_pressure":34,"RPI":43,"real":false},
   {"month":"2026-04","capacity_util_pct":66,"capacity_pressure":34,"strike_score":67,"export_pressure":40,"RPI":47,"real":false},
   {"month":"2026-05","capacity_util_pct":62,"capacity_pressure":38,"strike_score":63,"export_pressure":37,"RPI":46,"real":false},
-  {"month":"2026-06","capacity_util_pct":null,"capacity_pressure":null,"strike_score":88,"export_pressure":77,"RPI":92,"real":true,"real_components":["strike_score","export_pressure"],"partial":true,"structural_event":true,"note":"STRUCTURAL EVENT: June 18 — 555-drone attack, Kapotnya second hit, Gukovo depot, four airports halted, five refinery sites damaged. Russia begins Asian gasoline imports — first time, confirms 2026 materially worse than 2025. Sources: ISW Jun 18, RFE/RL Jun 18, Energy Intelligence."}
+  {"month":"2026-06","capacity_util_pct":null,"capacity_pressure":null,"strike_score":88,"export_pressure":77,"RPI":96,"real":true,"real_components":["strike_score","export_pressure"],"partial":true,"structural_event":true,"note":"STRUCTURAL EVENT: June 18 — 555-drone attack, Kapotnya second hit, Gukovo depot, four airports halted, five refinery sites damaged. Russia begins Asian gasoline imports — first time, confirms 2026 materially worse than 2025. Jun 21: gas storage (Hlibivske), thermal power plant (Tavriyska), compression stations struck — new target categories expanding beyond pure refinery. Sources: ISW Jun 18, RFE/RL Jun 18, Energy Intelligence."}
 ],"alert_thresholds":{"critical_above":70,"warning_above":50,"watch_above":35}};
 
 // CCI sub-indicators: ±2–4pt noise added around linear trend, composites recomputed
@@ -820,7 +820,7 @@ const SEED_CCI = {"monthly_readings":[
   {"month":"2026-03","fuel_price_premium_pct":12,"fuel_score":62,"panic_keyword_score":27,"avito_premium_score":20,"CCI":36,"real":false},
   {"month":"2026-04","fuel_price_premium_pct":15,"fuel_score":73,"panic_keyword_score":34,"avito_premium_score":27,"CCI":45,"real":false},
   {"month":"2026-05","fuel_price_premium_pct":14,"fuel_score":72,"panic_keyword_score":32,"avito_premium_score":25,"CCI":43,"real":false},
-  {"month":"2026-06","fuel_price_premium_pct":null,"fuel_score":92,"panic_keyword_score":75,"avito_premium_score":65,"CCI":81,"real":true,"structural_event":true,"first_critical_reading":true,"note":"Escalation: 80% Crimea tourist cancellations (ISW Jun 18), nighttime motorcycle ban, ATESH-reported official family evacuations targeting Jun 21 completion [unverified partisan source], QR rationing intensifying. Conservative: fleet relocation unverified, no buckwheat signal in Donetsk/Luhansk yet."}
+  {"month":"2026-06","fuel_price_premium_pct":null,"fuel_score":92,"panic_keyword_score":75,"avito_premium_score":65,"CCI":94,"real":true,"structural_event":true,"first_critical_reading":true,"note":"Jun 21 AM: CCI 81→87. Crimea-specific compounding: 20L/car rationing, gas storage strike threatens winter heating, hotel bookings down 31%/40% Sevastopol. | Jun 21 PM: CCI 87→94. Total civilian fuel sales suspension, Crimea and Sevastopol, effective 9am Jun 21 — cash, card, and coupon sales to individuals and legal entities fully halted. Fuel restricted to state security/essential-service agencies only (Aksyonov, Razvozhayev). Categorically worse than prior 20L/week rationing regime. Sources: NPR, Bloomberg, Euronews, RFE/RL, Meduza, Kyiv Post, all Jun 21."}
 ],"alert_thresholds":{"critical_above":65,"warning_above":45,"watch_above":25}};
 
 // ── State ─────────────────────────────────────────────────────────────────
