@@ -1,12 +1,17 @@
 require('dotenv').config({ path: '.env', override: true });
 
-const { put, head } = require('@vercel/blob');
+const { put, del, head, list } = require('@vercel/blob');
 const storage = require('../lib/storage');
 const { fetchNews }    = require('../lib/firecrawl');
 const { synthesize }   = require('../lib/claude');
 const { sendMessage }  = require('../lib/telegram');
 
 async function writePending(data) {
+  try {
+    const { blobs } = await list({ prefix: 'pending.json' });
+    const existing = blobs.find(b => b.pathname === 'pending.json');
+    if (existing) await del(existing.url);
+  } catch (_) {}
   await put('pending.json', JSON.stringify(data), {
     access: 'public',
     contentType: 'application/json',
@@ -91,6 +96,11 @@ module.exports = async (req, res) => {
       return dateDiff !== 0 ? dateDiff : (b.sequence || 1) - (a.sequence || 1);
     });
 
+    try {
+      const { blobs: idxBlobs } = await list({ prefix: 'digests/index.json' });
+      const idxExisting = idxBlobs.find(b => b.pathname === 'digests/index.json');
+      if (idxExisting) await del(idxExisting.url);
+    } catch (_) {}
     await put('digests/index.json', JSON.stringify(index), {
       access: 'public',
       contentType: 'application/json',

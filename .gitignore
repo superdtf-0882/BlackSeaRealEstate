@@ -15,6 +15,11 @@ node_modules/
 # Firecrawl test artifacts
 .env
 scripts/last-run.json
+scripts/write-digest-seq2.js
+READMEold.md
+TGKV.txt
+debug_restate.html
+telegram.env
 
 .vercel
 .env*

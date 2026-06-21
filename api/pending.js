@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '.env', override: true });
 
-const { put, list } = require('@vercel/blob');
+const { put, del, list } = require('@vercel/blob');
 
 async function readPending() {
   try {
@@ -14,6 +14,11 @@ async function readPending() {
 }
 
 async function writePending(data) {
+  try {
+    const { blobs } = await list({ prefix: 'pending.json' });
+    const existing = blobs.find(b => b.pathname === 'pending.json');
+    if (existing) await del(existing.url);
+  } catch (_) {}
   await put('pending.json', JSON.stringify(data), {
     access: 'public',
     contentType: 'application/json',
