@@ -1960,7 +1960,8 @@ async function init() {
     ? "₽" + (latestMort.three_bank_rub / 1e9).toFixed(1) + "bn (" + latestMort.date.slice(0, 7) + ")"
     : "₽28.3bn (2025-12)";
 
-  const dataDate = SCORES?.last_updated || priceReadings[priceReadings.length - 1]?.date || "2026-06-06";
+  const rawLastUpdated = SCORES?.last_updated || priceReadings[priceReadings.length - 1]?.date || "2026-06-06";
+  const dataDate = rawLastUpdated.slice(0, 10); // display as YYYY-MM-DD regardless of timestamp
   document.getElementById("st-latest").textContent = dataDate;
   document.getElementById("last-updated").textContent = "Data: " + dataDate;
 
@@ -2046,10 +2047,12 @@ async function checkPending() {
     const data = await res.json();
 
     if (data.pending) {
-      const digestDate = new Date(data.date + 'T00:00:00');
-      const dataDate   = new Date((SCORES?.last_updated || '') + 'T00:00:00');
+      // Compare full timestamps: pending.time vs scores.last_updated (both ISO)
+      // Fall back to date-only comparison if time field absent (legacy pending.json)
+      const digestTs = new Date(data.time || (data.date + 'T00:00:00Z'));
+      const scoresTs = new Date(SCORES?.last_updated || '2000-01-01');
 
-      if (dataDate >= digestDate) {
+      if (scoresTs >= digestTs) {
         // Already ingested — auto-clear and show quiet link
         await fetch('/api/pending', { method: 'DELETE' });
         showDigestLink(data.date, data.digest_url);

@@ -3,8 +3,15 @@ require('dotenv').config({ path: '.env', override: true });
 const { head }   = require('@vercel/blob');
 const { marked } = require('marked');
 
-function formatDate(d) {
-  return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+function formatDate(d, sequence) {
+  const label = new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return sequence > 1 ? `${label} (${ordinal(sequence)} update)` : label;
+}
+
+function ordinal(n) {
+  const s = ['th','st','nd','rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
 module.exports = async (req, res) => {
@@ -12,11 +19,15 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const dateParam = req.query?.date || req.params?.date
-    || req.url.split('/').filter(Boolean).pop();
-  const requestedDate = (!dateParam || dateParam === 'latest' || dateParam === 'digest')
+  // Date param — Vercel rewrite passes /api/digest/:date as ?date=
+  const rawDate = req.query?.date || req.params?.date
+    || req.url.split('?')[0].split('/').filter(Boolean).pop();
+  const requestedDate = (!rawDate || rawDate === 'latest' || rawDate === 'digest')
     ? null
-    : dateParam;
+    : rawDate;
+
+  // Optional sequence param: ?seq=N
+  const requestedSeq = req.query?.seq ? parseInt(req.query.seq, 10) : null;
 
   try {
     // Load index
@@ -30,38 +41,59 @@ module.exports = async (req, res) => {
       return res.status(404).send('No digests yet.');
     }
 
-    // Resolve primary
-    const primary = requestedDate
-      ? index.find(d => d.date === requestedDate)
-      : index[0];
-
-    if (!primary) {
-      return res.status(404).send(`No digest found for ${requestedDate}`);
+    // Resolve primary entry
+    let primary;
+    if (requestedDate) {
+      const dateEntries = index.filter(e => e.date === requestedDate);
+      if (!dateEntries.length) {
+        return res.status(404).send(`No digest found for ${requestedDate}`);
+      }
+      if (requestedSeq) {
+        primary = dateEntries.find(e => (e.sequence || 1) === requestedSeq);
+        if (!primary) return res.status(404).send(`No digest for ${requestedDate} seq ${requestedSeq}`);
+      } else {
+        // Default: highest sequence for that date
+        primary = dateEntries.reduce((best, e) => (e.sequence || 1) > (best.sequence || 1) ? e : best);
+      }
+    } else {
+      // Latest: highest sequence of the most recent date
+      const latestDate = index[0].date;
+      const latestEntries = index.filter(e => e.date === latestDate);
+      primary = latestEntries.reduce((best, e) => (e.sequence || 1) > (best.sequence || 1) ? e : best);
     }
 
     // Fetch primary content
     const primaryContent = await fetch(primary.url).then(r => r.text());
     const primaryHtml = marked.parse(primaryContent);
 
-    // Sidebar — everything except current primary
-    const sidebarItems = index.filter(d => d.date !== primary.date);
+    // Sidebar — all entries except current primary, sorted newest/highest-seq first
+    const sidebarItems = index.filter(e => !(e.date === primary.date && (e.sequence || 1) === (primary.sequence || 1)));
+
+    function sidebarHref(item) {
+      const seq = item.sequence || 1;
+      return seq > 1
+        ? `/api/digest/${item.date}?seq=${seq}`
+        : `/api/digest/${item.date}`;
+    }
+
     const sidebarHtml = sidebarItems.map(item => {
-      const excerpt = item.summary.length > 120
-        ? item.summary.slice(0, 120) + '…'
-        : item.summary;
-      return `<a href="/api/digest/${item.date}" class="sidebar-card">
-        <div class="sidebar-date">${formatDate(item.date)}</div>
+      const seq = item.sequence || 1;
+      const excerpt = item.summary.length > 120 ? item.summary.slice(0, 120) + '…' : item.summary;
+      return `<a href="${sidebarHref(item)}" class="sidebar-card">
+        <div class="sidebar-date">${formatDate(item.date, seq)}</div>
         <div class="sidebar-excerpt">${excerpt}</div>
         <div class="sidebar-arrow">→</div>
       </a>`;
     }).join('');
+
+    const navDate = formatDate(primary.date, primary.sequence || 1);
 
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Black Sea Monitor — Digest ${primary.date}</title>
+  <title>Black Sea Monitor — Digest ${primary.date}${(primary.sequence || 1) > 1 ? ' #' + primary.sequence : ''}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -74,10 +106,7 @@ module.exports = async (req, res) => {
       grid-template-columns: 4fr 1fr;
       min-height: 100vh;
     }
-    .main {
-      padding: 32px 40px 60px;
-      max-width: 740px;
-    }
+    .main { padding: 32px 40px 60px; max-width: 740px; }
     .nav {
       display: flex; justify-content: space-between; align-items: center;
       padding-bottom: 16px; margin-bottom: 8px;
@@ -122,13 +151,9 @@ module.exports = async (req, res) => {
       border-bottom: 1px solid #21262d;
     }
     .sidebar-card {
-      display: block;
-      text-decoration: none;
-      background: #0d1117;
-      border: 1px solid #21262d;
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
+      display: block; text-decoration: none;
+      background: #0d1117; border: 1px solid #21262d;
+      border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
       transition: border-color 0.15s ease;
     }
     .sidebar-card:hover { border-color: #58a6ff; }
@@ -146,7 +171,7 @@ module.exports = async (req, res) => {
     <div class="main">
       <div class="nav">
         <a href="https://black-sea-real-estate.vercel.app">← Black Sea Monitor</a>
-        <span>${formatDate(primary.date)}</span>
+        <span>${navDate}</span>
       </div>
       ${primaryHtml}
       <div class="footer">Black Sea Monitor · Methodology v4.0</div>
@@ -161,6 +186,7 @@ module.exports = async (req, res) => {
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('X-Digest-Date', primary.date);
+    res.setHeader('X-Digest-Sequence', String(primary.sequence || 1));
     res.status(200).send(html);
 
   } catch (err) {
