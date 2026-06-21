@@ -141,7 +141,7 @@
       "fuel_score": 92,
       "panic_keyword_score": 75,
       "avito_premium_score": 65,
-      "CCI": 81,
+      "CCI": 87,
       "real": true,
       "structural_event": true,
       "first_critical_reading": true,
@@ -154,7 +154,7 @@
       "fuel_score_methodology": "Score 92: No reserves, tanker-only supply, two largest chains ended sales, QR-only at 20L cap. Near ceiling (100 = total cutoff). Highest-confidence fuel reading in dataset — occupation-government-acknowledged plus named Ukrainian presidential official sourcing.",
       "panic_keyword_score_methodology": "Score 75: Confirmed shortages across 7 staple categories (гречка, rice, pasta, salt, sugar, cereals, flour). Official purchase limits recommended. Admin denial-then-confirmation pattern = maximum credibility signal. Weeks-only food stock estimate. Dairy at 30% self-sufficiency.",
       "avito_premium_score_methodology": "Score 65: Barter economy active — villa accommodation exchanged for fuel canisters (qualitative, not scraped price premium). Represents clearest possible grey-market bypass signal; scored conservatively below scraped Avito premium because quantity/frequency unknown.",
-      "note": "FIRST CRITICAL CCI READING IN DATASET. CCI=77 crosses critical_above=65 threshold. All three sub-indicators sourced from named Ukrainian government official (Chistikov). Buckwheat index active: гречка confirmed unavailable in occupied Crimea retail."
+      "note": "Jun 21 update: CCI 81→87. Crimea-specific compounding: 20L/car rationing persists, gas storage strike now threatens winter heating capacity (new distress category beyond vehicle fuel), hotel bookings down 31% overall / 40% Sevastopol vs prior year. Sources: CBC Jun 19, MSN/Hotel Management Network Jun 12, ISW Jun 19. FIRST CRITICAL CCI READING IN DATASET. Buckwheat index active."
     }
   ],
   "alert_thresholds": {

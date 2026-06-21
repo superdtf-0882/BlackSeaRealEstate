@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-20",
+  "last_updated": "2026-06-21",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -460,13 +460,13 @@
         {
           "month": "2026-06",
           "SCI": 62,
-          "track_a": 54,
+          "track_a": 50,
           "track_b": 46,
-          "composite": 57,
-          "spread": -11,
+          "composite": 55,
+          "spread": -9,
           "crimea_price_rub_m2": 221332,
           "data_quality": "real",
-          "note": "Track A reduced: ISW Jun 18 confirms 80% June tourist booking cancellations, up to 18% annual peninsula revenue at risk. Hard economic number from named source — first confirmed commercial market impact."
+          "note": "Hotel booking collapse confirmed worsening into June (31% overall, 40% Sevastopol), commercial seasonal revenue base continuing to erode. Track A 54→50. composite = 62×0.4 + 50×0.6 = 54.8 → 55. spread = 46 − 55 = −9."
         }
       ]
     },
