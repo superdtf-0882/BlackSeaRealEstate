@@ -1,0 +1,76 @@
+{
+  "monthly_readings": [
+    {
+      "month": "2025-06",
+      "export_revenue_proxy": 20,
+      "nwf_liquid_pct_gdp_score": 15,
+      "ofz_debt_stress": 15,
+      "regional_budget_cuts": 10,
+      "shadow_fleet_stress": 10,
+      "OFP": 15,
+      "real": false,
+      "note": "Baseline period — NWF intact, export revenue near pre-war levels with manageable discount"
+    },
+    {
+      "month": "2025-09",
+      "export_revenue_proxy": 28,
+      "nwf_liquid_pct_gdp_score": 22,
+      "ofz_debt_stress": 20,
+      "regional_budget_cuts": 10,
+      "shadow_fleet_stress": 15,
+      "OFP": 22,
+      "real": false
+    },
+    {
+      "month": "2025-12",
+      "export_revenue_proxy": 35,
+      "nwf_liquid_pct_gdp_score": 30,
+      "ofz_debt_stress": 28,
+      "regional_budget_cuts": 15,
+      "shadow_fleet_stress": 20,
+      "OFP": 30,
+      "real": false
+    },
+    {
+      "month": "2026-03",
+      "export_revenue_proxy": 45,
+      "nwf_liquid_pct_gdp_score": 42,
+      "ofz_debt_stress": 38,
+      "regional_budget_cuts": 25,
+      "shadow_fleet_stress": 28,
+      "OFP": 40,
+      "real": false
+    },
+    {
+      "month": "2026-06",
+      "export_revenue_proxy": 55,
+      "nwf_liquid_pct_gdp_score": 55,
+      "ofz_debt_stress": 57,
+      "regional_budget_cuts": 48,
+      "shadow_fleet_stress": 35,
+      "OFP": 54,
+      "real": true,
+      "partial": true,
+      "note": "Jun 24: OFP initialized at 54. Export revenue proxy: seaborne exports down ~15% Jun vs May, Urals-Brent spread ~$13-15 (~score 55). NWF liquid portion ~2.5-3% of GDP, down from ~8% pre-war (~score 55). OFZ prices fell Jun 23-24, ruble past 75/dollar (~score 57). Regional cuts: national fiscal stress evident but no confirmed direct occupation transfer cuts yet (~score 48). Shadow fleet: ongoing but no acute new enforcement event (~score 35). OFP modulator applies +2 to MTCS (band: 41-55). Hormuz MOU (Jun 2026) ambiguous — Iranian supply return could soften Urals price realization; monitoring export revenue proxy for response. Sources: Reuters Jun 23, Minfin NWF disclosures, Kpler/Reuters export data."
+    }
+  ],
+  "component_weights": {
+    "export_revenue_proxy": 0.30,
+    "nwf_liquid_pct_gdp_score": 0.25,
+    "ofz_debt_stress": 0.20,
+    "regional_budget_cuts": 0.15,
+    "shadow_fleet_stress": 0.10
+  },
+  "ofp_modulator_thresholds": {
+    "0_to_40": 0,
+    "41_to_55": 2,
+    "56_to_70": 4,
+    "71_to_85": 6,
+    "86_to_100": 8
+  },
+  "alert_thresholds": {
+    "critical_above": 70,
+    "warning_above": 50,
+    "watch_above": 35
+  }
+}

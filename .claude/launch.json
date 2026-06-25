@@ -4,7 +4,7 @@
     {
       "name": "black-sea-monitor",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "7700", "--directory", "C:\\Users\\User\\CodeProjects\\Black Sea Real Estate"],
+      "runtimeArgs": ["-m", "http.server", "7700", "--directory", "C:\\Users\\User\\Documents\\GitHub\\BlackSeaRealEstate\\public"],
       "port": 7700
     }
   ]

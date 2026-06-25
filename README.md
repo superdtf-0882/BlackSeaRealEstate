@@ -1,21 +1,22 @@
 # Black Sea Monitor
 ## Geopolitical Early Warning — Real Estate & Energy Signal Tracker
-### Methodology v4.0 · Live at [davidfacer.com](https://davidfacer.com)
+### Methodology v5.0 · Live at [davidfacer.com](https://davidfacer.com)
 
 ---
 
 > **TL;DR** — The Black Sea Monitor tracks the balance of Russia's
 > occupation of Eastern Ukraine, the Azov Corridor, and Crimea as
 > self-sustaining or sustained primarily through efforts of the Russian
-> central government. It does this by watching three things: what Moscow is
+> central government. It does this by watching four things: what Moscow is
 > deploying (state commitment), what private investors are betting (market
-> confidence), and what locals with no exit option are actually doing with
-> their money (residential permanence). When state spending is doing all
-> the work and neither private capital nor local residents are independently
-> confident, the system is fragile. A daily news pipeline monitors energy
-> infrastructure and civilian conditions as fast-moving early warning
-> signals. All scoring decisions go through human review before the
-> dashboard updates.
+> confidence), what locals with no exit option are actually doing with
+> their money (residential permanence), and whether Moscow can afford to
+> keep doing all of it (occupation financial pressure). When state spending
+> is doing all the work, neither private capital nor local residents are
+> independently confident, and the fiscal runway is shortening, the system
+> is fragile. A daily news pipeline monitors energy infrastructure and
+> civilian conditions as fast-moving early warning signals. All scoring
+> decisions go through human review before the dashboard updates.
 
 ---
 
@@ -40,7 +41,16 @@ export corridor disruption) and civilian consumer stress (fuel rationing,
 panic purchasing, grey market activation) as fast-moving indicators that
 precede and sometimes predict the slower real estate signal.
 
-The result is an eight-dial instrument tracking three distinct voices:
+v5.0 adds a third sector: occupation financial pressure. By mid-2026 the
+war and the occupation had merged into a single fiscal commitment —
+front-line operations, occupation administration, reconstruction theater,
+military family payments, and the evasion infrastructure required to
+maintain all of it under sanctions are no longer separable expenditure
+streams. The question is whether Moscow can fund the combined load. OFP
+measures the pressure on that funding stream and applies it as a modulator
+on the master signal.
+
+The result is a nine-dial instrument tracking four distinct voices:
 
 - **The State** — what Moscow is spending and deploying to project
   permanence, independent of whether anyone believes it
@@ -48,6 +58,8 @@ The result is an eight-dial instrument tracking three distinct voices:
   independent of subsidy
 - **Local Residents** — what people with no exit option bet their
   financial lives on
+- **The Fiscal Position** — whether the combined occupation-war load is
+  financially durable or burning through its buffer
 
 The spread between these voices is the primary intelligence product.
 
@@ -77,9 +89,15 @@ confirmation, the ISW tourist cancellation figure, the Bellingcat contractor
 analysis — it gets sourced to a named person or publication with a date.
 If you can't find the source, the claim shouldn't be in the model.
 
+OFP scoring follows the same discipline. The five components are updated
+monthly from named sources, with event-driven updates when the digest
+pipeline surfaces a qualifying event (confirmed regional budget cuts,
+shadow fleet enforcement actions, OFZ auction results). OFP does not move
+on rumor.
+
 ---
 
-## The eight dials
+## The nine dials
 
 ### Real estate sector
 
@@ -241,28 +259,129 @@ unconnected to the broader campaign.
 
 ---
 
+### Fiscal sector
+
+**OFP — Occupation Financial Pressure** (0–100, higher = more pressure on
+occupation-war funding)
+
+Measures the fiscal durability of Moscow's combined occupation-war
+commitment. By mid-2026 these are no longer separable expenditure
+streams. Front-line operations, occupation administration, reconstruction
+theater, military family payments (mobilization bonuses, death benefits),
+and the sanctions evasion infrastructure required to sustain all of it
+have merged into a single fiscal load. OFP asks whether that load is
+financially durable or burning through its buffer.
+
+OFP is not a measure of total Russian fiscal capacity — it is scoped
+specifically to the occupation-war fusion and the revenue streams that
+fund it. A Russia under fiscal stress for reasons unrelated to the
+occupation (commodity price collapse, demographic headwinds) would show
+OFP pressure only to the extent that stress compresses the occupation
+funding line.
+
+**Five components:**
+
+*Export Revenue Proxy (weight 30%)* — Normalized seaborne export volume
+index combined with Urals price realization factor (Urals price ÷ Brent
+price). Falls when either volume drops or the sanctions discount widens.
+At current spreads (~$13–15/barrel on ~$70 Brent) price realization is
+approximately 0.80 — Russia is leaving roughly 20% of potential revenue
+on the table per barrel. Sources: Kpler/Reuters weekly export data,
+Argus/Reuters Urals-Brent spread.
+
+*NWF Liquid % of GDP (weight 25%)* — Russia's National Wealth Fund
+liquid, deployable portion as a share of GDP, inverted. Pre-war liquid
+NWF was ~8% of GDP (~$185B). Current liquid portion is estimated at
+2.5–3% of GDP once committed-but-illiquid positions are stripped out.
+This is the runway indicator: how long can Moscow sustain the combined
+load if income falls short. Moves slowly and honestly — deterioration
+is harder to hide than stability is to fake. Source: Minfin monthly NWF
+disclosures (minfin.gov.ru).
+
+*OFZ / Sovereign Debt Stress (weight 20%)* — Direction of OFZ bond
+prices and auction coverage ratios. When OFZ yields rise despite CBR
+rate cuts, the market is pricing fiscal stress the official rate is
+trying to suppress. Falling OFZ prices + ruble weakness = compound
+signal. Source: Moscow Exchange, CBR auction results, Reuters/Bloomberg.
+
+*Regional Budget Transfer Cuts (weight 15%)* — Event-driven. Scored
+from digest pipeline. Distinguishes cuts to non-occupation regions
+(mild signal) from cuts to occupation-adjacent regions like Rostov,
+Belgorod, and Kursk (stronger signal) from direct cuts to occupation
+territory transfer payments (acute signal). The most honest component
+in the set: these are internal administrative decisions not being managed
+for external perception.
+
+*Shadow Fleet / Sanctions Enforcement Stress (weight 10%)* — Event-driven.
+Lloyd's of London war risk premiums on Black Sea routes, tanker seizures,
+and secondary sanctions designations. Rising enforcement friction raises
+the cost of maintaining the export revenue stream that funds everything
+else. Source: Lloyd's, Reuters tanker tracking, US/EU sanctions registers.
+
+**Directional note:** All five components are oriented so that
+deterioration raises OFP. This is consistent with the monitor's 100=bad
+convention across all dials. Readers accustomed to thinking of NWF size
+as a positive indicator should note that OFP's NWF component scores
+*depletion* — a falling NWF raises OFP, as intended.
+
+**Asymmetric signal reliability:** Downward moves in OFP (improving
+fiscal position) are less reliable than upward moves. Russia has
+demonstrated willingness to burn reserves and suppress monetary signals
+to project stability. A reading of "deteriorating" is harder to fake
+than a reading of "stable." Score improvements should require stronger
+source evidence than score increases.
+
+**Update cadence:** Monthly anchors from Minfin (NWF), CBR (rate
+direction), and Reuters/Kpler (export proxy). Event-driven updates for
+regional cuts and shadow fleet enforcement. OFP does not respond to
+weekly digest inputs the way RPI and CCI do — it is a slower-moving
+structural signal, not a weather indicator.
+
+Alert thresholds: >35 = watch, >50 = warning, >70 = critical.
+
+---
+
 **MTCS — Master Territorial Confidence Signal** (0–100, higher = more fragile)
 
-Synthesizes the real estate and energy sectors into one territorial
-fragility reading.
+Synthesizes all three sectors into one territorial fragility reading.
 
-Computation:
+**v5.0 computation:**
+
 1. Convert each city's composite spread to a Real Estate Pressure score:
    REP = 50 − spread. Apply city weights (Crimea 1.2×, Berdiansk 0.7×,
    others 1.0×) and compute weighted corridor average.
-2. MTCS = (Corridor REP × 0.5) + (ECS × 0.5)
+2. Base MTCS = (Corridor REP × 0.5) + (ECS × 0.5)
+3. Apply OFP modulator: look up adjustment from threshold table below.
+4. Final MTCS = min(100, Base MTCS + OFP modulator)
 
-Plain-language thresholds:
+**OFP modulator thresholds:**
+
+| OFP range | MTCS adjustment | Plain language |
+|---|---|---|
+| 0–40 | +0 | Fiscal position stable — no amplification |
+| 41–55 | +2 | Mild depletion pressure — structural note only |
+| 56–70 | +4 | Meaningful pressure — occupation funding under strain |
+| 71–85 | +6 | Acute pressure — burn rate exceeding sustainable income |
+| 86–100 | +8 | Critical — buffer near exhaustion, funding at risk |
+
+The OFP modulator is additive rather than co-equal because OFP is
+measuring something upstream of the other inputs — the sustainability
+of the system that produces those readings. A high OFP amplifies what
+the real estate and energy sectors are already saying. It does not
+average against them. When OFP is low (≤40), MTCS is unaffected. The
+modulator earns its weight by rising.
+
+The dashboard displays the decomposition transparently: Base [X] + OFP
+[+N] = Final MTCS. Readers can see the modulator's contribution
+separately and evaluate it independently.
+
+**Plain-language thresholds:**
 - <30: Occupation self-sustaining, signals aligned
 - 30–50: State working harder than independent actors to project confidence
 - 50–65: Structural stress confirmed across sectors
 - 65–80: System held together primarily by state expenditure and inertia —
   vulnerable to any shock that interrupts either
-- \>80: Acute signal — immediate behavioral change expected
-
-Equal weighting (real estate 50%, energy/consumer 50%) is a starting
-assumption, subject to revision once live data from both sectors has
-accumulated across multiple distinct events.
+- >80: Acute signal — immediate behavioral change expected
 
 ---
 
@@ -306,7 +425,7 @@ collapse means something that no other city's collapse means.
 - **CREA** (energyandcleanair.org) — Monthly Russian refinery capacity
   utilization. RPI anchor.
 - **Kpler** — Weekly Russian crude/product export volumes from Black Sea
-  ports. RPI export sub-indicator.
+  ports. RPI export sub-indicator; also feeds OFP export revenue proxy.
 - **Rosstat** (rosstat.gov.ru) — Weekly retail fuel prices by federal
   subject, including occupied oblasts. CCI fuel sub-indicator.
 - **GUR Ukraine** (@DefenceU Telegram) — Confirmed infrastructure strike
@@ -316,6 +435,23 @@ collapse means something that no other city's collapse means.
 - **UNN / Denys Chistikov** — June 12 2026 fuel/food crisis confirmation.
   Highest-confidence single CCI reading in dataset.
 - **RFE/RL Crimea.Realities** — Regional civilian conditions reporting.
+
+### Fiscal (OFP)
+- **Minfin** (minfin.gov.ru) — Monthly NWF balance disclosures. OFP
+  NWF component anchor. Liquid vs. illiquid breakdown requires reading
+  against committed-position disclosures; headline NWF figure overstates
+  deployable reserves.
+- **Argus Media / Reuters** — Weekly Urals-Brent spread. OFP export
+  revenue proxy price realization factor.
+- **Kpler / Reuters** — Seaborne Russian export volumes. OFP export
+  revenue proxy volume index.
+- **Moscow Exchange / CBR** — OFZ auction results and price direction.
+  OFP sovereign debt stress component.
+- **Regional government statements / digest pipeline** — Confirmed
+  budget transfer cuts. OFP regional cuts component. Event-driven;
+  sourced to named officials or budget documents only.
+- **Lloyd's of London / Reuters tanker tracking** — War risk premiums
+  and shadow fleet operational status. OFP shadow fleet component.
 
 ### Source bias acknowledgment
 Ukrainian government sources, Ukrainian partisan/resistance networks
@@ -331,6 +467,12 @@ digest prompt explicitly labels:
 Wire services (Reuters, AP, AFP) and named officials making on-record
 statements (Chistikov, Razvozhayev, Brovdi) are treated as higher-quality
 sources. ISW is treated as independent analysis, not a partisan source.
+
+For OFP specifically: Russian state sources (Minfin, CBR, Rosstat) are
+used for the NWF and OFZ components because no independent alternative
+exists. These are treated as directionally reliable — Russia has incentive
+to project stability, meaning adverse readings in state-published data
+carry more signal weight than stable or improving readings.
 
 ---
 
@@ -355,7 +497,7 @@ Dashboard (public/index.html)
     quiet digest link
   → If not pending: show quiet digest link if last_digest_date exists
 
-Digest reader (api/digest/[date].js, api/digest/latest)
+Digest reader (api/digest.js, with /api/digest/:date rewritten to it by vercel.json)
   → Two-column layout: requested digest (4/5 width) + sidebar archive (1/5)
   → Sidebar lists all other digests, newest first, 120-char summary excerpts
   → Click any sidebar entry to make it primary
@@ -364,8 +506,17 @@ Human review
   → Read full digest via dashboard link or Telegram
   → Evaluate Dashboard Relevance section
   → Decide: score changes, key_events, or no action needed
-  → If changes: edit index.html seed data, commit, push
+  → If changes: edit data files and index.html seed data, commit, push
   → Vercel deploys → last_updated advances → banner auto-clears
+
+OFP review (monthly)
+  → Check Minfin NWF disclosure (monthly release)
+  → Check Kpler/Reuters export volume and Urals-Brent spread
+  → Check OFZ auction results and ruble direction
+  → Check digest pipeline for regional budget cut events
+  → Update occupation_financial_pressure.json
+  → Sync SEED_OFP in index.html
+  → Commit with note on which components moved and why
 ```
 
 ### Firecrawl query list (v1)
@@ -394,10 +545,12 @@ Human review
 
 **It says:** how much load-bearing capacity the territorial confidence
 structure has — how much of apparent stability is self-sustaining versus
-how much requires continuous state input to maintain.
+how much requires continuous state input to maintain. With the addition
+of OFP, it also says how long that state input can be sustained at
+current rates.
 
 **It doesn't say:** when. A fragile configuration can persist for a long
-time if no trigger arrives. MTCS=70 means the structure is under
+time if no trigger arrives. MTCS=75 means the structure is under
 significant stress. It does not mean retreat is imminent.
 
 **It doesn't capture:** information that isn't in formal markets. The
@@ -406,15 +559,28 @@ informal cash deals that never touch Домклик — are invisible to the
 model. The Telegram channel monitoring is an approximation, not a
 substitute.
 
-**It can be confused by:** exogenous shocks. The Iran ceasefire and
-resulting oil price decline (June 2026) pressure Russian export revenue
-through a completely separate mechanism from the Black Sea corridor
-interdiction campaign. Both show up in the same fiscal space but for
-different reasons. The model currently doesn't distinguish them.
+**It can be confused by:** exogenous shocks. The Iran nuclear MOU
+(June 2026) and resulting oil price pressure affects Russian export
+revenue through a completely separate mechanism from the Black Sea
+corridor interdiction campaign. Both show up in the same OFP fiscal
+space but for different reasons. If Iranian supply returns to market,
+Urals price realization may soften even as the Urals-Brent discount
+narrows — Russia and Iran compete for the same sanctioned-oil customer
+base. The Hormuz MOU is being monitored through the OFP export revenue
+proxy component for observable price and volume effects before any
+scoring adjustment is made.
+
+**On OFP specifically:** the model measures fiscal pressure on the
+occupation-war funding stream, not Russian fiscal capacity in aggregate.
+A Russia that is financially stressed for reasons unrelated to the
+occupation would show OFP pressure only to the degree that stress
+compresses the occupation funding line. The two questions are related
+but not identical.
 
 **The most honest description:** a stress test, not a forecast. It tells
-you the structure's load-bearing capacity. It cannot tell you when the
-weight becomes too much.
+you the structure's load-bearing capacity and the durability of the
+mechanism sustaining it. It cannot tell you when the weight becomes
+too much.
 
 ---
 
@@ -439,11 +605,9 @@ data sources — everything listed above is publicly accessible.
 ```
 black-sea-monitor/
 ├── api/
-│   ├── scores.js          # GET current dial values
+│   ├── scores.js          # GET current dial values + computed ofp{current,modulator,mtcs_base,mtcs_final} (v5.0)
 │   ├── events.js          # GET key_events array
-│   ├── digest/
-│   │   ├── latest.js      # GET latest digest, two-column reader
-│   │   └── [date].js      # GET specific digest, two-column reader
+│   ├── digest.js          # GET digest reader, two-column layout (/api/digest/:date rewritten here by vercel.json)
 │   ├── monitor.js         # GET (cron) / POST (manual): full pipeline
 │   └── pending.js         # GET/DELETE pending state
 ├── lib/
@@ -453,9 +617,13 @@ black-sea-monitor/
 │   └── storage.js         # Data read/write abstraction
 ├── public/
 │   ├── index.html         # Dashboard (self-contained)
-│   └── data/               # Seed JSON files
+│   └── data/
+│       ├── scores.json              # Real estate dial values
+│       ├── refinery_pressure.json   # RPI monthly readings
+│       ├── civilian_confidence.json # CCI monthly readings
+│       └── occupation_financial_pressure.json  # OFP monthly readings (v5.0)
 ├── server.js               # Express local dev server
-└── vercel.json              # Cron schedule + CORS headers
+└── vercel.json              # Cron schedule + CORS headers + digest rewrite rule
 ```
 
 ---
@@ -470,6 +638,11 @@ black-sea-monitor/
 - **v4.0** — RPI + CCI + ECS + MTCS added; Vercel migration; automated
   Firecrawl pipeline; pending review workflow; Vercel Blob digest
   persistence; two-column digest archive reader
+- **v5.0** — OFP (Occupation Financial Pressure) added as fiscal sector;
+  MTCS modulator architecture (OFP amplifies base signal rather than
+  averaging with it); layout inversion (MTCS prominent at top, sector
+  signals in middle row, feeder dials below); three-panel MTCS display
+  showing base, modulator, and final values transparently
 
 ---
 
