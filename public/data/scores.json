@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-21T20:00:00Z",
+  "last_updated": "2026-06-24T20:00:00Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -460,13 +460,13 @@
         {
           "month": "2026-06",
           "SCI": 62,
-          "track_a": 50,
-          "track_b": 38,
-          "composite": 55,
-          "spread": -17,
+          "track_a": 47,
+          "track_b": 35,
+          "composite": 53,
+          "spread": -18,
           "crimea_price_rub_m2": 221332,
           "data_quality": "real",
-          "note": "Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. First substantive Track B movement of the monitoring period. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise — 30-year mortgage commitment hard to rationalize where legal civilian fuel purchase is currently impossible. Composite stays 55 (SCI and Track A unchanged). RPI held at 96 — fuel ban is distribution/access policy downstream of existing RPI pressure, not new refinery/export infrastructure damage."
+          "note": "Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. First substantive Track B movement of the monitoring period. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise — 30-year mortgage commitment hard to rationalize where legal civilian fuel purchase is currently impossible. Composite stays 55 (SCI and Track A unchanged). RPI held at 96 — fuel ban is distribution/access policy downstream of existing RPI pressure, not new refinery/export infrastructure damage. | Jun 24: Track A 50→47, Track B 38→35, composite 55→53, spread −17→−18. Sevastopol full city blackout after main substation destroyed overnight Jun 23–24. North Crimean Canal railway bridge destroyed (SSO two-phase strike). Black Sea Fleet families evacuating to Novorossiysk. Tourism/summer camp season effectively cancelled. Multi-modal civilian infrastructure failure: fuel + power + transport simultaneously."
         }
       ]
     },
@@ -663,6 +663,42 @@
       "date": "2026-06-18",
       "label": "Putin signs FEZ investment threshold reduction 30%→10% across occupied Donetsk, Luhansk, Zaporizhzhia, Kherson — explicit legislative acknowledgment that private investment attraction has failed",
       "category": "policy",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-22",
+      "label": "North Crimean Canal railway bridge destroyed — SSO two-phase strike (initial strike + follow-up destroyed repair equipment); SSO: 'bridge no longer exists'",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-23",
+      "label": "Sevastopol full city blackout — main substation (330/220/110/35 kV) destroyed overnight Jun 23–24; public transport curfew 10pm, shops close 8pm, summer camps suspended to Sep 1",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-23",
+      "label": "Black Sea Fleet families evacuating Crimea to Novorossiysk — traffic jams in both directions on Kerch Bridge; bridge closed 5+ hours after Kerch port oil depot fires",
+      "category": "military",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-23",
+      "label": "Russian fuel crisis reaches Siberia — Omsk caps purchases at 40L, Irkutsk in 'manual mode' rationing, Novosibirsk, Kamchatka, Yakutia join ban list; at least 15 regions now rationing",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-23",
+      "label": "Moscow Exchange −5%, ruble past 75/dollar (weakest since May 6), Gazprom shares below 100 rubles (lowest since 2009), OFZ bond prices fall — market reaction to deepening fuel/energy crisis",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-23",
+      "label": "Orenburg Gazprom gas processing plant struck overnight Jun 23–24 — accounts for 60% of Gazprom Pererabotka gas processing capacity; Russia's only helium plant hit; 1,200km from front",
+      "category": "infrastructure",
       "significance": "high"
     }
   ]
