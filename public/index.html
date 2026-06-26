@@ -72,7 +72,7 @@
     .mtcs-panel-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .mtcs-panel-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 4px; }
     .mtcs-comp-line { font-size: 13px; color: var(--text); line-height: 1.65; }
-    .mtcs-comp-note { font-size: 10px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+    .mtcs-comp-line span[title] { cursor: help; border-bottom: 1px dotted var(--muted); }
     .mtcs-gauge-wrap-lg { position: relative; width: 180px; height: 180px; margin: 0 auto 8px; }
     .mtcs-gauge-wrap-lg canvas { width: 180px !important; height: 180px !important; }
     .mtcs-value-lg {
@@ -325,10 +325,9 @@
       <!-- Left panel — composition breakdown -->
       <div class="mtcs-panel-left">
         <div class="mtcs-panel-label">MTCS Composition</div>
-        <div class="mtcs-comp-line">Base: <span id="mtcs-base-line">—</span></div>
-        <div class="mtcs-comp-line">OFP Modulator: <span id="mtcs-modulator-line">—</span></div>
-        <div class="mtcs-comp-line">Final MTCS: <span id="mtcs-final-line">—</span></div>
-        <div class="mtcs-comp-note">OFP modulator: +2 at OFP 41–55 · +4 at 56–70 · +6 at 71–85 · +8 at 86–100</div>
+        <div class="mtcs-comp-line">Real Estate + Energy: <span id="mtcs-base-line">—</span></div>
+        <div class="mtcs-comp-line">Fiscal Pressure (OFP): <span id="mtcs-modulator-line" title="OFP modulator: +2 at OFP 41–55 · +4 at 56–70 · +6 at 71–85 · +8 at 86–100">—</span></div>
+        <div class="mtcs-comp-line">Master Signal: <span id="mtcs-final-line">—</span></div>
       </div>
 
       <!-- Center panel — full donut gauge -->
@@ -338,13 +337,11 @@
           <div class="mtcs-value-lg" id="mtcs-val">—</div>
         </div>
         <div class="mtcs-change-lg" id="mtcs-chg"></div>
-        <span class="quality-badge quality-mixed" style="margin-top:8px;display:inline-block">◑ MIXED</span>
         <div class="card-label" style="margin-top:8px">Master Territorial Confidence Signal</div>
       </div>
 
       <!-- Right panel — threshold band + status + most severe condition -->
       <div class="mtcs-panel-right">
-        <div class="mtcs-panel-label">Status</div>
         <div class="mtcs-band-name" id="mtcs-band-name">—</div>
         <div class="mtcs-status-desc" id="mtcs-status">Computing…</div>
         <div class="mtcs-active-condition" id="mtcs-active-condition"></div>
@@ -580,11 +577,11 @@ function mtcsStatus(v) {
 }
 // Short threshold-band label for the Row 1 right panel — same thresholds as mtcsColor/mtcsStatus.
 function mtcsBandName(v) {
-  if (v > 80) return "ACUTE";
-  if (v > 65) return "FRAGILITY";
-  if (v > 50) return "WARNING";
-  if (v > 30) return "MONITORING";
-  return "STABLE";
+  if (v > 80) return "Acute Signal";
+  if (v > 65) return "Fragility Zone";
+  if (v > 50) return "Structural Stress";
+  if (v > 30) return "State Dependent";
+  return "Self-Sustaining";
 }
 
 function qualityClass(q) {
@@ -1855,13 +1852,19 @@ function buildSummaryDials() {
     const finalLine = document.getElementById("mtcs-final-line");
     if (finalLine) finalLine.textContent = mtcsVal;
 
-    // Period-over-period change
+    // Period-over-period change — only render when a real previous MTCS value
+    // exists; never show a delta against zero/default/uninitialized state.
     const prevMtcsVal = computePrevMtcsVal(prpi, pcci, activeViewMonth);
     const chgEl = document.getElementById("mtcs-chg");
-    if (chgEl && prevMtcsVal != null) {
-      const d = mtcsVal - prevMtcsVal;
-      if (d === 0) { chgEl.textContent = "Stable"; chgEl.className = "mtcs-change-lg"; }
-      else { chgEl.textContent = (d > 0 ? "▲ +" : "▼ ") + d; chgEl.className = "mtcs-change-lg " + (d > 0 ? "up" : "down"); }
+    if (chgEl) {
+      if (prevMtcsVal == null) {
+        chgEl.textContent = "";
+        chgEl.className = "mtcs-change-lg";
+      } else {
+        const d = mtcsVal - prevMtcsVal;
+        if (d === 0) { chgEl.textContent = "Stable"; chgEl.className = "mtcs-change-lg"; }
+        else { chgEl.textContent = (d > 0 ? "▲ +" : "▼ ") + d; chgEl.className = "mtcs-change-lg " + (d > 0 ? "up" : "down"); }
+      }
     }
   }
 }
