@@ -569,11 +569,11 @@ function cciColor(v)  { return v >= 65 ? "#f85149" : v >= 45 ? "#d29922" : v >= 
 function ecsColor(v)  { return v >= 65 ? "#f85149" : v >= 45 ? "#d29922" : v >= 25 ? "#58a6ff" : "#3fb950"; }
 function mtcsColor(v) { return v > 80 ? "#ff3333" : v > 65 ? "#f85149" : v > 50 ? "#d29922" : v > 30 ? "#58a6ff" : "#3fb950"; }
 function mtcsStatus(v) {
-  if (v > 80) return "🔴🔴 Acute — immediate behavioral change expected";
-  if (v > 65) return "🔴 Fragility confirmed — structural stress across sectors";
-  if (v > 50) return "⚠ Warning — multi-sector pressure confirmed";
-  if (v > 30) return "Monitoring — elevated pressure in one or more sectors";
-  return "System stable — no early warning signal";
+  if (v > 80) return "The occupation is in acute distress. Behavioral change — population movement, market exit, administrative breakdown — is expected.";
+  if (v > 65) return "The occupation is held together by state spending and inertia. It has no independent foundation. Any shock to either breaks it.";
+  if (v > 50) return "Pressure is confirmed across multiple sectors. The state is working hard to project stability it is not generating organically.";
+  if (v > 30) return "The state is doing more work than the market or residents are. Early fragility signal.";
+  return "Signals are aligned. The occupation appears self-sustaining.";
 }
 // Short threshold-band label for the Row 1 right panel — same thresholds as mtcsColor/mtcsStatus.
 function mtcsBandName(v) {
