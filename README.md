@@ -56,8 +56,10 @@ The result is a nine-dial instrument tracking four distinct voices:
   permanence, independent of whether anyone believes it
 - **The Private Market** — what non-state actors do with their own money,
   independent of subsidy
-- **Local Residents** — what people with no exit option bet their
-  financial lives on
+- **Local Residents** — what the remaining civilian population bets its
+  financial lives on, with the important caveat that "remaining civilian
+  population" describes very different conditions in different cities
+  (see City profiles)
 - **The Fiscal Position** — whether the combined occupation-war load is
   financially durable or burning through its buffer
 
@@ -117,6 +119,18 @@ that contractors only enter DNR if the state compensates all costs or
 rewards them via government contract. This finding caused us to separate
 SCI from Track A entirely in Methodology v3.0.
 
+**Emerging signal — commandeering:** Reports as of June 2026 indicate
+Russian military forces in occupied territories are transitioning in some
+areas from formal tenancy and subsidized purchase toward commandeering
+civilian property for billeting. If confirmed and widespread, this would
+represent a structural shift in how SCI should be read: commandeering is
+not a permanence signal, it is an emergency measure that signals the state
+can no longer organize or afford the formal program. It also undermines
+the property rights framework that makes Track A and Track B meaningful.
+Currently logged as a watch condition pending further confirmation. A
+verified shift to widespread commandeering would trigger a methodology
+review of SCI sub-indicators.
+
 Sources: Federal budget execution (minfin.gov.ru), ЕИСЖС developer
 registry (наш.дом.рф), PSB/VTB/Sberbank quarterly disclosures via
 Kommersant and RBC, ДОМ.РФ monthly mortgage analytics.
@@ -135,11 +149,21 @@ and asking price momentum on secondary market platforms. Mariupol's
 Track A score is structurally penalized because the Bellingcat/Shumanov
 finding leaves almost no genuine private capital identifiable there.
 
-Crimea's Track A is meaningfully higher — a decade of integration has
-produced real private market dynamics, resort developers making
-independent decisions, mainland Russians buying second homes with their
-own cash. That independence makes Crimea's Track A a more honest signal
-than Mariupol's.
+Crimea's Track A was meaningfully higher through 2025 — a decade of
+integration produced real private market dynamics, resort developers
+making independent decisions, mainland Russians buying second homes with
+their own cash. As of June 2026, that independence is collapsing. The
+tourism season has been effectively cancelled by official decree, summer
+camps suspended, hotel bookings down 31–40%, and both buyer and renter
+populations are in simultaneous retreat. Crimea Track A is now in active
+decline rather than independent operation.
+
+**Note on commandeering:** If Russian forces are requisitioning civilian
+property at administrative discretion, the private market framework
+breaks down regardless of willingness to transact. A developer whose
+completed units can be commandeered is not operating in a market.
+Track A scores would need to reflect this risk premium once commandeering
+is confirmed as systematic.
 
 Sources: Restate.ru biweekly price index (krym.restate.ru/graph/),
 GID.HOUSE developer listings, Realytix transaction database (Rosreestr
@@ -149,19 +173,52 @@ GID.HOUSE developer listings, Realytix transaction database (Rosreestr
 
 **Track B — Residential Outcome Signal** (0–100, higher = local permanence confidence)
 
-Measures what people with no exit option actually do: secondary market
-listing depth on Домклик, buyer permanence composition (local residents
-vs inter-regional speculators per PSB/VTB disclosures), and the
-rental-to-purchase ratio. At 2% mortgage rates, buying is cheaper than
-renting on a monthly cash flow basis in every occupied city except
-Mariupol new-build. Anyone renting despite this is paying a measurable
-premium for optionality — that premium is the permanence uncertainty
-signal.
+Measures what the remaining civilian population does with long-horizon
+financial decisions: secondary market listing depth on Домклик, buyer
+permanence composition (local residents vs inter-regional speculators
+per PSB/VTB disclosures), and the rental-to-purchase ratio. At 2%
+mortgage rates, buying is cheaper than renting on a monthly cash flow
+basis in every occupied city except Mariupol new-build. Anyone renting
+despite this is paying a measurable premium for optionality — that
+premium is the permanence uncertainty signal.
 
 Track B is the quietest and most informationally dense dial. It doesn't
 move on news. It moves when Домклик listing counts shift, when PSB
 discloses buyer composition changes, when the rental market absorbs
 demand that should be going to purchase. It is the climate dial.
+
+**Critical interpretive caveat — Donbas:** Track B in Donetsk and
+Luhansk does not measure a representative civilian population. A decade
+of conflict, displacement, and Russian administrative integration has
+produced a residual population that is below pre-war levels and
+self-selected for pro-Russia orientation — the people who remained when
+exit options were available and chose not to use them. Mortgage
+participation in Donbas reflects a prior political commitment that
+preceded the mortgage, not a market confidence signal generated
+independently of that commitment. Stability in Donbas Track B should
+not be read the same way as stability in Crimea Track B. It means the
+true believers are still betting. It does not mean the general civilian
+population is confident.
+
+The corollary is important: if commandeering reaches Donbas at scale,
+it means the occupation is putting financial pressure on its own captive
+support base — the people who stayed when others left and who have
+exhausted their tolerance buffer. That would be a categorically more
+acute signal than commandeering in a mixed or resistant population.
+
+**Crimea — phase transition:** As of June 2026, Crimea Track B is not
+merely declining — it is in active exit. Both sides of the
+permanence/optionality equation are in simultaneous retreat. Buyers are
+withdrawing because the product the mortgage finances (stable occupation,
+functional infrastructure, personal safety) is visibly degrading. The
+renter/optionality population — mainland Russian speculators, military
+families, resort visitors — is exercising that optionality and leaving.
+The civilian exodus is sustained and structural, not episodic. Russian
+Black Sea Fleet families are relocating to Novorossiysk. Summer 2026
+tourism has effectively collapsed. The Russian-installed administration
+declared a formal state of emergency on June 26, 2026 — an administrative
+acknowledgment that normal governance has failed. This is not a market
+under stress. It is a market in evacuation.
 
 Sources: Домклик live listing counts (domclick.ru), PSB/VTB buyer
 composition disclosures (RBC Jan 2025), Avito rental listings for
@@ -199,10 +256,21 @@ and the Sberbank/PSB expansion depends on oil revenue. Every percentage
 point of refining capacity offline is pressure on the budget line that
 funds the permanence projection.
 
-As of June 2026: ~33% of Russian refining capacity offline, fuel
-rationing confirmed in 53 regions, Russia importing gasoline from Asia
-by sea for the first time (first time this has been necessary; 2025 was
-managed domestically).
+As of June 2026: RPI 97. Approximately 33% of Russian refining capacity
+offline, fuel rationing confirmed in 56 regions, Russia importing
+gasoline from Asia by sea for the first time. The Sevastopol main power
+substation destroyed June 23–24. North Crimean Canal railway bridge
+destroyed. Orenburg Gazprom gas processing plant struck (60% of Gazprom
+Pererabotka capacity, 1,200km from front). Ukraine has launched a
+Zelensky-authorized 40-day intermediate and long-range strike operation
+as of June 25, expanding the target set beyond energy infrastructure to
+include air defense systems and logistics corridors.
+
+**Ceiling note:** RPI at 97 is effectively at its scoring ceiling. The
+indicator cannot meaningfully differentiate between "critical" and
+"catastrophic" at this range. New events are captured in scoring notes
+and key_events rather than further dial movement. The notes carry the
+analytical weight when the dial cannot.
 
 Sources: CREA (energyandcleanair.org) monthly capacity reports, GUR
 Ukraine (@DefenceU Telegram), ISW daily occupation updates
@@ -237,7 +305,22 @@ CCI and Track B measure different time horizons of the same underlying
 question. CCI measures the 30-day survival bet. Track B measures the
 30-year permanence bet. A population can exhibit high CCI stress while
 maintaining Track B stability if they believe the disruption is temporary.
-If both move together, behavioral change is likely imminent.
+When both move together, behavioral change is not imminent — it is
+already underway.
+
+As of June 2026: CCI 100 (index ceiling). Sevastopol full city blackout.
+Water supply outages. Public transit suspended in occupied Crimea and
+four Russian oblasts due to diesel shortages. Formal state of emergency
+declared by Russian-installed Crimea administration June 26, 2026.
+Ukraine's Foreign Intelligence Service released internal Russian documents
+confirming near-daily governance failures and reporting that over 80% of
+Russians now consider a large-scale economic crisis inevitable.
+
+**Ceiling note:** CCI at 100 is the index ceiling. The dial cannot move
+further. New acute stress events are captured in scoring notes and
+key_events. The ceiling does not mean conditions have stopped
+deteriorating. It means the model's acute-stress instrument is exhausted
+in this dimension and the notes carry the analytical weight.
 
 Sources: Rosstat weekly fuel prices by federal subject (rosstat.gov.ru),
 local Telegram community channels (Mariupol, Donetsk, Luhansk), UNN
@@ -256,6 +339,10 @@ are both necessary signals — one without the other is incomplete. RPI
 without CCI could mean successful interdiction that hasn't reached
 civilians yet. CCI without RPI could mean local supply chain failures
 unconnected to the broader campaign.
+
+As of June 2026: ECS 99. Both inputs at or near ceiling simultaneously.
+This is the configuration the monitor was built to detect: infrastructure
+destruction and civilian collapse arriving together, not sequentially.
 
 ---
 
@@ -331,6 +418,18 @@ to project stability. A reading of "deteriorating" is harder to fake
 than a reading of "stable." Score improvements should require stronger
 source evidence than score increases.
 
+**Live test — Hormuz MOU:** The Iran nuclear framework agreement (June
+2026) creates ambiguity for OFP's export revenue proxy. If Iranian
+supply returns to market, global oil prices soften — potentially
+narrowing the Urals-Brent discount while reducing the absolute Urals
+price. Russia and Iran compete for the same sanctioned-oil customer
+base in China and India. A rehabilitated Iran is not straightforwardly
+good for Russian price realization. The export revenue proxy is
+monitoring for observable Urals price and volume effects before any
+scoring adjustment is made. If OFP holds or rises despite the MOU,
+that is itself a finding: fiscal pressure is structural, not merely
+oil-price-contingent.
+
 **Update cadence:** Monthly anchors from Minfin (NWF), CBR (rate
 direction), and Reuters/Kpler (export proxy). Event-driven updates for
 regional cuts and shadow fleet enforcement. OFP does not respond to
@@ -343,7 +442,11 @@ Alert thresholds: >35 = watch, >50 = warning, >70 = critical.
 
 **MTCS — Master Territorial Confidence Signal** (0–100, higher = more fragile)
 
-Synthesizes all three sectors into one territorial fragility reading.
+How much of Russia's territorial control is self-sustaining — and how
+much requires continuous state spending to maintain. When private
+investors and local residents act independently of the state, the
+occupation has a foundation. When the state is the only actor, it
+doesn't. MTCS measures the gap between those two conditions.
 
 **v5.0 computation:**
 
@@ -353,6 +456,10 @@ Synthesizes all three sectors into one territorial fragility reading.
 2. Base MTCS = (Corridor REP × 0.5) + (ECS × 0.5)
 3. Apply OFP modulator: look up adjustment from threshold table below.
 4. Final MTCS = min(100, Base MTCS + OFP modulator)
+
+The dashboard displays the decomposition transparently: Real Estate +
+Energy [X] + Fiscal Pressure (OFP) [+N] = Master Signal [total].
+Readers can evaluate the modulator's contribution independently.
 
 **OFP modulator thresholds:**
 
@@ -364,41 +471,93 @@ Synthesizes all three sectors into one territorial fragility reading.
 | 71–85 | +6 | Acute pressure — burn rate exceeding sustainable income |
 | 86–100 | +8 | Critical — buffer near exhaustion, funding at risk |
 
-The OFP modulator is additive rather than co-equal because OFP is
-measuring something upstream of the other inputs — the sustainability
-of the system that produces those readings. A high OFP amplifies what
-the real estate and energy sectors are already saying. It does not
-average against them. When OFP is low (≤40), MTCS is unaffected. The
-modulator earns its weight by rising.
-
-The dashboard displays the decomposition transparently: Base [X] + OFP
-[+N] = Final MTCS. Readers can see the modulator's contribution
-separately and evaluate it independently.
+The OFP modulator is additive rather than co-equal because OFP measures
+something upstream of the other inputs — the sustainability of the system
+that produces those readings. A high OFP amplifies what the real estate
+and energy sectors are already saying. It does not average against them.
+When OFP is low (≤40), MTCS is unaffected. The modulator earns its
+weight by rising.
 
 **Plain-language thresholds:**
-- <30: Occupation self-sustaining, signals aligned
-- 30–50: State working harder than independent actors to project confidence
-- 50–65: Structural stress confirmed across sectors
-- 65–80: System held together primarily by state expenditure and inertia —
-  vulnerable to any shock that interrupts either
-- >80: Acute signal — immediate behavioral change expected
+- <30: The occupation appears self-sustaining. Signals are aligned.
+- 30–50: The state is working harder than the market or residents are.
+  Early fragility signal.
+- 50–65: Pressure is confirmed across multiple sectors. The state is
+  working hard to project stability it is not generating organically.
+- 65–80: The occupation is held together by state spending and inertia.
+  It has no independent foundation. Any shock to either breaks it.
+- >80: The occupation is in acute distress. Behavioral change —
+  population movement, market exit, administrative breakdown — is
+  expected.
+
+**Current reading:** MTCS 79, Fragility Zone. Base 77 (real estate +
+energy) + OFP modulator +2 = 79. One point below the acute threshold.
+Both RPI and CCI are at or near ceiling. The formal state of emergency
+declaration in Crimea (June 26, 2026) and the ongoing civilian exodus
+are behavioral changes already in progress, not anticipated.
 
 ---
 
 ## City profiles
 
-| City | Weight | Buyer profile | Track B quality | Primary watch |
-|---|---|---|---|---|
-| **Mariupol** | 1.0 | Inter-regional speculative (PSB: ~82%) | Low — thin secondary market | ДДУ contraction; PSB approval slowdown |
-| **Donetsk** | 1.0 | Local residents (PSB confirmed) | Medium — 385 Домклик apts | Listing count trend; price-cut ratio |
-| **Luhansk** | 1.0 | Local residents (VTB primary) | Medium — 974 Домклик houses | VTB volume disclosures; listing trend |
-| **Crimea** | 1.2× | Mainland Russian resort/second-home | Good — Restate.ru real data | Spread vs Sochi/Krasnodar; ДКП volume |
-| **Berdiansk** | 0.7× | Unknown — thin data | Very low | Any PSB/VTB Zaporizhzhia disclosures |
+| City | Weight | Buyer profile | Track B interpretation | Market phase | Primary watch |
+|---|---|---|---|---|---|
+| **Mariupol** | 1.0 | Inter-regional speculative (PSB: ~82%) | Low signal — state program dominates | State-Only | ДДУ contraction; PSB approval slowdown |
+| **Donetsk** | 1.0 | Residual pro-Russia self-selected population, below pre-war levels | Captive — reflects prior commitment, not current confidence | Captive + Watch | Commandeering reports; listing count trend |
+| **Luhansk** | 1.0 | Residual pro-Russia self-selected population, below pre-war levels | Captive — reflects prior commitment, not current confidence | Captive + Watch | Commandeering reports; VTB volume disclosures |
+| **Crimea** | 1.2× | Collapsing — military families, tourists, speculators exiting | Active exit — both permanence and optionality populations retreating simultaneously | Exiting | State of emergency; civilian exodus pace; Restate.ru price trajectory |
+| **Berdiansk** | 0.7× | Unknown — thin data | Unclassifiable | Unknown | Any PSB/VTB Zaporizhzhia disclosures |
 
-Crimea carries 1.2× weight because it is Moscow's stated red line —
+**Crimea carries 1.2× weight** because it is Moscow's stated red line —
 voluntary withdrawal from Crimea would represent a categorically different
-political event than retreat from the Azov corridor. A Crimea market
-collapse means something that no other city's collapse means.
+political event than retreat from the Azov corridor. A Crimea market in
+active exit means something no other city's signal means.
+
+**Donbas population caveat:** Donetsk and Luhansk are below pre-war
+population levels. The residents who remain are not a representative
+sample of the pre-war civilian population — they are those who chose to
+stay under Russian administration when exit was possible. Mortgage
+participation in this population reflects a prior political commitment.
+It is not evidence of general civilian confidence in the occupation's
+permanence. The model correctly scores Donbas Track B higher than Crimea
+Track B on the numbers, but the interpretation requires this context:
+Donbas is measuring true believers. Crimea was measuring a genuine
+private market. That market is now evacuating.
+
+**Market phase classifications** are documented here as a framework
+pending dashboard implementation in v5.1:
+- **State-Only** — genuine private market undetectable; state program is the market
+- **Captive** — residual self-selected population below pre-war levels; participation reflects prior commitment not current confidence
+- **Watch** — emerging structural risk not yet visible in transaction data (commandeering)
+- **Exiting** — active departure of prior participants; both buyer and renter populations retreating
+- **Unknown** — insufficient data to classify
+
+---
+
+## Planned — v5.1
+
+**Market Directionality indicator**
+
+A per-city phase classification surfaced alongside each city's dial set.
+Distinguishes *why* Track A and Track B are at their current levels —
+whether scores reflect absence of new entrants, active exit of existing
+participants, captive self-selected populations, or state-only activity.
+
+The distinction matters because a falling score caused by active exit is
+a categorically more acute signal than a falling score caused by lack of
+new interest. The current model captures the level but not the direction
+of travel or the composition of the population generating the reading.
+
+Market Directionality is an interpretive layer, not a formula input. It
+will not feed into MTCS. Phase transitions will be documented in the
+digest's Dashboard Relevance section when they occur.
+
+Current assignments pending implementation:
+- Mariupol: State-Only
+- Donetsk: Captive + Watch (commandeering risk)
+- Luhansk: Captive + Watch (commandeering risk)
+- Crimea: Exiting
+- Berdiansk: Unknown
 
 ---
 
@@ -406,8 +565,7 @@ collapse means something that no other city's collapse means.
 
 ### Real estate
 - **Restate.ru** (krym.restate.ru/graph/) — Crimea biweekly secondary
-  price index. 26 real readings Jun 2025–Jun 2026. Only fully real
-  time-series in the dataset.
+  price index. Only fully real time-series in the dataset.
 - **Домклик** (domclick.ru) — Sberbank's property platform. Live listing
   counts for Donetsk and Luhansk. Track B anchor.
 - **GID.HOUSE** (gid.house/mariupol) — Mariupol new-build developer
@@ -497,7 +655,8 @@ Dashboard (public/index.html)
     quiet digest link
   → If not pending: show quiet digest link if last_digest_date exists
 
-Digest reader (api/digest.js, with /api/digest/:date rewritten to it by vercel.json)
+Digest reader (api/digest.js, with /api/digest/:date rewritten to it
+by vercel.json)
   → Two-column layout: requested digest (4/5 width) + sidebar archive (1/5)
   → Sidebar lists all other digests, newest first, 120-char summary excerpts
   → Click any sidebar entry to make it primary
@@ -550,32 +709,40 @@ of OFP, it also says how long that state input can be sustained at
 current rates.
 
 **It doesn't say:** when. A fragile configuration can persist for a long
-time if no trigger arrives. MTCS=75 means the structure is under
-significant stress. It does not mean retreat is imminent.
+time if no trigger arrives. MTCS 79 means the structure is under
+significant stress and has no independent foundation. It does not mean
+retreat is imminent — though in Crimea, behavioral change is already
+underway rather than anticipated.
 
 **It doesn't capture:** information that isn't in formal markets. The
 most important Track B signals — decisions made in Donetsk kitchens,
 informal cash deals that never touch Домклик — are invisible to the
 model. The Telegram channel monitoring is an approximation, not a
-substitute.
+substitute. The model also cannot fully capture the Donbas mortgage
+signal without the population context documented above: the numbers are
+real, but the population generating them is not representative of the
+pre-war civilian base.
 
 **It can be confused by:** exogenous shocks. The Iran nuclear MOU
-(June 2026) and resulting oil price pressure affects Russian export
-revenue through a completely separate mechanism from the Black Sea
-corridor interdiction campaign. Both show up in the same OFP fiscal
-space but for different reasons. If Iranian supply returns to market,
-Urals price realization may soften even as the Urals-Brent discount
-narrows — Russia and Iran compete for the same sanctioned-oil customer
-base. The Hormuz MOU is being monitored through the OFP export revenue
-proxy component for observable price and volume effects before any
-scoring adjustment is made.
+(June 2026) affects Russian export revenue through a completely separate
+mechanism from the Black Sea corridor interdiction campaign. Both show
+up in the same OFP fiscal space but for different reasons. The model
+currently does not distinguish them.
 
-**On OFP specifically:** the model measures fiscal pressure on the
-occupation-war funding stream, not Russian fiscal capacity in aggregate.
-A Russia that is financially stressed for reasons unrelated to the
-occupation would show OFP pressure only to the degree that stress
-compresses the occupation funding line. The two questions are related
-but not identical.
+**When indicators reach their ceilings:** RPI (97) and CCI (100) are
+at or near the top of their scoring range. The dials cannot express
+"worse than critical." When this happens, the scoring notes and
+key_events log carry the analytical weight. A ceiling reading means the
+model's sensitivity in that dimension is exhausted, not that conditions
+have stabilized.
+
+**On the state of emergency declaration:** The formal declaration by
+the Russian-installed Crimea administration on June 26, 2026 is an
+event the model can log but not fully score — it is an administrative
+acknowledgment of what the dials have been measuring, not a new data
+point that moves them further. Its significance is confirmatory: the
+occupation authority itself has now stated that normal governance has
+failed.
 
 **The most honest description:** a stress test, not a forecast. It tells
 you the structure's load-bearing capacity and the durability of the
@@ -605,9 +772,11 @@ data sources — everything listed above is publicly accessible.
 ```
 black-sea-monitor/
 ├── api/
-│   ├── scores.js          # GET current dial values + computed ofp{current,modulator,mtcs_base,mtcs_final} (v5.0)
+│   ├── scores.js          # GET current dial values + computed
+│   │                      #   ofp{current,modulator,mtcs_base,mtcs_final} (v5.0)
 │   ├── events.js          # GET key_events array
-│   ├── digest.js          # GET digest reader, two-column layout (/api/digest/:date rewritten here by vercel.json)
+│   ├── digest.js          # GET digest reader, two-column layout
+│   │                      #   (/api/digest/:date rewritten here by vercel.json)
 │   ├── monitor.js         # GET (cron) / POST (manual): full pipeline
 │   └── pending.js         # GET/DELETE pending state
 ├── lib/
@@ -618,12 +787,12 @@ black-sea-monitor/
 ├── public/
 │   ├── index.html         # Dashboard (self-contained)
 │   └── data/
-│       ├── scores.json              # Real estate dial values
-│       ├── refinery_pressure.json   # RPI monthly readings
-│       ├── civilian_confidence.json # CCI monthly readings
-│       └── occupation_financial_pressure.json  # OFP monthly readings (v5.0)
+│       ├── scores.json                        # Real estate dial values
+│       ├── refinery_pressure.json             # RPI monthly readings
+│       ├── civilian_confidence.json           # CCI monthly readings
+│       └── occupation_financial_pressure.json # OFP monthly readings (v5.0)
 ├── server.js               # Express local dev server
-└── vercel.json              # Cron schedule + CORS headers + digest rewrite rule
+└── vercel.json             # Cron schedule + CORS headers + digest rewrite rule
 ```
 
 ---
@@ -642,7 +811,12 @@ black-sea-monitor/
   MTCS modulator architecture (OFP amplifies base signal rather than
   averaging with it); layout inversion (MTCS prominent at top, sector
   signals in middle row, feeder dials below); three-panel MTCS display
-  showing base, modulator, and final values transparently
+  showing base, modulator, and final values transparently; plain-language
+  MTCS status text
+- **v5.1 (planned)** — Market Directionality indicator per city
+  (State-Only / Captive / Watch / Exiting / Unknown);
+  documents the phase of market participation, not just its level;
+  interpretive layer only, does not feed into MTCS formula
 
 ---
 
