@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-24T20:00:00Z",
+  "last_updated": "2026-06-27T20:00:00Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -700,6 +700,96 @@
       "label": "Orenburg Gazprom gas processing plant struck overnight Jun 23–24 — accounts for 60% of Gazprom Pererabotka gas processing capacity; Russia's only helium plant hit; 1,200km from front",
       "category": "infrastructure",
       "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "R-280 Novorossiya highway closed km 317–331 (occupied Zaporizhzhia) after Ukrainian drone strikes — primary land supply corridor to Crimea via Mariupol/Berdiansk; traffic diverted through villages",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Three bridges struck overnight Jun 24–25: road bridge over Korsak River (Zaporizhzhia), railway bridges over Aidar and Luhanchyk rivers (Luhansk Oblast)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Ukraine launches SBU-authorized 40-day intermediate and long-range strike operation — Jun 26 strikes hit two cable ships, ferry near Kerch, multiple Crimea substations, Kerch airfield (ISW Jun 26)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "NORSI refinery halted — Russia's 4th largest (Kstovo, Nizhny Novgorod), CDU-5 primary refining unit damaged, 15M ton/year capacity offline (Reuters/Ukrainska Pravda Jun 25)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Ufa dual-refinery strikes: Bashneft-Novoil and Bashneft-Ufaneftekhim — combined 10.5M tons annual processing capacity (OSINT/ISW Jun 26)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Fuel rationing confirmed in at least 56 Russian regions (up from 53); Moscow Oil Refinery offline minimum 6 months after Jun 16/18 attacks (EA WorldView Jun 25)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Russia negotiating emergency gasoline imports from Kazakhstan (~50,000 MT) and drafting tax subsidies for India imports — unprecedented; domestic production gap cannot be closed by existing measures (Reuters/Counteroffensive Jun 25)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Baltic/Black Sea crude loadings on track for record ~2.7M bpd in June (up from 2.5M May) — damaged refineries redirecting unprocessed crude to export markets (Energy News Pro/Inkorr Jun 25)",
+      "category": "macro",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Public transit suspended in occupied Crimea and four Russian oblasts (Zabaikalsky, Kaluga, Rostov, Tula) due to diesel shortages (NV Ukraine/Agentstvo Jun 25)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-25",
+      "label": "Satellite imagery confirms kilometer-long vehicle queues exiting Crimea via Kerch Bridge (Kyiv Independent Jun 25)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-26",
+      "label": "Aksyonov and Razvozhayev sign formal state of emergency decrees in occupied Crimea and Sevastopol — primarily to streamline supply procurement and bypass bureaucratic restrictions on energy restoration (ISW Jun 26)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-26",
+      "label": "TES fuel network employees formally petition Putin for company rescue from collapse — signals fuel retail infrastructure financially failing, not merely constrained (Inkorr Jun 26)",
+      "category": "civilian",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-06-26",
+      "label": "PSB: more branches per capita in occupied Ukraine than Moscow Oblast; 2,000 small business loans approved in occupied Zaporizhzhia H1 2026, up 50% YoY — state financial infrastructure deepening as physical infrastructure collapses (ISW Jun 25)",
+      "category": "banking",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-06-27",
+      "label": "Ukraine FIS reports internal Russian documents showing near-daily governance failures in occupied Crimea; over 80% of Russians reportedly consider large-scale economic crisis inevitable [unverified — Ukrainian intelligence source] (ISW Jun 26)",
+      "category": "macro",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-06-27",
+      "label": "WATCH: reports of Russian military forces transitioning from formal tenancy/subsidized purchase toward commandeering civilian property for billeting in some occupied areas — pattern across multiple digest inputs, no single named-source confirmation (monitor watch condition)",
+      "category": "civilian",
+      "significance": "medium"
     }
   ]
 }
