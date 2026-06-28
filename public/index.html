@@ -63,13 +63,13 @@
       border-radius: 8px;
       padding: 24px 28px;
       display: grid;
-      grid-template-columns: 30% 40% 30%;
+      grid-template-columns: 3fr 4fr 3fr;
       gap: 20px;
       align-items: center;
     }
-    .mtcs-panel-left  { display: flex; flex-direction: column; gap: 5px; }
-    .mtcs-panel-right { display: flex; flex-direction: column; gap: 5px; text-align: right; }
-    .mtcs-panel-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .mtcs-panel-left  { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    .mtcs-panel-right { display: flex; flex-direction: column; gap: 5px; text-align: right; min-width: 0; }
+    .mtcs-panel-center { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
     .mtcs-panel-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 4px; }
     .mtcs-comp-line { font-size: 13px; color: var(--text); line-height: 1.65; }
     .mtcs-comp-line span[title] { cursor: help; border-bottom: 1px dotted var(--muted); }
