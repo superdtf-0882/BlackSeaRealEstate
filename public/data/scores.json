@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-27T20:00:00Z",
+  "last_updated": "2026-06-30T20:00:00Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -789,6 +789,24 @@
       "date": "2026-06-27",
       "label": "WATCH: reports of Russian military forces transitioning from formal tenancy/subsidized purchase toward commandeering civilian property for billeting in some occupied areas — pattern across multiple digest inputs, no single named-source confirmation (monitor watch condition)",
       "category": "civilian",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-06-28",
+      "label": "Putin publicly admits Crimea has ‘only days’ of fuel reserves and Russia is ‘going through a difficult period’ — first presidential-level confirmation of acute Crimea supply crisis; pledges increased land and sea deliveries (Guardian Jun 29, Reuters Jun 29)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-28",
+      "label": "Slavyansk-na-Kubani refinery struck (Krasnodar Krai) — ~4M ton/year capacity, named key Crimea fuel supplier; fire ongoing Jun 29; Yaroslavl refinery struck same night (ABC News/AP Jun 28, Kyiv Independent Jun 29)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-06-29",
+      "label": "ISW confirms Mariupol as epicenter of Russia’s resettlement campaign — Russian citizens relocated into city as Russification strategy; coercive passportization pressure confirmed across all occupied oblasts (ISW Jun 29, Just Security Jun 29)",
+      "category": "policy",
       "significance": "medium"
     }
   ]
