@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-06-30T20:00:00Z",
+  "last_updated": "2026-07-03T20:00:00Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -461,12 +461,12 @@
           "month": "2026-06",
           "SCI": 62,
           "track_a": 47,
-          "track_b": 35,
+          "track_b": 33,
           "composite": 53,
-          "spread": -18,
+          "spread": -20,
           "crimea_price_rub_m2": 221332,
           "data_quality": "real",
-          "note": "Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. First substantive Track B movement of the monitoring period. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise — 30-year mortgage commitment hard to rationalize where legal civilian fuel purchase is currently impossible. Composite stays 55 (SCI and Track A unchanged). RPI held at 96 — fuel ban is distribution/access policy downstream of existing RPI pressure, not new refinery/export infrastructure damage. | Jun 24: Track A 50→47, Track B 38→35, composite 55→53, spread −17→−18. Sevastopol full city blackout after main substation destroyed overnight Jun 23–24. North Crimean Canal railway bridge destroyed (SSO two-phase strike). Black Sea Fleet families evacuating to Novorossiysk. Tourism/summer camp season effectively cancelled. Multi-modal civilian infrastructure failure: fuel + power + transport simultaneously."
+          "note": "Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. First substantive Track B movement of the monitoring period. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise — 30-year mortgage commitment hard to rationalize where legal civilian fuel purchase is currently impossible. Composite stays 55 (SCI and Track A unchanged). RPI held at 96 — fuel ban is distribution/access policy downstream of existing RPI pressure, not new refinery/export infrastructure damage. | Jun 24: Track A 50→47, Track B 38→35, composite 55→53, spread −17→−18. Sevastopol full city blackout after main substation destroyed overnight Jun 23–24. North Crimean Canal railway bridge destroyed (SSO two-phase strike). Black Sea Fleet families evacuating to Novorossiysk. Tourism/summer camp season effectively cancelled. Multi-modal civilian infrastructure failure: fuel + power + transport simultaneously. | Jul 3: Track B 35→33, spread −18→−20. Geographic spread of infrastructure failure confirmed beyond Sevastopol: Armyansk without power and water 2+ days, Feodosia municipal district significant outages, Sevastopol power restored then re-cut within 24 hours. Peninsula-wide failure, not city-specific. 3,500-vehicle queue confirmed at Kerch Bridge (Inkorr Jul 2). Residential permanence premise further eroded by sustained multi-city collapse."
         }
       ]
     },
@@ -808,6 +808,78 @@
       "label": "ISW confirms Mariupol as epicenter of Russia’s resettlement campaign — Russian citizens relocated into city as Russification strategy; coercive passportization pressure confirmed across all occupied oblasts (ISW Jun 29, Just Security Jun 29)",
       "category": "policy",
       "significance": "medium"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Donetsk–Mariupol highway bridge near Kremenivka/Hranitne destroyed — multiple spans collapsed, route fully blocked, Russian logistics rerouted +15–20km; second bridge near Novoazovsk on R-280 also partially collapsed same day (Moscow Times/Militarnyi Jul 1)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Ukrainian MoD discloses June 2026 DeepStrike campaign: 11 refineries, 7 fuel logistics facilities, 8 defense-industrial enterprises struck; maximum confirmed range 2,000+km (Ukrainian MoD via United24/Ukrinform Jul 1)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Russia crude oil processing fell 25% YoY to 3.95M bpd in June — lowest level in over two decades (AP/Economic Times Jul 1)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Bloomberg: Russian seaborne crude exports hit record 4.13M bpd in June while gross export revenues fell to $1.9B/week (lowest since March 2026) — volume cannot compensate for price collapse; refineries redirecting unprocessed crude to export (ISW Jul 1)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Russia begins importing refined gasoline from India for first time — 60,000–80,000 MT en route, plans for 400,000 MT/month from multiple countries (Reuters/ISW Jul 1)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Armyansk without power and water 2+ days; Feodosia municipal district significant outages; Sevastopol power restored then re-cut within 24 hours — infrastructure failure now peninsula-wide, not city-specific (ISW Jul 1)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Occupied Luhansk social fund pays 880,000 rubles to six Far North residents for relocation to occupied territory — monetary incentives for Russian civilian resettlement deepening (ISW Jul 2)",
+      "category": "policy",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "‘Zemsky Teacher’ program recruits Russian teachers to occupied Kherson Oblast at 2M rubles each — Russification through institutional staffing (ISW Jul 2)",
+      "category": "policy",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-07-01",
+      "label": "USF 48-hour operation Jul 1–2 disables 13 energy targets: 10 electrical substations in occupied Crimea, one each in occupied Luhansk and Donetsk oblasts, gas distribution station near Aidar (USF Commander Brovdi/Kyiv Independent Jul 2)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-02",
+      "label": "NORSI refinery (Kstovo, Nizhny Novgorod) struck second time in 8 days — AVT-6 primary crude unit on fire; CDU-5 unit was knocked offline in Jun 24 strike; facility now multiply degraded (Euromaidan Press/ISW Jul 2)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-02",
+      "label": "Sevastopol actual pump price reaches 199 rubles/liter (Kommersant Jul 2) — nearly double official Rosstat figure of 118.79 rubles/liter; Razvozhayev confirms rationing continues minimum one more month",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-02",
+      "label": "Bilohirsk quarry (occupied Crimea) halts operations entirely due to fuel absence — first confirmed industrial production shutdown attributable to fuel crisis (RFE/RL/ISW Jul 2)",
+      "category": "civilian",
+      "significance": "high"
     }
   ]
 }
