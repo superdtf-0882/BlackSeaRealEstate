@@ -1026,23 +1026,16 @@ function updateDials(cityKey) {
   chg("tb-chg",     latest, prev, "track_b");
   chg("spread-chg", latest, prev, "spread");
 
-  // Quality badge — spread is always MIXED (computed from real + estimated sub-indicators)
-  const bw = document.getElementById("quality-badge-wrap");
-  bw.innerHTML = `<span class="quality-badge quality-mixed">◑ MIXED</span>`;
 
   // ── Alert system: severity + new-this-update detection ───────────────────
   const alertEl   = document.getElementById("alert-banner");
   const composite = latest.composite ?? Math.round(latest.SCI * 0.4 + latest.track_a * 0.6);
 
-  const rpiReadings = (RPI?.monthly_readings || []).filter(r => r.RPI != null);
-  const latestRpi   = rpiReadings[rpiReadings.length - 1];
-  const prevRpi     = rpiReadings.length > 1 ? rpiReadings[rpiReadings.length - 2] : null;
-  const rpiThr      = RPI?.alert_thresholds || {};
+  const [latestRpi, prevRpi] = histAt(RPI?.monthly_readings, "RPI", activeViewMonth);
+  const rpiThr               = RPI?.alert_thresholds || {};
 
-  const cciReadings = (CCI_DATA?.monthly_readings || []).filter(r => r.CCI != null);
-  const latestCci   = cciReadings[cciReadings.length - 1];
-  const prevCci     = cciReadings.length > 1 ? cciReadings[cciReadings.length - 2] : null;
-  const cciThr      = CCI_DATA?.alert_thresholds || {};
+  const [latestCci, prevCci] = histAt(CCI_DATA?.monthly_readings, "CCI", activeViewMonth);
+  const cciThr               = CCI_DATA?.alert_thresholds || {};
 
   const ofpReadings = (OFP_DATA?.monthly_readings || []).filter(r => r.OFP != null);
   const latestOfp   = ofpReadings[ofpReadings.length - 1];
