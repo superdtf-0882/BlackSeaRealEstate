@@ -101,6 +101,23 @@ module.exports = async (req, res) => {
       font-size: 14px; line-height: 1.7;
       color: #c9d1d9; background: #0d1117;
     }
+    .site-topbar {
+      background: #0d1117; border-bottom: 1px solid #21262d;
+      padding: 12px 24px 10px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .site-identity-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; width: fit-content; }
+    .site-identity-mark img { width: 28px; height: 34px; border-radius: 6px; object-fit: cover; object-position: center 30%; border: 1px solid #21262d; }
+    .site-identity-mark span { font-size: 13px; color: #8b949e; letter-spacing: 0.02em; }
+    .site-breadcrumb { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #8b949e; }
+    .site-breadcrumb a { color: #8b949e; text-decoration: none; }
+    .site-breadcrumb a:hover { text-decoration: underline; }
+    .site-breadcrumb-sep { margin: 0 8px; opacity: 0.5; }
+    .site-attribution {
+      position: fixed; bottom: 16px; right: 20px; z-index: 30;
+      font-size: 11px; color: #8b949e; text-decoration: none;
+      background: #0d1117; padding: 2px 6px; border-radius: 4px;
+    }
+    .site-attribution:hover { color: #e6edf3; }
     .layout {
       display: grid;
       grid-template-columns: 4fr 1fr;
@@ -167,6 +184,17 @@ module.exports = async (req, res) => {
   </style>
 </head>
 <body>
+  <div class="site-topbar">
+    <a href="https://davidfacer.com/" class="site-identity-mark">
+      <img src="/HeadshotBW.jpg" alt="">
+      <span>David Facer</span>
+    </a>
+    <div class="site-breadcrumb">
+      <a href="https://davidfacer.com/">← davidfacer.com</a>
+      <span class="site-breadcrumb-sep">/</span>
+      <span>Research</span>
+    </div>
+  </div>
   <div class="layout">
     <div class="main">
       <div class="nav">
@@ -181,6 +209,7 @@ module.exports = async (req, res) => {
       ${sidebarHtml || '<div style="font-size:12px;color:#8b949e">No earlier digests yet.</div>'}
     </div>
   </div>
+  <a href="https://davidfacer.com/" class="site-attribution">© 2026 David Facer</a>
 </body>
 </html>`;
 
