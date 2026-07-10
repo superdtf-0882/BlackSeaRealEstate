@@ -2264,6 +2264,7 @@ async function init() {
   const dataDate = rawLastUpdated.slice(0, 10); // display as YYYY-MM-DD regardless of timestamp
   document.getElementById("st-latest").textContent = dataDate;
   document.getElementById("last-updated").textContent = "Data: " + dataDate;
+  checkPending();
 
   // Build scrubber
   buildScrubber();
@@ -2369,7 +2370,6 @@ async function checkPending() {
     }
   } catch(e) { /* silent fail */ }
 }
-checkPending();
 </script>
 
 <a href="https://davidfacer.com/" class="site-attribution">© 2026 David Facer</a>
