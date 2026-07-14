@@ -1,4 +1,256 @@
 # Black Sea Monitor
+
+## 1.1 What this is
+
+The Black Sea Monitor is a daily-updating geopolitical early warning
+system. It watches Russian-occupied territory in eastern Ukraine
+(Mariupol, Donetsk, Luhansk, Crimea, Berdiansk) and produces a set of
+numeric indicators — combining real estate market behavior, energy
+infrastructure pressure, civilian conditions, and government fiscal
+pressure — that together estimate how much of Russia's control over
+that territory is self-sustaining versus propped up by continuous state
+spending. A news-scraping and AI-synthesis pipeline runs once a day,
+produces a written digest, and alerts a human reviewer; the human
+decides whether anything in that digest should move the published
+indicator values. If this system stopped running, the published dashboard
+would simply stop updating — there is no other process that keeps its
+data current.
+
+Within the davidfacer.com portfolio, this is a governed product (not an
+experimental prototype) that was elevated from an informal "shadow
+topology" deployment under the Prototype Lifecycle Charter (CHARTER-001,
+2026-07-13). It has two public-facing surfaces: a static shell embedded
+at `davidfacer.com/blackseamonitor/` (which fetches its data live,
+cross-origin, from this project), and this project's own backend,
+deployed independently at `black-sea-real-estate.vercel.app` with no
+custom domain of its own. The digest reader and monitoring API live only
+on the backend URL; the embedded shell on the main site is a copy of the
+dashboard's front-end HTML, not a separate implementation.
+
+*(The full analytical methodology — the nine-dial scoring model, current
+readings, and the reasoning behind it — is preserved below in full under
+"Analytical Methodology," clearly separated from the engineering
+sections here. If you're operating or debugging this system, you don't
+need to read that section first.)*
+
+## 1.2 Architecture and data flows
+
+**Trigger mechanism:** a Vercel Cron fires `GET /api/monitor` daily at
+07:00 UTC (schedule defined in `vercel.json`). The same endpoint also
+accepts `POST` for manual triggering (used during development and
+testing) — **note that unlike the `GET` path, `POST` currently has no
+authentication check**, see 1.6.
+
+**Current live flow** (confirmed this session by reading `api/monitor.js`
+directly, not assumed from a prior design):
+
+```
+Vercel Cron, 07:00 UTC daily (GET, requires CRON_SECRET)
+  → api/monitor.js
+      → lib/firecrawl.js: 9 search queries, sources:["news"], last 24h
+      → lib/claude.js: synthesis (claude-sonnet-4-6) with full
+                       methodology context + current scores as input
+      → write digest to Vercel Blob: black-sea-digests/digests/YYYY-MM-DD.md
+          → [fire-and-forget archive push to davidfacer-archive
+             /api/blob-receive — see below]
+      → update digests/index.json in the same Blob store
+          → [fire-and-forget archive push, same as above]
+      → write pending.json (dashboard banner state)
+      → lib/telegram.js: send summary + dashboard link
+```
+
+**Archive push (added for portfolio backup, ADR-007):** after each of
+the two Blob writes above, this project fires a non-blocking POST to a
+separate, independently-deployed backup project (`davidfacer-archive`).
+This exists because `black-sea-digests` (this project's own Blob store)
+has no other backup mechanism, and Black Sea Monitor's published digests
+are not recoverable from any other source if this store were ever lost.
+The push is fire-and-forget: the request is not awaited, a failed push
+is only logged (`console.error`) on this project's side, and it can
+never block or delay digest publication, the Telegram alert, or any
+other part of this pipeline. See `davidfacer-archive`'s own README and
+ADR-007 for the receiving side of this relationship.
+
+**CORS constraint:** `vercel.json` restricts every `/api/*` route to
+`Access-Control-Allow-Origin: https://davidfacer.com` (GET/OPTIONS only)
+— this is what allows the embedded shell at
+`davidfacer.com/blackseamonitor/` to call this backend cross-origin at
+all, and nothing else. This is a bare-origin allowlist, not a wildcard —
+confirmed by reading `vercel.json` directly.
+
+**Downstream consumers, for context (not part of this project's own
+data flow):** the static dashboard (`public/index.html`) reads
+`digests/index.json` and `pending.json` to show the "new digest
+available" banner; a human reviewer reads the digest and, if warranted,
+manually edits this project's own seed data files and redeploys to move
+the published indicator values. See "Analytical Methodology" below for
+the full pipeline-to-human-review-to-redeploy cycle and the OFP monthly
+review cadence, which are analytical/editorial processes rather than
+this codebase's own architecture.
+
+## 1.3 Credentials and environment
+
+Every environment variable this project's code actually reads (confirmed
+via a direct search of `api/` and `lib/` for `process.env` usage, plus
+`BLOB_READ_WRITE_TOKEN` which the `@vercel/blob` SDK reads implicitly and
+is never referenced by name in this codebase):
+
+| Variable | What it accesses | Required for | Tier |
+|---|---|---|---|
+| `BLOB_READ_WRITE_TOKEN` | `black-sea-digests` Blob store (read/write) | All digest read/write operations | High — if revoked, digests can no longer be written or read; the dashboard and digest reader would break entirely |
+| `ANTHROPIC_API_KEY` | Claude API (`claude-sonnet-4-6`) | Digest synthesis | High — if revoked, synthesis fails and no digest is produced that day; the pipeline errors out before reaching the Blob write |
+| `FIRECRAWL_API_KEY` | Firecrawl web search/scraping service | Daily news fetch | High — if revoked, the fetch step fails with zero results, which triggers the "0 results" pipeline-health alert path and no digest is written |
+| `TELEGRAM_BOT_TOKEN` | Telegram Bot API | Alert delivery | Medium — if revoked, digest publication still completes; only the Telegram notification fails |
+| `TELEGRAM_CHAT_ID` | Identifies which Telegram chat receives alerts | Alert delivery | Low — identifies a destination, not itself a credential with independent access |
+| `CRON_SECRET` | Authenticates the Vercel Cron's `GET` call to `/api/monitor` | Scheduled execution | Low — operational, not a data-access credential |
+| `ARCHIVE_ENDPOINT` | URL of `davidfacer-archive`'s `/api/blob-receive` endpoint | Archive push | N/A — not a secret, just a destination URL |
+| `ARCHIVE_PUSH_SECRET` | Shared secret authenticating this project's pushes to the archive endpoint | Archive push | Medium — the same value is also set in `davidfacer-archive`'s own environment; compromise would let someone else push arbitrary content into the archive store under this project's name |
+
+Tier definitions (PES-001): **High** = production data or admin-level
+access, compromise has material consequences. **Medium** = scoped
+operations. **Low** = operational, not data-access.
+
+## 1.4 Deployment and operations
+
+**Deploy from scratch:**
+
+```bash
+git clone <this repo>
+cd BlackSeaRealEstate
+npm install
+# Set all 8 env vars from 1.3 in the Vercel dashboard (Production + Preview)
+npx vercel link      # one-time
+npx vercel --prod
+```
+
+No build step — plain Node.js serverless functions under `api/`, no
+framework (confirmed via `vercel.json`'s `"framework": null` and
+`package.json`'s dependency list — no framework packages, just
+`@mendable/firecrawl-js`, `@vercel/blob`, `dotenv`, `express` for local
+dev only, and `marked`). Deployment does not auto-promote to production
+on push — an explicit `vercel --prod` (or a manual dashboard promotion)
+is required every time, same as every other project in this portfolio.
+
+**Verify the cron is registered:**
+
+```bash
+vercel crons ls
+```
+Expected: `/api/monitor` at `0 7 * * *`.
+
+**Confirm a digest ran successfully** (whether triggered by cron or
+manually):
+
+- A new dated file appears in the `black-sea-digests` Blob store:
+  `digests/YYYY-MM-DD.md` (or `digests/YYYY-MM-DD-2.md`, etc. for a
+  second same-day update — see 1.6 for a related discrepancy).
+- `digests/index.json` in the same store has a new entry for that date.
+- The configured Telegram chat received an alert (either the full
+  digest summary, or a quieter "nothing dashboard-relevant" ping,
+  depending on content — see "Low-news threshold" under Analytical
+  Methodology).
+- The corresponding archive push succeeded: check
+  `manifest/blacksea-digests.json` in the `davidfacer-archive` project's
+  own Blob store for the new key. This step is fire-and-forget and its
+  failure would **not** be visible from this project's own logs or
+  behavior — see 1.5.
+
+**Manual trigger for testing:** `POST /api/monitor` runs the full
+pipeline on demand. See 1.6 — this currently has no authentication.
+
+## 1.5 Runbook — known failure modes
+
+**Firecrawl fetch fails or returns 0 results.** Not retried within the
+same run. If the result count is exactly 0, the pipeline sends a
+pipeline-health alert to Telegram ("Monitor ran — 0 results returned.
+Check Firecrawl API or query list.") and writes no digest at all that
+day. If individual queries fail but others succeed, the pipeline
+continues with whatever results it got (errors are caught and logged
+per-query in `lib/firecrawl.js`, not fatal to the run).
+
+**Claude synthesis fails.** The whole request fails with a thrown error,
+caught by the top-level handler, which sends a Telegram alert
+(`🚨 Monitor pipeline error: ...`) and returns a 500. No digest is
+produced for that day. Not automatically retried — the next opportunity
+is the following day's scheduled cron run, or a manual `POST` trigger.
+
+**Blob write fails** (digest `.md` or `index.json`). This would throw
+inside the same top-level `try` block as synthesis, triggering the same
+error-alert path above. Telegram would receive the pipeline-error alert,
+not the normal digest summary — the two are mutually exclusive for a
+given run, not both sent.
+
+**Archive push fails.** Explicitly non-blocking, by design (see 1.2):
+the digest is published regardless, the Telegram alert still fires
+normally, and the only trace of the failure is a `console.error` line
+in this project's own Vercel function logs — nothing surfaces to
+Telegram or anywhere else a human would notice. Recovery: the missing
+key can be manually re-pushed to `davidfacer-archive`'s
+`/api/blob-receive` endpoint, or picked up by re-running that project's
+backfill pattern (list `black-sea-digests`, re-POST anything missing
+from the archive's manifest). This project's own Blob store
+(`black-sea-digests`) is unaffected either way — the archive push never
+reads from or depends on anything already written there.
+
+**Telegram alert fails** (bad token, chat ID, or Telegram API error).
+Caught separately from the main pipeline (`try`/`catch` around the
+`sendMessage` call specifically) — the digest is published regardless,
+and the failure is logged (`console.error('Telegram send failed:', ...)`)
+but does not fail the overall request or block anything else.
+
+**`POST /api/monitor` has no authentication.** Confirmed by reading the
+handler directly: only the `GET` path checks `CRON_SECRET`. Since this
+project has no custom domain and is reachable directly at its
+`.vercel.app` URL, anyone who has that URL can trigger a full pipeline
+run — including the paid Anthropic and Firecrawl API calls and a real
+Telegram alert — with a bare `curl -X POST`, any number of times, with
+no rate limiting. This is a real gap, not a documentation omission;
+flagged as a follow-up item rather than fixed silently as part of this
+README task (see 1.6).
+
+## 1.6 Known limitations and open items
+
+- **`POST /api/monitor` is unauthenticated** (see 1.5). Cost and abuse
+  exposure: repeated unauthenticated POSTs would run up real Anthropic
+  and Firecrawl API charges and could flood the configured Telegram
+  chat. Flagged as a follow-up task, not fixed as part of this
+  documentation pass.
+- **No retry logic anywhere in the pipeline.** If Firecrawl or Claude
+  synthesis fails on a given day, that day's digest is simply not
+  produced — the next chance is tomorrow's scheduled run or a manual
+  trigger. There is no queued retry or backoff.
+- **No alerting on archive push failure** (see 1.5). A missed archive
+  push produces no notification anywhere a human would see it — the
+  only way to discover one is to check `davidfacer-archive`'s manifest
+  against this project's own `digests/index.json` and look for gaps.
+- **A pre-existing discrepancy in `digests/index.json` itself:** it
+  lists 26 entries covering 25 distinct calendar dates, while 28 actual
+  `.md` digest files exist (26 calendar days between 2026-06-19 and
+  2026-07-14, plus two extra same-day sequence files on 2026-06-21 —
+  `2026-06-21-2.md` and `2026-06-21-3.md`). This predates the archive
+  work and is not something the archive backup caused — the archive
+  correctly holds copies of all 28 `.md` files plus the index as-is.
+  Worth investigating independently of this README task, since it means
+  `index.json` is not a fully reliable index of every digest that
+  actually exists.
+- **ADR-006** (governing this project's use of the Anthropic/Claude API
+  for digest synthesis) exists in the portfolio's architecture corpus
+  but is not yet cross-referenced from this README. Added as a forward
+  reference here; the decision record itself lives in the `OKF TOGAF`
+  repository's corpus, not in this repo.
+
+---
+
+# Analytical Methodology
+
+*The following is the Black Sea Monitor's own analytical/product
+documentation — the scoring model, current readings, data sources, and
+the reasoning behind the methodology. This section is written for a
+reader of the intelligence product itself, not for an engineer
+operating the system. If you're deploying, debugging, or maintaining
+this codebase, everything you need is in the engineering sections above
+— you do not need to read further to do that job.*
+
 ## Geopolitical Early Warning — Real Estate & Energy Signal Tracker
 ### Methodology v5.0 · Live at [davidfacer.com](https://davidfacer.com)
 
@@ -634,22 +886,14 @@ carry more signal weight than stable or improving readings.
 
 ---
 
-## The monitor pipeline
+## Editorial pipeline (human review and score updates)
+
+*The data-fetch and digest-generation pipeline itself is documented in
+the engineering section above (1.2). This section covers what happens
+after a digest is published — the analytical/editorial process for
+turning a digest into an updated dashboard.*
 
 ```
-Daily Vercel Cron (07:00 UTC)
-  → api/monitor.js
-      → lib/firecrawl.js: 9 search queries, sources:["news"], qdr:d
-      → lib/claude.js: synthesis with full methodology context +
-                       current scores as input
-      → Write digest to Vercel Blob: digests/YYYY-MM-DD.md
-      → [archive push: fire-and-forget POST to davidfacer-archive]
-      → Update digests/index.json: { date, summary, url } per entry
-      → [archive push: fire-and-forget POST to davidfacer-archive]
-      → Write pending.json: { pending: true, date, summary,
-                              last_digest_date, digest_url }
-      → lib/telegram.js: summary + link to dashboard
-
 Dashboard (public/index.html)
   → checkPending() on load
   → If pending and last_updated < digest date: show green banner
@@ -679,14 +923,6 @@ OFP review (monthly)
   → Sync SEED_OFP in index.html
   → Commit with note on which components moved and why
 ```
-
-**Archive push:** After each digest `.md` write and each `digests/index.json`
-update, `api/monitor.js` fires a non-blocking POST to `davidfacer-archive`
-(a separate, dedicated backup project — see ADR-007). This is
-fire-and-forget: the request is not awaited, a failure is only logged
-(`console.error`), and it never blocks or affects digest publication or
-the rest of this pipeline. It exists because this project's own Blob
-store (`black-sea-digests`) has no other backup mechanism.
 
 ### Firecrawl query list (v1)
 ```
@@ -827,6 +1063,9 @@ black-sea-monitor/
   (State-Only / Captive / Watch / Exiting / Unknown);
   documents the phase of market participation, not just its level;
   interpretive layer only, does not feed into MTCS formula
+- **Archive push (2026-07-14)** — fire-and-forget backup of every
+  published digest to `davidfacer-archive`, per ADR-007. Not a
+  methodology change — an infrastructure addition. See 1.2.
 
 ---
 
