@@ -86,6 +86,16 @@ module.exports = async (req, res) => {
       allowOverwrite: true,
     });
 
+    // Fire-and-forget — do not await, do not block digest publication
+    fetch(process.env.ARCHIVE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.ARCHIVE_PUSH_SECRET}`
+      },
+      body: JSON.stringify({ key: filename, content: digest })
+    }).catch(err => console.error('Archive push failed:', filename, err));
+
     // 7. Update index — append new entry, sort newest first
     const seqSuffix = sequence > 1 ? `?seq=${sequence}` : '';
     const digestApiUrl = `https://black-sea-real-estate.vercel.app/api/digest/${today}${seqSuffix}`;
@@ -107,6 +117,16 @@ module.exports = async (req, res) => {
       addRandomSuffix: false,
       allowOverwrite: true,
     });
+
+    // Fire-and-forget — do not await, do not block digest publication
+    fetch(process.env.ARCHIVE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.ARCHIVE_PUSH_SECRET}`
+      },
+      body: JSON.stringify({ key: 'digests/index.json', content: JSON.stringify(index) })
+    }).catch(err => console.error('Archive push failed:', 'digests/index.json', err));
 
     // 8. Detect significance
     const isSignificant = !digest.includes('No items meet dashboard-update threshold');
