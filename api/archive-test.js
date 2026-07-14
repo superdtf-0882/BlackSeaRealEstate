@@ -2,7 +2,7 @@
 // black-sea-digests, pushes it through the real archive flow, and reports
 // the result. Delete this file (and its Vercel deployment) after the
 // synthetic test is confirmed -- not part of the permanent publication flow.
-const { put } = require('@vercel/blob');
+const { put, del, list } = require('@vercel/blob');
 
 const TEST_KEY = 'digests/test-archive-2026-07-13.md';
 const TEST_CONTENT = '# TEST — synthetic blob for archive push verification\n\nThis is a labelled test blob, not a real digest. Safe to delete.';
@@ -11,6 +11,17 @@ module.exports = async (req, res) => {
   const authHeader = req.headers.authorization;
   if (authHeader !== `Bearer ${process.env.BACKFILL_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  if (req.method === 'DELETE') {
+    try {
+      const { blobs } = await list({ prefix: TEST_KEY });
+      const existing = blobs.find((b) => b.pathname === TEST_KEY);
+      if (existing) await del(existing.url);
+      return res.status(200).json({ ok: true, deleted: TEST_KEY, existed: Boolean(existing) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
   }
 
   try {
