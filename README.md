@@ -643,7 +643,9 @@ Daily Vercel Cron (07:00 UTC)
       → lib/claude.js: synthesis with full methodology context +
                        current scores as input
       → Write digest to Vercel Blob: digests/YYYY-MM-DD.md
+      → [archive push: fire-and-forget POST to davidfacer-archive]
       → Update digests/index.json: { date, summary, url } per entry
+      → [archive push: fire-and-forget POST to davidfacer-archive]
       → Write pending.json: { pending: true, date, summary,
                               last_digest_date, digest_url }
       → lib/telegram.js: summary + link to dashboard
@@ -677,6 +679,14 @@ OFP review (monthly)
   → Sync SEED_OFP in index.html
   → Commit with note on which components moved and why
 ```
+
+**Archive push:** After each digest `.md` write and each `digests/index.json`
+update, `api/monitor.js` fires a non-blocking POST to `davidfacer-archive`
+(a separate, dedicated backup project — see ADR-007). This is
+fire-and-forget: the request is not awaited, a failure is only logged
+(`console.error`), and it never blocks or affects digest publication or
+the rest of this pipeline. It exists because this project's own Blob
+store (`black-sea-digests`) has no other backup mechanism.
 
 ### Firecrawl query list (v1)
 ```
