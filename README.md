@@ -38,8 +38,8 @@ need to read that section first.)*
 **Trigger mechanism:** a Vercel Cron fires `GET /api/monitor` daily at
 07:00 UTC (schedule defined in `vercel.json`). The same endpoint also
 accepts `POST` for manual triggering (used during development and
-testing) — **note that unlike the `GET` path, `POST` currently has no
-authentication check**, see 1.6.
+testing) — both `GET` and `POST` require the same `CRON_SECRET` bearer
+token (fixed 2026-07-14; previously `POST` had no auth check, see 1.6).
 
 **Current live flow** (confirmed this session by reading `api/monitor.js`
 directly, not assumed from a prior design):
@@ -156,7 +156,8 @@ manually):
   behavior — see 1.5.
 
 **Manual trigger for testing:** `POST /api/monitor` runs the full
-pipeline on demand. See 1.6 — this currently has no authentication.
+pipeline on demand, with the same `Authorization: Bearer <CRON_SECRET>`
+header required for the cron's `GET` call.
 
 ## 1.5 Runbook — known failure modes
 
@@ -198,23 +199,17 @@ Caught separately from the main pipeline (`try`/`catch` around the
 and the failure is logged (`console.error('Telegram send failed:', ...)`)
 but does not fail the overall request or block anything else.
 
-**`POST /api/monitor` has no authentication.** Confirmed by reading the
-handler directly: only the `GET` path checks `CRON_SECRET`. Since this
-project has no custom domain and is reachable directly at its
-`.vercel.app` URL, anyone who has that URL can trigger a full pipeline
-run — including the paid Anthropic and Firecrawl API calls and a real
-Telegram alert — with a bare `curl -X POST`, any number of times, with
-no rate limiting. This is a real gap, not a documentation omission;
-flagged as a follow-up item rather than fixed silently as part of this
-README task (see 1.6).
+**`POST /api/monitor` previously had no authentication** (fixed
+2026-07-14). Since this project has no custom domain and is reachable
+directly at its `.vercel.app` URL, anyone who had that URL could
+previously trigger a full pipeline run — including the paid Anthropic
+and Firecrawl API calls and a real Telegram alert — with a bare
+`curl -X POST`, any number of times, with no rate limiting. Both `GET`
+and `POST` now require the same `CRON_SECRET` bearer token; there is
+still no rate limiting on authenticated calls.
 
 ## 1.6 Known limitations and open items
 
-- **`POST /api/monitor` is unauthenticated** (see 1.5). Cost and abuse
-  exposure: repeated unauthenticated POSTs would run up real Anthropic
-  and Firecrawl API charges and could flood the configured Telegram
-  chat. Flagged as a follow-up task, not fixed as part of this
-  documentation pass.
 - **No retry logic anywhere in the pipeline.** If Firecrawl or Claude
   synthesis fails on a given day, that day's digest is simply not
   produced — the next chance is tomorrow's scheduled run or a manual
