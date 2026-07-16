@@ -59,6 +59,15 @@ Vercel Cron, 07:00 UTC daily (GET, requires CRON_SECRET)
       → lib/telegram.js: send summary + dashboard link
 ```
 
+**OFP boundary (documented 2026-07-15):** the daily synthesis prompt in
+`lib/claude.js` scopes to eight daily-sensitive dials (SCI, Track A,
+Track B, Composite Spread, RPI, CCI, ECS, MTCS) and does not include OFP
+(Occupation Financial Pressure) — this is intentional, not an oversight.
+OFP is scored monthly by a human reviewer, deliberately outside the
+automated daily pipeline (see "Analytical Methodology" below), so the
+digest's Dashboard Relevance suggestions correctly never propose OFP
+moves.
+
 **Archive push (added for portfolio backup, ADR-007):** after each of
 the two Blob writes above, this project fires a non-blocking POST to a
 separate, independently-deployed backup project (`davidfacer-archive`).
