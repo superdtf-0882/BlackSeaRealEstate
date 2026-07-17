@@ -198,11 +198,11 @@ module.exports = async (req, res) => {
   <div class="layout">
     <div class="main">
       <div class="nav">
-        <a href="https://black-sea-real-estate.vercel.app">← Black Sea Monitor</a>
+        <a href="https://davidfacer.com/blackseamonitor/">← Black Sea Monitor</a>
         <span>${navDate}</span>
       </div>
       ${primaryHtml}
-      <div class="footer">Black Sea Monitor · Methodology v4.0</div>
+      <div class="footer">Black Sea Monitor · Methodology v5.0</div>
     </div>
     <div class="sidebar">
       <div class="sidebar-header">Previous Digests</div>
