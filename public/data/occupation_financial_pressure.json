@@ -43,23 +43,23 @@
     },
     {
       "month": "2026-06",
-      "export_revenue_proxy": 55,
+      "export_revenue_proxy": 58,
       "nwf_liquid_pct_gdp_score": 55,
       "ofz_debt_stress": 57,
-      "regional_budget_cuts": 48,
+      "regional_budget_cuts": 57,
       "shadow_fleet_stress": 35,
-      "OFP": 54,
+      "OFP": 58,
       "real": true,
       "partial": true,
-      "note": "Jun 24: OFP initialized at 54. Export revenue proxy: seaborne exports down ~15% Jun vs May, Urals-Brent spread ~$13-15 (~score 55). NWF liquid portion ~2.5-3% of GDP, down from ~8% pre-war (~score 55). OFZ prices fell Jun 23-24, ruble past 75/dollar (~score 57). Regional cuts: national fiscal stress evident but no confirmed direct occupation transfer cuts yet (~score 48). Shadow fleet: ongoing but no acute new enforcement event (~score 35). OFP modulator applies +2 to MTCS (band: 41-55). Hormuz MOU (Jun 2026) ambiguous — Iranian supply return could soften Urals price realization; monitoring export revenue proxy for response. Sources: Reuters Jun 23, Minfin NWF disclosures, Kpler/Reuters export data."
+      "note": "Jun 24: OFP initialized at 54. Export revenue proxy: seaborne exports down ~15% Jun vs May, Urals-Brent spread ~$13-15 (~score 55). NWF liquid portion ~2.5-3% of GDP, down from ~8% pre-war (~score 55). OFZ prices fell Jun 23-24, ruble past 75/dollar (~score 57). Regional cuts: national fiscal stress evident but no confirmed direct occupation transfer cuts yet (~score 48). Shadow fleet: ongoing but no acute new enforcement event (~score 35). OFP modulator applies +2 to MTCS (band: 41-55). Hormuz MOU (Jun 2026) ambiguous — Iranian supply return could soften Urals price realization; monitoring export revenue proxy for response. Sources: Reuters Jun 23, Minfin NWF disclosures, Kpler/Reuters export data. | Jul 17: OFP 54→58 (modulator +2→+4, entering 56–70 band). Behavioral signals confirming fiscal pressure on occupation-war funding stream: VTB reducing ATM withdrawal limits for Crimea customers; Russian federal government emergency subsidy of ₽4.3B to Crimea tourism companies (reactive fiscal expenditure confirming civilian economic collapse); ten canceled state fuel procurement tenders across Samara, Tambov, Stavropol — ambulances and utility services running on reserves (Izvestiya/Kyiv Post Jul 13); Russia importing gasoline from India (400,000 MT/month planned) and seeking jet fuel from Japan via multi-leg routing — import dependency deepening materially; Russian oil refining at lowest level since 2005 (Kyiv Post Jul 14). Deputy PM Novak publicly acknowledged national fuel crisis ‘due to [Ukrainian] strikes’ (Kyiv Post Jul 13). OFP modulator advances to +4 — occupation funding stream under meaningful strain."
     }
   ],
   "component_weights": {
-    "export_revenue_proxy": 0.30,
+    "export_revenue_proxy": 0.3,
     "nwf_liquid_pct_gdp_score": 0.25,
-    "ofz_debt_stress": 0.20,
+    "ofz_debt_stress": 0.2,
     "regional_budget_cuts": 0.15,
-    "shadow_fleet_stress": 0.10
+    "shadow_fleet_stress": 0.1
   },
   "ofp_modulator_thresholds": {
     "0_to_40": 0,

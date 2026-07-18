@@ -1,6 +1,6 @@
 {
   "methodology_version": "4.0",
-  "last_updated": "2026-07-09T20:00:00Z",
+  "last_updated": "2026-07-17T20:00:00Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -460,13 +460,13 @@
         {
           "month": "2026-06",
           "SCI": 62,
-          "track_a": 44,
-          "track_b": 30,
-          "composite": 51,
-          "spread": -21,
+          "track_a": 42,
+          "track_b": 28,
+          "composite": 50,
+          "spread": -22,
           "crimea_price_rub_m2": 221332,
           "data_quality": "real",
-          "note": "Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. First substantive Track B movement of the monitoring period. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise — 30-year mortgage commitment hard to rationalize where legal civilian fuel purchase is currently impossible. Composite stays 55 (SCI and Track A unchanged). RPI held at 96 — fuel ban is distribution/access policy downstream of existing RPI pressure, not new refinery/export infrastructure damage. | Jun 24: Track A 50→47, Track B 38→35, composite 55→53, spread −17→−18. Sevastopol full city blackout after main substation destroyed overnight Jun 23–24. North Crimean Canal railway bridge destroyed (SSO two-phase strike). Black Sea Fleet families evacuating to Novorossiysk. Tourism/summer camp season effectively cancelled. Multi-modal civilian infrastructure failure: fuel + power + transport simultaneously. | Jul 3: Track B 35→33, spread −18→−20. Geographic spread of infrastructure failure confirmed beyond Sevastopol: Armyansk without power and water 2+ days, Feodosia municipal district significant outages, Sevastopol power restored then re-cut within 24 hours. Peninsula-wide failure, not city-specific. 3,500-vehicle queue confirmed at Kerch Bridge (Inkorr Jul 2). Residential permanence premise further eroded by sustained multi-city collapse. | Jul 9: Track A 47→44. Kyiv Post/Korshak reports Crimea real estate prices down 30–50% since January 2026 during peak summer season — confirmed demand collapse. Tourism reservations down 79% in June; rail and ferry suspended. Private market confidence in active collapse, not mere stagnation. | Jul 9: Track B →30, spread →−21. Peninsula-wide Crimea blackout Jul 6 (Krymenergo confirmed regionwide). Sevastopol kindergartens cut from 74 to 24 operating — first-order civic services failure. Fuel rationing confirmed in all four occupied oblasts. Multi-commodity food shortages confirmed (sugar, flour, cereals, salt, pasta). Grey market fuel via Telegram/Avito. Aksyonov Jul 8: crisis 'open-ended,' fuel unavailability on certain days permanent. Residents describing 'survival mode' (Le Monde Jul 9). 30–50% real estate price collapse corroborates residential permanence rejection. | Jul 9: MTCS at 80 (acute boundary — threshold is >80; band remains Fragility Zone). Base 78 + OFP +2 = 80. ECS at ceiling (100). Crimea in active evacuation. Behavioral change underway, not anticipated — state of emergency, civilian exodus, industrial shutdowns, civic services failure all confirmed."
+          "note": "Jun 21 AM: Track A 54→50, composite 57→55, spread −11→−9. Hotel booking collapse confirmed worsening (31% overall, 40% Sevastopol). | Jun 21 PM: Track B 46→38, spread −9→−17. First substantive Track B movement of the monitoring period. Total civilian fuel access suspension (Aksyonov/Razvozhayev, 9am Jun 21) directly undermines the residential-permanence premise — 30-year mortgage commitment hard to rationalize where legal civilian fuel purchase is currently impossible. Composite stays 55 (SCI and Track A unchanged). RPI held at 96 — fuel ban is distribution/access policy downstream of existing RPI pressure, not new refinery/export infrastructure damage. | Jun 24: Track A 50→47, Track B 38→35, composite 55→53, spread −17→−18. Sevastopol full city blackout after main substation destroyed overnight Jun 23–24. North Crimean Canal railway bridge destroyed (SSO two-phase strike). Black Sea Fleet families evacuating to Novorossiysk. Tourism/summer camp season effectively cancelled. Multi-modal civilian infrastructure failure: fuel + power + transport simultaneously. | Jul 3: Track B 35→33, spread −18→−20. Geographic spread of infrastructure failure confirmed beyond Sevastopol: Armyansk without power and water 2+ days, Feodosia municipal district significant outages, Sevastopol power restored then re-cut within 24 hours. Peninsula-wide failure, not city-specific. 3,500-vehicle queue confirmed at Kerch Bridge (Inkorr Jul 2). Residential permanence premise further eroded by sustained multi-city collapse. | Jul 9: Track A 47→44. Kyiv Post/Korshak reports Crimea real estate prices down 30–50% since January 2026 during peak summer season — confirmed demand collapse. Tourism reservations down 79% in June; rail and ferry suspended. Private market confidence in active collapse, not mere stagnation. | Jul 9: Track B →30, spread →−21. Peninsula-wide Crimea blackout Jul 6 (Krymenergo confirmed regionwide). Sevastopol kindergartens cut from 74 to 24 operating — first-order civic services failure. Fuel rationing confirmed in all four occupied oblasts. Multi-commodity food shortages confirmed (sugar, flour, cereals, salt, pasta). Grey market fuel via Telegram/Avito. Aksyonov Jul 8: crisis 'open-ended,' fuel unavailability on certain days permanent. Residents describing 'survival mode' (Le Monde Jul 9). 30–50% real estate price collapse corroborates residential permanence rejection. | Jul 9: MTCS at 80 (acute boundary — threshold is >80; band remains Fragility Zone). Base 78 + OFP +2 = 80. ECS at ceiling (100). Crimea in active evacuation. Behavioral change underway, not anticipated — state of emergency, civilian exodus, industrial shutdowns, civic services failure all confirmed. | Jul 17: Track A 44→42. Don-Azov Canal suspended Jul 10–11; Sea of Azov vessel count fell from 132 to 43 (55% AIS transponder decline); maritime blockade of Crimea supply routes now complete — land corridors and sea routes simultaneously closed. No new private market transaction data but macro environment for any private activity has materially worsened beyond Jul 9 baseline. | Jul 17: Track B 30→28. Confirmed persistence and deepening of civilian infrastructure failure: water supply limited to one hour daily in some areas (Jul 11); farms halting mechanized operations due to combined electricity and fuel failures (Chubarov/ISW Jul 14); rotating 2-on/6-off blackouts in Sevastopol (Razvozhayev Jul 14); transformer cannibalization — ATESH Jul 14 reports Russian authorities removing transformers from idle Northern Crimean Canal pumping stations to replace destroyed substations, spare stocks exhausted; VTB ATM withdrawal limits reduced for Crimea customers. These are not disruptions — they are the new baseline. Residential permanence premise structurally impaired beyond prior floor. | Jul 17: MTCS crosses acute threshold (>80). Base 78 + OFP +4 = 82. OFP modulator advances from +2 to +4 as fiscal pressure crosses into meaningful-strain band. ECS at ceiling (100). Crimea in active evacuation — maritime blockade complete, water/power/fuel simultaneously failed, agricultural and emergency services affected. Behavioral change confirmed and deepening, not anticipated."
         }
       ]
     },
@@ -981,6 +981,162 @@
       "date": "2026-07-08",
       "label": "Over 90% of Russian regions have experienced fuel rationing or shortages since June; Bank of Russia flags fuel prices as driver of inflation above target (Vanguard/AFP Jul 8)",
       "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-09",
+      "label": "Crimea receives only one-third of daily fuel needs — Razvozhayev confirms; fuel prices rose 78.4% in single week per Russian Statistics Service (Mezha.net/Kyiv Independent Jul 9)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-09",
+      "label": "36 Russian shadow fleet vessels struck in Sea of Azov Jul 6–9, targeting tankers on Taganrog-to-Crimea fuel route — ISW: ‘new phase’ of Crimea isolation campaign combining land and maritime interdiction (BBC/ISW Jul 9)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-09",
+      "label": "Luhansk Oblast occupation officials publish Jun 16 decree simplifying ‘ownerless’ property designation — enabling broader seizure and redistribution; Rosreestr identifies 1.9M properties missing from state register and 63,000 unused land parcels across occupied oblasts (ISW Jul 9)",
+      "category": "policy",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-07-09",
+      "label": "618 residential properties transferred to law enforcement, healthcare, and education personnel in occupied Zaporizhzhia Oblast; first Mariupol apartment under municipal co-financing program transferred Jul 3 (ISW Jul 9)",
+      "category": "policy",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-07-10",
+      "label": "Ilsky refinery (Krasnodar Krai, ~3M ton/year, primary Southern Federal District supplier via Novorossiysk/Taman) struck overnight Jul 9–10; Moynaki substation Yevpatoria struck, cutting city power (Censor.NET Jul 10)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-11",
+      "label": "Don-Azov Canal navigation halted following vessel strikes — effectively closing the maritime resupply route Russia pivoted to after R-280 highway and bridge degradation (Reuters Jul 10–11)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-11",
+      "label": "76 Russian vessels struck in Sea of Azov Jul 6–11; 21 tankers in single overnight operation Jul 10–11; AIS data shows 55% decline in active vessel transponders over period (ISW Jul 11, Starboard Maritime Intelligence)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-11",
+      "label": "Water supply limited to one hour daily in some Crimea areas; grey-market gasoline $25/gallon via Telegram/Avito/Ozon; shops closing or cash-only due to persistent power cuts (The Telegraph/UNN Jul 11)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-11",
+      "label": "Russian Rosstat: consumer gasoline prices rose 6.88% in June 2026 — nearly 10× the May rate; diesel +7.1%; annual gasoline inflation 19.9%; shortages affecting 78 of 83 Russian federal subjects (ISW Jul 11)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-11",
+      "label": "Russian federal government allocates ₽4.3B (~$55.9M) emergency subsidies to Crimea tourism companies — reactive fiscal expenditure confirming civilian economic collapse (ISW Jul 11)",
+      "category": "macro",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-07-11",
+      "label": "Syzran oil refinery (Samara Oblast, 8.5–9M ton/year, supplies Russian Air Force and military in central/southern Russia) struck overnight Jul 11–12 (Ukrainian General Staff/EA WorldView Jul 12)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-13",
+      "label": "105 Russian vessels struck in Sea of Azov Jul 6–13; total vessel count fell from 132 to 43; Kerch Strait passage requests suspended; Don-Azov Canal halted — maritime blockade of Crimea effectively complete (ISW Jul 13, SAR imagery)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-13",
+      "label": "Kerch Bridge closed 11+ hours overnight Jul 12–13 after drone strikes on Kerch energy point and air defenses — all Crimea supply vectors simultaneously degraded: land corridors, maritime routes, bridge (Euromaidan Press Jul 13)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-13",
+      "label": "State fuel procurement system collapsing: ten canceled state fuel tenders across Samara, Tambov, Stavropol; ambulance and utility services running on reserves (Izvestiya via Kyiv Post Jul 13)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-13",
+      "label": "Deputy PM Novak publicly acknowledges national fuel crisis ‘due to [Ukrainian] strikes’ — first explicit ministerial attribution (Kyiv Post Jul 13)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-13",
+      "label": "El País Feodosia ground-truth Jul 13: fuel reserved exclusively for essential services, QR-code allocation, constant power cuts, food service closed, zero tourism — 70% hotel bookings cancelled (Russian Tourism Industry Union); ‘most expensive retail gasoline on earth’ (Kyiv Post Jul 13)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-13",
+      "label": "Pump prices in Yalta and Yevpatoria reach 330–450 rubles/liter ($3.50–5.85/liter, ~$22/gallon) — 3–5× mainland Russian average; grey market 400 rubles/liter doorstep delivery via Telegram (Kyiv Post Jul 13)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-14",
+      "label": "Salavat Gazpromneftekhim complex (Bashkortostan, 10M ton/year) struck overnight Jul 13–14 — last major Russian gasoline producer not previously hit in 2026; AVT-6 primary crude distillation unit damaged (ISW/Kyiv Independent Jul 14)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-14",
+      "label": "Chubarov (Crimean Tatar Mejlis Chairperson): small and medium enterprises halted operations; livestock farms manually performing previously mechanized processes; water supply affected in northern Crimea (ISW Jul 14)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-14",
+      "label": "Razvozhayev announces rotating 2-hours-on/6-hours-off blackouts in Sevastopol following overnight strikes on energy infrastructure (Reuters/Devdiscourse Jul 14)",
+      "category": "civilian",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-14",
+      "label": "ATESH: Russian authorities removing 10–40 MVA transformers from idle Northern Crimean Canal pumping stations to replace destroyed substations — spare stocks exhausted; no normal restoration timeline [unverified — partisan source] (Euromaidan Press Jul 14)",
+      "category": "infrastructure",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-07-14",
+      "label": "VTB reduces ATM withdrawal limits for Crimea customers — banking infrastructure stress in occupied territory (Global Banking & Finance Review Jul 17)",
+      "category": "banking",
+      "significance": "medium"
+    },
+    {
+      "date": "2026-07-14",
+      "label": "Russian oil refining falls to lowest level since 2005; gasoline production running at ~65% of average seasonal consumption following cumulative strikes (Kyiv Post/Mezha.net Jul 14)",
+      "category": "macro",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-14",
+      "label": "116 vessels struck in Sea of Azov over 9 days as of Jul 14; Ukrainian Navy sinks Russian FSB patrol vessel Izumrud near Novorossiysk using Sargan-3000 unmanned surface vehicle (Kyiv Independent/Euromaidan Press Jul 14)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-16",
+      "label": "Kerch railway station warehouses and rolling stock struck Jul 16–17, fires confirmed by NASA satellite data; energy infrastructure in occupied Berdiansk struck; 6–7 shadow-fleet vessels struck in Black Sea (Atesh/USF Jul 17)",
+      "category": "infrastructure",
+      "significance": "high"
+    },
+    {
+      "date": "2026-07-16",
+      "label": "SBU strikes shadow-fleet tankers Louise 1 (transported ~3M tonnes Russian crude in 2026) and Banda Jul 16; USF reports 147 vessels struck Jul 6–16 (SBU/USF Jul 17)",
+      "category": "infrastructure",
       "significance": "high"
     }
   ]
