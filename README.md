@@ -512,15 +512,19 @@ and the Sberbank/PSB expansion depends on oil revenue. Every percentage
 point of refining capacity offline is pressure on the budget line that
 funds the permanence projection.
 
-As of June 2026: RPI 97. Approximately 33% of Russian refining capacity
-offline, fuel rationing confirmed in 56 regions, Russia importing
-gasoline from Asia by sea for the first time. The Sevastopol main power
-substation destroyed June 23–24. North Crimean Canal railway bridge
-destroyed. Orenburg Gazprom gas processing plant struck (60% of Gazprom
-Pererabotka capacity, 1,200km from front). Ukraine has launched a
-Zelensky-authorized 40-day intermediate and long-range strike operation
-as of June 25, expanding the target set beyond energy infrastructure to
-include air defense systems and logistics corridors.
+As of August 9, 2026: RPI 100 (ceiling). Approximately 33–38% of
+Russian refining capacity offline; 18 refineries struck Jul 18–Aug 9;
+Novorossiysk export volume −38% vs pre-war baseline; FT reports 30%+
+of capacity disabled with some estimates at 45%; Tyumen refinery halted;
+Taman terminal, Ryazan, Syzran, and Ilsky facilities confirmed struck.
+ACLED shadow fleet tracking: 200+ vessels. The dial has reached its
+scoring ceiling. As of June 2026: the Sevastopol main power substation
+destroyed June 23–24; North Crimean Canal railway bridge destroyed;
+Orenburg Gazprom gas processing plant struck (60% of Gazprom
+Pererabotka capacity, 1,200km from front). Ukraine's Zelensky-authorized
+40-day intermediate and long-range strike operation (from June 25) has
+continued into the Jul–Aug period, expanding the target set to include
+refinery network dismantling.
 
 **Ceiling note:** RPI at 97 is effectively at its scoring ceiling. The
 indicator cannot meaningfully differentiate between "critical" and
@@ -596,9 +600,12 @@ without CCI could mean successful interdiction that hasn't reached
 civilians yet. CCI without RPI could mean local supply chain failures
 unconnected to the broader campaign.
 
-As of June 2026: ECS 99. Both inputs at or near ceiling simultaneously.
-This is the configuration the monitor was built to detect: infrastructure
-destruction and civilian collapse arriving together, not sequentially.
+As of August 9, 2026: ECS 100 (ceiling). Both RPI and CCI at ceiling
+simultaneously. This is the configuration the monitor was built to
+detect: infrastructure destruction and civilian collapse arriving
+together, not sequentially. New acute stress events are captured in
+scoring notes and key_events; the ceiling does not mean conditions
+have stabilized.
 
 ---
 
@@ -746,9 +753,11 @@ weight by rising.
   population movement, market exit, administrative breakdown — is
   expected.
 
-**Current reading:** MTCS 79, Fragility Zone. Base 77 (real estate +
-energy) + OFP modulator +2 = 79. One point below the acute threshold.
-Both RPI and CCI are at or near ceiling. The formal state of emergency
+**Current reading:** MTCS 82, Acute Signal. Base 78 (real estate +
+energy) + OFP modulator +4 = 82. Above the >80 acute threshold as of
+August 9, 2026. Both RPI and CCI at ceiling (100). OFP crossed into the
+56–70 range (modulator +4) on the August review; next threshold watch
+at OFP 71+ (modulator jumps to +6). The formal state of emergency
 declaration in Crimea (June 26, 2026) and the ongoing civilian exodus
 are behavioral changes already in progress, not anticipated.
 
