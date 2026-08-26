@@ -36,8 +36,8 @@ module.exports = async (req, res) => {
   const time  = now.toISOString();
 
   try {
-    // 1. Current scores
-    const currentScores = storage.getScores();
+    // 1. Current scores (includes latest RPI/CCI/OFP readings for synthesis context)
+    const currentScores = storage.getAllScores();
 
     // 2. Fetch news
     const newsResults = await fetchNews();
