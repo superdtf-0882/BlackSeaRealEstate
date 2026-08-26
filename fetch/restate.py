@@ -8,7 +8,7 @@ data-href value: /graph2/data/?region=60983&type=112&period=2&influence=3&op=1&f
 
 Usage:
     python fetch/restate.py           # dry-run: print new readings only
-    python fetch/restate.py --write   # append to data/crimea_prices.json
+    python fetch/restate.py --write   # append to public/data/crimea_prices.json
     python fetch/restate.py --all     # print all scraped readings (debugging)
 """
 
@@ -21,7 +21,7 @@ from datetime import datetime, date
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-DATA = ROOT / "data" / "crimea_prices.json"
+DATA = ROOT / "public" / "data" / "crimea_prices.json"
 
 API_URL = (
     "https://krym.restate.ru/graph2/data/"
