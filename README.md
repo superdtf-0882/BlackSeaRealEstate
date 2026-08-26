@@ -526,11 +526,13 @@ Pererabotka capacity, 1,200km from front). Ukraine's Zelensky-authorized
 continued into the Jul–Aug period, expanding the target set to include
 refinery network dismantling.
 
-**Ceiling note:** RPI at 97 is effectively at its scoring ceiling. The
+**Ceiling note:** RPI at 100 has reached its scoring ceiling. The
 indicator cannot meaningfully differentiate between "critical" and
-"catastrophic" at this range. New events are captured in scoring notes
-and key_events rather than further dial movement. The notes carry the
-analytical weight when the dial cannot.
+"catastrophic" at this range, and three new target categories (naval
+harbour, grain terminals, refinery network dismantling) cannot be
+expressed as further dial movement. New events are captured in scoring
+notes and key_events rather than further dial movement. The notes carry
+the analytical weight when the dial cannot.
 
 Sources: CREA (energyandcleanair.org) monthly capacity reports, GUR
 Ukraine (@DefenceU Telegram), ISW daily occupation updates
@@ -753,10 +755,10 @@ weight by rising.
   population movement, market exit, administrative breakdown — is
   expected.
 
-**Current reading:** MTCS 82, Acute Signal. Base 78 (real estate +
-energy) + OFP modulator +4 = 82. Above the >80 acute threshold as of
-August 9, 2026. Both RPI and CCI at ceiling (100). OFP crossed into the
-56–70 range (modulator +4) on the August review; next threshold watch
+**Current reading:** MTCS 84, Acute Signal. Base 78 (real estate +
+energy) + OFP modulator +6 = 84. Above the >80 acute threshold as of
+August 26, 2026. Both RPI and CCI at ceiling (100). OFP crossed into the
+71–85 range (modulator +6) on the August 26 review; next threshold watch
 at OFP 71+ (modulator jumps to +6). The formal state of emergency
 declaration in Crimea (June 26, 2026) and the ongoing civilian exodus
 are behavioral changes already in progress, not anticipated.
