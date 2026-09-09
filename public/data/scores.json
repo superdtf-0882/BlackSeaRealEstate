@@ -1,6 +1,6 @@
 {
   "methodology_version": "5.0",
-  "last_updated": "2026-09-09T09:25:17Z",
+  "last_updated": "2026-09-09T10:29:07Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -633,7 +633,7 @@
     },
     {
       "date": "2026-06-11",
-      "label": "Sevastopol fuel rationing coupons fully suspended — tanker trucks unable to reach city after corridor strikes; refueling restricted to emergency and essential services only",
+      "label": "Sevastopol fuel rationing coupons fully suspended — tanker trucks unable to reach city after corridor strikes; refueling priority restricted to public transport, utilities, emergency, and government vehicles only",
       "category": "civilian",
       "significance": "high"
     },
