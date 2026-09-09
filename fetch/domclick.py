@@ -6,7 +6,7 @@ Targets:
     Donetsk houses     : doneck.domclick.ru/pokupka/doma
     Luhansk houses     : lugansk.domclick.ru/pokupka/doma
 
-Appends new readings to data/domclick_listings.json.
+Appends new readings to public/data/domclick_listings.json.
 
 Usage:
     python fetch/domclick.py           # dry-run: print counts only
@@ -23,7 +23,8 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-DATA = ROOT / "data" / "domclick_listings.json"
+# Repointed 2026-09-09: the app reads public/data/domclick_listings.json.
+DATA = ROOT / "public" / "data" / "domclick_listings.json"
 
 TARGETS = {
     "donetsk": {

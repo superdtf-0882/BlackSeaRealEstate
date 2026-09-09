@@ -40,7 +40,11 @@ from pathlib import Path
 _SSL_CTX = ssl._create_unverified_context()
 
 ROOT = Path(__file__).parent.parent
-DATA = ROOT / "data"
+# Repointed 2026-09-09: the app reads public/data/, so ROOT/"data" was
+# writing where nothing looks. PRIVATE stays outside public/ because
+# Vercel publishes public/ and a debug dump there would be served.
+DATA    = ROOT / "public" / "data"
+PRIVATE = ROOT / "data"
 OUT  = DATA / "refinery_pressure.json"
 
 # Kpler 2021 annual average Novorossiysk export baseline (mt/year → approx weekly)
@@ -99,7 +103,7 @@ def fetch_crea() -> dict:
                     return {"capacity_util_pct": val, "source_url": url, "parsed": True}
 
         # Save debug
-        (DATA / "debug_crea.html").write_text(html[:50000], encoding="utf-8")
+        (PRIVATE / "debug_crea.html").write_text(html[:50000], encoding="utf-8")
         print(f"    Parse failed — saved debug_crea.html", file=sys.stderr)
 
     print("  [CREA] All URLs failed or unparseable", file=sys.stderr)
@@ -212,7 +216,7 @@ def fetch_kpler() -> dict:
                 print(f"    → export {mt_week:.2f} Mt/week → pressure: {pressure}")
                 return {"export_volume_mt_week": mt_week, "export_pressure": pressure, "parsed": True}
 
-        (DATA / "debug_kpler.html").write_text(html[:50000], encoding="utf-8")
+        (PRIVATE / "debug_kpler.html").write_text(html[:50000], encoding="utf-8")
         print(f"    Parse failed — saved debug_kpler.html", file=sys.stderr)
 
     # Fallback: check Bloomberg/Reuters snippets for recent Russia export numbers

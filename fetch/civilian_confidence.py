@@ -38,7 +38,11 @@ from pathlib import Path
 _SSL_CTX = ssl._create_unverified_context()
 
 ROOT = Path(__file__).parent.parent
-DATA = ROOT / "data"
+# Repointed 2026-09-09: the app reads public/data/, so ROOT/"data" was
+# writing where nothing looks. PRIVATE stays outside public/ because
+# Vercel publishes public/ and a debug dump there would be served.
+DATA    = ROOT / "public" / "data"
+PRIVATE = ROOT / "data"
 OUT  = DATA / "civilian_confidence.json"
 
 # Baseline keyword hit rate (Jun–Aug 2025) for normalization
@@ -140,7 +144,7 @@ def fetch_rosstat_fuel() -> dict:
             russian_prices = [sum(all_prices) / len(all_prices)]
 
     if not occupied_prices or not russian_prices:
-        (DATA / "debug_rosstat.html").write_text(html[:80000], encoding="utf-8")
+        (PRIVATE / "debug_rosstat.html").write_text(html[:80000], encoding="utf-8")
         print(f"    Parse failed — saved debug_rosstat.html", file=sys.stderr)
         return {"fuel_price_premium_pct": None, "fuel_score": None, "parsed": False}
 

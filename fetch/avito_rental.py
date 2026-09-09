@@ -7,9 +7,10 @@ Targets (long-term residential rental, квартиры):
     Luhansk  : avito.ru/lugansk/nedvizhimost/snyat/kvartiru
     Crimea   : avito.ru/respublika_krym/nedvizhimost/snyat/kvartiru
 
-Appends monthly readings to data/permanence_ratio.json under each city's
-monthly_readings array, updating rental_listings_est and median_rent_rub.
-Also writes a raw snapshot to data/avito_rental_raw.json for auditing.
+Appends monthly readings to public/data/permanence_ratio.json under each
+city's monthly_readings array, updating rental_listings_est and
+median_rent_rub. Also writes a raw snapshot to data/avito_rental_raw.json
+for auditing -- deliberately OUTSIDE public/, which Vercel publishes.
 
 Usage:
     python fetch/avito_rental.py           # dry-run: print counts only
@@ -27,9 +28,17 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-DATA = ROOT / "data"
+# DATA is what the app reads. api/scores.js and index.html both resolve to
+# public/data/, so anything written to ROOT/"data" is written where nothing
+# looks. Repointed 2026-09-09.
+DATA = ROOT / "public" / "data"
+# PRIVATE stays outside public/ ON PURPOSE. Vercel serves public/ as the static
+# output directory, so a debug dump or a raw scrape written there would be
+# PUBLISHED. avito_rental_raw.json has no reader in the app or the API — it is
+# scrape output, not data — and data/*_raw.json is already gitignored.
+PRIVATE = ROOT / "data"
 PERM = DATA / "permanence_ratio.json"
-RAW  = DATA / "avito_rental_raw.json"
+RAW  = PRIVATE / "avito_rental_raw.json"
 
 TARGETS = {
     "mariupol": {
@@ -182,7 +191,7 @@ def fetch_city(city_key: str, config: dict) -> dict:
 
     if not html or status == 403:
         print(f"    !! Status {status} — Avito blocked request. Saving debug file.")
-        debug_path = DATA / f"avito_debug_{city_key}.html"
+        debug_path = PRIVATE / f"avito_debug_{city_key}.html"
         debug_path.write_text(html or f"[empty — status {status}]", encoding="utf-8")
         print(f"    Inspect {debug_path} to diagnose. Consider residential proxy.")
         return {"city": city_key, "count": None, "median_price": None, "blocked": True}
@@ -192,7 +201,7 @@ def fetch_city(city_key: str, config: dict) -> dict:
 
     if count is None:
         print(f"    !! Count parse failed — saving debug HTML")
-        (DATA / f"avito_debug_{city_key}.html").write_text(html, encoding="utf-8")
+        (PRIVATE / f"avito_debug_{city_key}.html").write_text(html, encoding="utf-8")
     else:
         print(f"    → {count:,} rental listings")
 

@@ -51,7 +51,7 @@ Methodology v3.0:
 
 Usage:
     python fetch/compute.py           # print scores, do not write
-    python fetch/compute.py --write   # update data/scores.json
+    python fetch/compute.py --write   # update public/data/scores.json
     python fetch/compute.py --month 2026-07   # force specific month tag
 """
 
@@ -63,7 +63,12 @@ from datetime import date, datetime
 from pathlib import Path
 
 ROOT   = Path(__file__).parent.parent
-DATA   = ROOT / "data"
+# Repointed 2026-09-09. This one mattered most: compute.py --write was
+# loading and rewriting the STALE data/scores.json (methodology 4.0,
+# 2026-06-14) instead of the live public/data/scores.json the app and
+# api/scores.js actually serve. It writes no debug dumps, so there is
+# nothing to keep private here.
+DATA   = ROOT / "public" / "data"
 OUT    = DATA / "scores.json"
 PERM   = DATA / "permanence_ratio.json"
 
