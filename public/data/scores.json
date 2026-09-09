@@ -1,6 +1,6 @@
 {
   "methodology_version": "5.0",
-  "last_updated": "2026-09-09T09:05:18Z",
+  "last_updated": "2026-09-09T09:15:06Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -1625,7 +1625,7 @@
       "date": "2026-08-30",
       "category": "infrastructure",
       "significance": "high",
-      "label": "KINEF refinery struck (Kirishi/KINEF, Leningrad Oblast — Bloomberg / Reuters / Euromaidan Press Aug 30)"
+      "label": "Kirishi/KINEF refinery (Leningrad Oblast) struck overnight Aug 29–30 — Russia’s SECOND-LARGEST refinery at roughly 20M tonnes/year (~400,000 bpd), over 6% of national refining capacity, and a supplier of military fuel. ALL CRUDE PROCESSING HALTED after the AVT-6 unit (22,860 t/day, ~40% of the refinery’s capacity) and the AT-1 unit (4,860 t/day, ~8%) were damaged; at least the sixth reported Ukrainian strike on the facility. Struck the same night as the Yeysk military airfield (Bloomberg / Reuters via MarineLink / Euromaidan Press / Kyiv Post / Militarnyi Aug 30)"
     },
     {
       "date": "2026-08-31",
@@ -1668,6 +1668,12 @@
       "category": "civilian",
       "significance": "high",
       "label": "Crimea fuel rationing tightened to four-hour daily windows on rotating station schedules — policy escalation beyond the prior limited-hours and fixed-cap regime"
+    },
+    {
+      "date": "2026-09-03",
+      "category": "real_estate",
+      "significance": "high",
+      "label": "The Insider: Ukrainian owners of confiscated property in occupied Mariupol are compensated at 70,000 rubles/m² while new housing on the same market sells at 170,000 rubles/m² — a 2.4× gap between the price the state pays to expropriate and the price it charges to resell, making the confiscation programme a transfer rather than a purchase (Sep 1 investigation, logged Sep 3). The confiscation COUNT is deliberately not restated here: 34,002 flagged addresses with 14,308 in Mariupol is BBC Verify Aug 7 and is already carried in the Mariupol history note."
     },
     {
       "date": "2026-09-04",
