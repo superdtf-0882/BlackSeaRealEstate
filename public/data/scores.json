@@ -1,6 +1,6 @@
 {
   "methodology_version": "5.0",
-  "last_updated": "2026-09-09T09:15:06Z",
+  "last_updated": "2026-09-09T09:25:17Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
@@ -14,7 +14,7 @@
       "crimea": 1.2,
       "berdiansk": 0.7
     },
-    "data_quality": "real = sourced and dateable. estimated = calibrated from anchors. uncertain = low-confidence estimate."
+    "data_quality": "real = sourced and dateable. estimated = calibrated from anchors. uncertain = low-confidence estimate. | HISTORY MONTH ROLLED 2026-06 -> 2026-09 on 2026-09-09, David’s ruling, overriding the work package’s standing instruction not to re-key. THE SERIES NOW SKIPS 2026-07 AND 2026-08, AND THAT GAP IS THE HONEST SHAPE OF THE DATA: no July or August reading was ever taken. Every entry before the last carries an empty note; only the last carries one, and those notes record dated updates running through Aug 26 (Mariupol: \"Aug 9: Track A 31→29\"). The entry keyed 2026-06 was the LIVE entry, opened in June and maintained continuously since, so re-keying states what it already was rather than asserting a new reading. APPENDING WAS REJECTED because a new entry needs values and CC does not set them; carrying the same values forward would have asserted \"no change June to September\", which those same notes falsify. NO SCORE MOVED IN THIS OPERATION — SCI, Track A, Track B, composite and spread are byte-identical for all five cities, and Donetsk 58 / Luhansk 54 remain held per the gated WP-4b. TWO VISIBLE CONSEQUENCES, NEITHER A DEFECT: the month scrubber now reads \"... Apr 26, May 26, Sep 26\", showing the gap rather than hiding it; and the Key Events legend, which renders only events whose date matches a chart axis label, now surfaces 2026-09 events on the composite and spread charts. JULY AND AUGUST EVENTS REMAIN INVISIBLE THERE — no axis label exists for them, and this roll does not fix that. SEPARATELY AND NOT TOUCHED: refinery_pressure.json, civilian_confidence.json and occupation_financial_pressure.json carry the identical freeze at 2026-06 under the field name `monthly_readings` rather than `history`, with the same pattern of an August-and-September log appended into a June-keyed entry."
   },
   "cities": {
     "mariupol": {
@@ -202,7 +202,7 @@
           "data_quality": "real"
         },
         {
-          "month": "2026-06",
+          "month": "2026-09",
           "SCI": 91,
           "SCI_lo": 87,
           "SCI_hi": 95,
@@ -267,7 +267,7 @@
           "data_quality": "mixed"
         },
         {
-          "month": "2026-06",
+          "month": "2026-09",
           "SCI": 44,
           "track_a": 36,
           "track_b": 58,
@@ -323,7 +323,7 @@
           "data_quality": "mixed"
         },
         {
-          "month": "2026-06",
+          "month": "2026-09",
           "SCI": 38,
           "track_a": 33,
           "track_b": 54,
@@ -459,7 +459,7 @@
           "data_quality": "real"
         },
         {
-          "month": "2026-06",
+          "month": "2026-09",
           "SCI": 62,
           "track_a": 38,
           "track_b": 25,
@@ -504,7 +504,7 @@
           "data_quality": "uncertain"
         },
         {
-          "month": "2026-06",
+          "month": "2026-09",
           "SCI": 31,
           "track_a": 22,
           "track_b": 11,
