@@ -1,16 +1,16 @@
 {
   "methodology_version": "5.0",
-  "last_updated": "2026-08-26T20:00:00Z",
+  "last_updated": "2026-09-09T09:05:18Z",
   "scoring_notes": {
     "SCI": "State Commitment Index. Federal budget activity + state-linked contractor starts + 2% mortgage volume as state expenditure.",
     "track_a": "Private market signal. Non-state developer entry + cash DKP transactions (non-mortgage) + asking price momentum. Mariupol penalised: Bellingcat/Shumanov confirm near-zero genuine private entry.",
-    "track_b": "Residential outcome signal. Secondary listing depth (Domclick counts) + buyer permanence score (PSB/VTB disclosures) + rental-to-purchase ratio (estimated where marked). | Aug 26 — Donbas Track B watch condition (Donetsk 58, Luhansk 54, both held). Two independent signals this window point downward, both partisan-sourced and neither corroborated: the National Resistance Center (Aug 9) reports occupation administrations across the occupied territories exploiting unemployment and months-long wage arrears to recruit civilians into the Russian army under false pretenses; ATESH (Aug 26) reports commanders of the 70th Motorized Rifle Division selling military fuel allocations to civilians in Donetsk, Luhansk and Rostov-on-Don at prices from 300 rubles per litre. If the ATESH report is corroborated it would be the first confirmed acute fuel-access failure in the Donbas cities at Crimea intensity, and grey-market fuel reaching the captive population matters more than the same signal in Crimea: per the README’s Donbas caveat, Track B there measures a residual self-selected population whose participation reflects a prior political commitment, so movement in it is categorically more acute than movement elsewhere. Three Galaktika shopping-centre fires in a single month (Makiivka Aug 9–10, Yenakiieve Aug 14, Donetsk Aug 16, the last with eyewitness drone flyovers) add commercial-stock attrition alongside the already-logged Aug 8 school and kindergarten closures. Track B is nonetheless the climate dial and moves on Domclick listing depth and PSB/VTB buyer composition, not on news or partisan reporting. Explicit corroboration trigger for the next cycle: a second independent source on the fuel diversion, or any Domclick listing-count or PSB disclosure movement in Donetsk or Luhansk. If either arrives, move both to 56/52 and note that the trigger was pre-registered here.",
+    "track_b": "Residential outcome signal. Secondary listing depth (Domclick counts) + buyer permanence score (PSB/VTB disclosures) + rental-to-purchase ratio (estimated where marked). | Aug 26 — Donbas Track B watch condition (Donetsk 58, Luhansk 54, both held). Two independent signals this window point downward, both partisan-sourced and neither corroborated: the National Resistance Center (Aug 9) reports occupation administrations across the occupied territories exploiting unemployment and months-long wage arrears to recruit civilians into the Russian army under false pretenses; ATESH (Aug 26) reports commanders of the 70th Motorized Rifle Division selling military fuel allocations to civilians in Donetsk, Luhansk and Rostov-on-Don at prices from 300 rubles per litre. If the ATESH report is corroborated it would be the first confirmed acute fuel-access failure in the Donbas cities at Crimea intensity, and grey-market fuel reaching the captive population matters more than the same signal in Crimea: per the README’s Donbas caveat, Track B there measures a residual self-selected population whose participation reflects a prior political commitment, so movement in it is categorically more acute than movement elsewhere. Three Galaktika shopping-centre fires in a single month (Makiivka Aug 9–10, Yenakiieve Aug 14, Donetsk Aug 16, the last with eyewitness drone flyovers) add commercial-stock attrition alongside the already-logged Aug 8 school and kindergarten closures. Track B is nonetheless the climate dial and moves on Domclick listing depth and PSB/VTB buyer composition, not on news or partisan reporting. Explicit corroboration trigger for the next cycle: a second independent source on the fuel diversion, or any Domclick listing-count or PSB disclosure movement in Donetsk or Luhansk. If either arrives, move both to 56/52 and note that the trigger was pre-registered here. | Sep 9 — WATCH CONDITION OPENED BY DAVID FOR TRIGGER REVIEW. Values HOLD at Donetsk 58, Luhansk 54; the numeric move to 56/52 is gated and is NOT executed in this package. The original trigger language above is preserved verbatim; this is an append, not a rewrite. THE CONDITION HAS NOW RUN FOUR CYCLES UNRESOLVED (08-27, 08-29, 08-31, 09-01), and the evidence arriving keeps failing the trigger ON SPECIFICATION RATHER THAN ON SUBSTANCE: the four-oblast blackout (Aug 27–28) was rejected as grid disruption rather than fuel-diversion corroboration; the EU Delegation \"Eating Last\" report (Aug 31) is consistent with the condition but meets neither branch; and the Galaktika Mariupol strike (Sep 6–7) is the fourth chain location destroyed in a month, with the co-located station reportedly the LAST GALAKTIKA-BRAND FUEL STATION IN OCCUPIED DONETSK OBLAST. THE ANALYTICAL QUESTION, STATED PLAINLY: the Galaktika sequence introduces a FUEL-RETAIL INFRASTRUCTURE dimension that the original trigger — written around fuel DIVERSION and listing/buyer data — did not anticipate. The condition may now be filtering out the evidence actually arriving. Carried to the v5.1 queue as a candidate Track B input dimension. SECOND BRANCH TESTED SEP 9, RESULT REPORTED AND NOT SCORED: a live Domclick pull returned Donetsk apartments 651–652 against a last committed 380 (2026-06-10) and Luhansk houses 1,090 against 974 — both moved, and Donetsk crossed the independently pre-registered donetsk_apartments_surge alert of 600 in domclick_listings.json. THE BASELINE IS THREE MONTHS OLD, NOT A SAME-CYCLE COMPARISON: the scraper has not run since 2026-06-10, so this is drift over one quarter rather than movement within a cycle. Whether that satisfies \"movement\" as pre-registered is David’s ruling; no dial was touched.",
     "composite": "SCI × 0.4 + Track A × 0.6. Weighted blend of state commitment and private market signal.",
     "spread": "Track B minus Composite (SCI×0.4 + A×0.6). Positive = residential confidence LEADS state+private composite. Negative = composite OUTPACES residential reality — the fragility signal.",
     "city_weights": {
-      "mariupol": 1.0,
-      "donetsk": 1.0,
-      "luhansk": 1.0,
+      "mariupol": 1,
+      "donetsk": 1,
+      "luhansk": 1,
       "crimea": 1.2,
       "berdiansk": 0.7
     },
@@ -19,7 +19,7 @@
   "cities": {
     "mariupol": {
       "display_name": "Mariupol",
-      "weight": 1.0,
+      "weight": 1,
       "history": [
         {
           "month": "2025-06",
@@ -221,7 +221,7 @@
     },
     "donetsk": {
       "display_name": "Donetsk",
-      "weight": 1.0,
+      "weight": 1,
       "domclick_listings": {
         "apartments": 385,
         "houses": 130,
@@ -279,7 +279,7 @@
     },
     "luhansk": {
       "display_name": "Luhansk",
-      "weight": 1.0,
+      "weight": 1,
       "domclick_listings": {
         "houses": 856,
         "date": "2026-06-06",
@@ -1572,6 +1572,138 @@
       "label": "EJIL:Talk legal analysis (Vozniuk): Russia’s 2% mortgage programme for the occupied territories runs to 2030 and had issued more than 6,000 loans by late 2025; Federal Constitutional Law No. 4-FKZ (Dec 2025) enables redistribution of confiscated Ukrainian property to Russian citizens; official territorial planning documents project an additional 113,800 residents across the occupied oblasts by 2045; GUR documents ~200,000 ethnic Russians in occupied Donetsk, Luhansk, Zaporizhzhia and Kherson plus 200,000–300,000 in Crimea as of July 2026 (EJIL:Talk Aug 26)",
       "category": "policy",
       "significance": "high"
+    },
+    {
+      "date": "2026-08-27",
+      "category": "macro",
+      "significance": "high",
+      "label": "Russian energy exporters sold only $2.2bn in foreign currency on domestic markets in July — lowest monthly volume in four years, a 3.5-fold drop from June — despite H1 2026 export revenue up 15%; retention abroad attributed to asset-nationalisation fears; ruble down over 20% since the start of summer (CBR via Moscow Times / United24 Aug 27)"
+    },
+    {
+      "date": "2026-08-27",
+      "category": "infrastructure",
+      "significance": "high",
+      "label": "NORSI crude processing halted indefinitely, confirmed by Reuters and three industry sources — third shutdown at the same facility in 2026 (prior strikes Jun 24–25, Jul 2) (Reuters Aug 27)"
+    },
+    {
+      "date": "2026-08-28",
+      "category": "infrastructure",
+      "significance": "high",
+      "label": "Shchastia TPP strike causes simultaneous blackout across all four occupied mainland oblasts (Donetsk, Luhansk, Zaporizhzhia, Kherson) overnight Aug 27–28 from a single power-plant strike; power out in occupied Donetsk city c. 1 a.m. — first large-scale grid failure hitting the Donbas city cluster directly rather than peripherally; Pushilin did not publicly acknowledge"
+    },
+    {
+      "date": "2026-08-28",
+      "category": "policy",
+      "significance": "high",
+      "label": "Rostov Oblast declares a state of emergency citing Azov–Black Sea shipping disruption"
+    },
+    {
+      "date": "2026-08-28",
+      "category": "infrastructure",
+      "significance": "high",
+      "label": "YANOS refinery struck (Slavneft-YANOS, Yaroslavl — Moscow Times / Kyiv Independent / Censor.NET Aug 28)"
+    },
+    {
+      "date": "2026-08-29",
+      "category": "policy",
+      "significance": "high",
+      "label": "Russia extends the fuel export ban through September 30 — policy confirmation of sustained domestic supply stress (ISW Aug 29)"
+    },
+    {
+      "date": "2026-08-29",
+      "category": "civilian",
+      "significance": "high",
+      "label": "NV Ukraine Crimea investigation: 450-ruble grey-market fuel, 211% official fuel price inflation in July, 30% food price rises, civic service collapse, real-estate demand contraction; independently confirms the Sevastopol 2-hours-on/6-hours-off blackout schedule and water outages across northern Crimea (NV Ukraine Aug 29)"
+    },
+    {
+      "date": "2026-08-29",
+      "category": "price",
+      "significance": "high",
+      "label": "NV Ukraine: first named-source confirmation of a residential price decline in occupied Crimea — down 28%, from 180,000 to 130,000 rubles/m²; settlers documented attempting to relocate families off the peninsula (NV Ukraine Aug 29)"
+    },
+    {
+      "date": "2026-08-30",
+      "category": "infrastructure",
+      "significance": "high",
+      "label": "KINEF refinery struck (Kirishi/KINEF, Leningrad Oblast — Bloomberg / Reuters / Euromaidan Press Aug 30)"
+    },
+    {
+      "date": "2026-08-31",
+      "category": "macro",
+      "significance": "high",
+      "label": "Grain rerouting away from Russian ports confirmed, with Akkon, Arkas and MSC exiting Russian port calls — structural export-corridor rerouting rather than temporary disruption (Reuters/Meduza Aug 31)"
+    },
+    {
+      "date": "2026-08-31",
+      "category": "civilian",
+      "significance": "high",
+      "label": "EU Delegation \"Eating Last\" report documents barter economies, informal food networks and shadow survival economies across occupied Donetsk and Luhansk (EU Delegation Aug 31)"
+    },
+    {
+      "date": "2026-08-31",
+      "category": "civilian",
+      "significance": "high",
+      "label": "Christian Science Monitor Crimea ground-truth report: 20-day power outages, refrigeration failure destroying agricultural produce, near-zero tourism, supplier withdrawal (CSM Aug 31)"
+    },
+    {
+      "date": "2026-09-01",
+      "category": "construction",
+      "significance": "high",
+      "label": "The Insider / TVP World / Vot Tak: 61.4bn rubles in Russian state bank loans extended for Mariupol housing projects, with developer profits estimated above market norms (Sep 1)"
+    },
+    {
+      "date": "2026-09-01",
+      "category": "civilian",
+      "significance": "high",
+      "label": "Crimea fuel shortage persists on the day of Aksyonov’s publicized supply-improvement promise; ration coupons reappear in Alushta; double-price charging confirmed in Dzhankoy (Intent Press Sep 1)"
+    },
+    {
+      "date": "2026-09-03",
+      "category": "macro",
+      "significance": "high",
+      "label": "Sberbank CEO Gref publicly attributes Russian inflation to refinery strike losses — highest-status Russian-source confirmation to date of the strike campaign’s fiscal impact (Reuters Sep 3)"
+    },
+    {
+      "date": "2026-09-03",
+      "category": "civilian",
+      "significance": "high",
+      "label": "Crimea fuel rationing tightened to four-hour daily windows on rotating station schedules — policy escalation beyond the prior limited-hours and fixed-cap regime"
+    },
+    {
+      "date": "2026-09-04",
+      "category": "macro",
+      "significance": "high",
+      "label": "KSE Institute August Chartbook: July export earnings $13.8bn (from $15.8bn in June), export volumes 7.0M bpd (from 7.6M) — a structural volume decline; OFZ issuance lowest since September 2022 with auctions suspended through at least September; Jan–Jul federal deficit 6.5tn rubles, 34% above the full-year target"
+    },
+    {
+      "date": "2026-09-07",
+      "category": "infrastructure",
+      "significance": "high",
+      "label": "Ukrainian strikes on the Lukoil Permnefteorgsintez refinery (Perm Krai) and Taganrog Airbase overnight Sep 6–7; second strike on the Sochi oil depot, repeating Sep 4"
+    },
+    {
+      "date": "2026-09-07",
+      "category": "infrastructure",
+      "significance": "high",
+      "label": "Drone strike destroys the Galaktika shopping centre and adjacent fuel station in occupied Mariupol overnight Sep 6–7 (Reuters photographs, Kyiv Post, Astra) — fourth Galaktika location destroyed in occupied Donetsk Oblast within a month (Makiivka Aug 9–10, Yenakiieve Aug 14, Donetsk Aug 16, Mariupol Sep 6–7); Astra identifies the destroyed station as reportedly the last Galaktika-brand fuel station in occupied Donetsk Oblast"
+    },
+    {
+      "date": "2026-09-07",
+      "category": "military",
+      "significance": "high",
+      "label": "Ukrainian General Staff reports a strike on the railway bridge across the North Crimean Canal near Vladyslavivka; GUR drone operators damage a Su-24 tactical bomber in occupied Crimea overnight Sep 6–7"
+    },
+    {
+      "date": "2026-09-07",
+      "category": "infrastructure",
+      "significance": "high",
+      "label": "Russian milblogger acknowledges the M-14 Rostov–Crimea highway remains under continuous Ukrainian drone pressure, contradicting occupation officials’ claims that the corridor is secure"
+    },
+    {
+      "date": "2026-09-07",
+      "category": "macro",
+      "significance": "high",
+      "label": "HUR chief states Ukrainian strikes have contributed to a Russian federal budget deficit of $82bn, while assessing that Russia may retain resources through 2028 — the latter a counter-signal to the upward pressure narrative"
     }
   ]
 }

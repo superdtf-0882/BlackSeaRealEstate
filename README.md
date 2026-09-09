@@ -826,6 +826,38 @@ Current assignments pending implementation:
 - Crimea: Exiting
 - Berdiansk: Unknown
 
+### Queued 2026-09-09 (nine-digest backlog, 2026-08-27 → 2026-09-09)
+
+No v5.0 behaviour changes. These are scope items for the v5.1 review.
+
+**1. Export-corridor sub-index** (flagged in digest 09-01). Carrier exits,
+grain rerouting and port-call collapse are structural signals a ceilinged
+RPI cannot express. Akkon, Arkas and MSC exited Russian port calls in the
+Aug 31 window. This restates the flag already standing in
+`refinery_pressure.json`'s Aug 10–26 ceiling note — *"RPI needs either a
+higher ceiling or a separate export-corridor sub-index"* — which is now
+carried by two windows rather than one.
+
+**2. M-14 corridor qualitative note** (flagged 09-09). Sustained inability
+to secure the primary Rostov–Crimea route, now conceded by Russian
+milbloggers against occupation officials' claims that the corridor is
+secure.
+
+**3. Ceiling differentiation.** RPI, CCI and ECS have all been pinned at
+100 across this entire window. The master signal's only remaining degree
+of freedom is the OFP modulator plus the SCI/Track side of `mtcs_base`.
+The **Market Directionality indicator** documented above is carried
+forward into this scope as the interpretive layer — it does not feed
+MTCS, and no change to it is proposed here.
+
+**4. Fuel-retail infrastructure** as a candidate Track B input dimension.
+Raised by the Donbas Track B watch condition: four Galaktika locations
+destroyed within a month, the Mariupol site's co-located station
+reportedly the last Galaktika-brand fuel station in occupied Donetsk
+Oblast. The existing trigger is written around fuel *diversion* and
+listing/buyer data and does not reach retail-network attrition. See
+`scoring_notes.track_b`.
+
 ---
 
 ## Data sources
