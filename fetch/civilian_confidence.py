@@ -19,7 +19,7 @@ CCI composite = mean(fuel_score, panic_keyword_score, avito_premium_score)
 
 Usage:
     python fetch/civilian_confidence.py           # dry-run
-    python fetch/civilian_confidence.py --write   # append to data/civilian_confidence.json
+    python fetch/civilian_confidence.py --write   # append to public/data/civilian_confidence.json
     python fetch/civilian_confidence.py --month 2026-07
 """
 

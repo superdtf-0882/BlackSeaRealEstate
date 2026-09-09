@@ -2,15 +2,15 @@
 fetch/compute.py — recalculate three-dial scores and permanence ratios
 
 Reads:
-    data/crimea_prices.json
-    data/domclick_listings.json
-    data/developer_counts.json
-    data/mortgage_volumes.json
-    data/permanence_ratio.json
+    public/data/crimea_prices.json
+    public/data/domclick_listings.json
+    public/data/developer_counts.json
+    public/data/mortgage_volumes.json
+    public/data/permanence_ratio.json
 
 Writes:
-    data/scores.json           (updates city histories and last_updated)
-    data/permanence_ratio.json (updates monthly_readings with computed ratios)
+    public/data/scores.json    (updates city histories and last_updated)
+    public/data/permanence_ratio.json (updates monthly_readings with ratios)
 
 Methodology v3.0:
 

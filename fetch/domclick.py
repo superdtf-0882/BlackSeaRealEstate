@@ -10,7 +10,7 @@ Appends new readings to public/data/domclick_listings.json.
 
 Usage:
     python fetch/domclick.py           # dry-run: print counts only
-    python fetch/domclick.py --write   # append to data/domclick_listings.json
+    python fetch/domclick.py --write   # append to public/data/domclick_listings.json
 """
 
 import sys

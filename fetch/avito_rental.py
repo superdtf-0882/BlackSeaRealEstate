@@ -180,6 +180,7 @@ def parse_median_price(html: str) -> int | None:
 #   3. Query the unofficial Avito API endpoint:
 #      https://m.avito.ru/api/9/items?locationId=...&categoryId=24&params[201]=1
 #   The script saves debug HTML to data/avito_debug_{city}.html on parse failure
+#   -- deliberately outside public/, which Vercel publishes.
 #   so you can diagnose what the server returned.
 
 def fetch_city(city_key: str, config: dict) -> dict:

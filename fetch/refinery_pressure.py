@@ -23,7 +23,7 @@ and the record is flagged with "partial": true.
 
 Usage:
     python fetch/refinery_pressure.py           # dry-run
-    python fetch/refinery_pressure.py --write   # append to data/refinery_pressure.json
+    python fetch/refinery_pressure.py --write   # append to public/data/refinery_pressure.json
     python fetch/refinery_pressure.py --month 2026-07   # force month tag
 """
 
